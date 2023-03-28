@@ -58,3 +58,14 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+#UserSetting
+Library/
+Logs/
+UserSettings/
+Temp/
+Text/
+.vs/
+obj/
+.csproj
+.sln
+.vsconfig
