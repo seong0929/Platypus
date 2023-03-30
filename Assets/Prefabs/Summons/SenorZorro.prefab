@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2130374940838060507}
   - component: {fileID: 2376395087261672186}
   - component: {fileID: 1953036741428038821}
+  - component: {fileID: 7515555654411334035}
   m_Layer: 0
   m_Name: SenorZorro
   m_TagString: Summon
@@ -185,6 +186,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66a5f9b7fae9ccb49bc58d6350d6b88e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7515555654411334035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169313282854515491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a1d77287ab8874683469912cd031cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8847056608256543638
