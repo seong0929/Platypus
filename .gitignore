@@ -63,7 +63,7 @@ Library/
 Logs/
 UserSettings/
 Temp/
-Tet/
+Test/
 .vs/
 obj/
 .csproj
