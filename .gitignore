@@ -69,4 +69,4 @@ obj/
 .csproj
 .sln
 .vsconfig
-.dwlt
+*.dwlt
