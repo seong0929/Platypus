@@ -5,5 +5,5 @@ public class SummonScriptableObject : ScriptableObject
 {
     [Header("Summon Stats")]
     public float AttackRange;
-    public float SummonSpeed;
+    public float MovementSpeed;
 }
