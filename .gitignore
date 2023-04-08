@@ -61,12 +61,12 @@ crashlytics-build.properties
 #UserSetting
 Library/
 Logs/
-UserSettings/
+/UserSettings/
+*.dwlt
 Temp/
-Test/
+Asset/Test/
 .vs/
 obj/
 .csproj
 .sln
 .vsconfig
-*.dwlt
