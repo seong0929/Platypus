@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class Summon : SummonBase
 {
     public bool isMoving;
+    public bool isAttack;
+    public bool isAlive = true;
 
     //ToDo: GameManager에서 팀 판별 초기화
     private bool myteam;
@@ -26,6 +28,7 @@ public abstract class Summon : SummonBase
 
             if (distance <= base.circleCollider.radius)
             {
+                Attack(opponent.GetComponent<Summon>(), stats[((int)Enums.ESummonStats.NormalDamage)]);
                 isMoving = false;
                 return; // 사거리 이내에 있으면 이동을 멈춤
             }
@@ -36,10 +39,13 @@ public abstract class Summon : SummonBase
     }
     public abstract void UseSkill(int skillIndex, Summon target);
 
+    public abstract void Attack(Summon target, float damage);
+
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
         stats[((int)Enums.ESummonStats.Health)] -= actualDamage;
+        if (stats[((int)Enums.ESummonStats.Health)] <= 0) { isAlive = false; }
     }
 
     public void GiveDamage(Summon target, float damage)

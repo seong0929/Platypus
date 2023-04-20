@@ -33,6 +33,11 @@ public class SenorZorro : Summon
             skills[skillIndex].Execute(this, target);
         }
     }
+    public override void Attack(Summon target, float damage)
+    {
+        animator.SetBool("Attack", true);
+    }
+
 }
 public class FootworkSkill : Skill
 {
