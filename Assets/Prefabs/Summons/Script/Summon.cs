@@ -11,9 +11,10 @@ public abstract class Summon : SummonBase
 
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();
-    
-    private void FixedUpdate()
+
+    private void Update()
     {
+        opponent = SearchOpponent();
         MoveForOpponent();
     }
 

@@ -13,14 +13,13 @@ public class SummonBase : MonoBehaviour
         circleCollider = GetComponentInChildren<CircleCollider2D>();
     }
 
-    private void FixedUpdate()
-    {
-        opponent = SearchOpponent();
-    }
-
-    GameObject SearchOpponent()
+    protected GameObject SearchOpponent()
     {
         GameObject[] opponents = GameObject.FindGameObjectsWithTag("Summon");
+        if (opponents.Length == 0)
+        {
+            return null;
+        }
         float nearestdistance = Mathf.Infinity;
         GameObject nearestOpponent = opponents[0];
 
