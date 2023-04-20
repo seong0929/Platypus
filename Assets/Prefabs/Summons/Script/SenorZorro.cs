@@ -20,11 +20,13 @@ public class SenorZorro : Summon
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
     }
+
     public override void MoveForOpponent()
     {
         base.MoveForOpponent();
         animator.SetBool("Move", base.isMoving);
     }
+
 
     public override void UseSkill(int skillIndex, Summon target)
     {
@@ -33,11 +35,12 @@ public class SenorZorro : Summon
             skills[skillIndex].Execute(this, target);
         }
     }
+
     public override void Attack(Summon target, float damage)
     {
-        animator.SetBool("Attack", true);
+        animator.SetTrigger("Attack");
+        TakeDamage(stats[((int)Enums.ESummonStats.NormalDamage)]);
     }
-
 }
 public class FootworkSkill : Skill
 {

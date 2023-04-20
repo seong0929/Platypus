@@ -5,11 +5,11 @@ using UnityEngine;
 public abstract class Summon : SummonBase
 {
     public bool isMoving;
-    public bool isAttack;
     public bool isAlive = true;
 
     //ToDo: GameManager에서 팀 판별 초기화
     private bool myteam;
+    float deadTime;
 
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();
@@ -34,18 +34,29 @@ public abstract class Summon : SummonBase
             }
             isMoving = true;
             Vector3 direction = (opponent.transform.position - transform.position).normalized;
-            transform.position += direction * stats[((int)Enums.ESummonStats.SummonSpeed)] * Time.deltaTime;
+            transform.position += direction * stats[((int)Enums.ESummonStats.MovementSpeed)] * Time.deltaTime;
         }
     }
-    public abstract void UseSkill(int skillIndex, Summon target);
-
+    public virtual void Respawne()
+    {
+        if (Constants.respawntime == GameManager.instance.GameTime - deadTime)
+        {
+            //ToDo: 생성 위치
+        }
+    }
+    
     public abstract void Attack(Summon target, float damage);
+    public abstract void UseSkill(int skillIndex, Summon target);   //skillIndex == 0: 스킬, skillIndex == 1: 궁
 
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
         stats[((int)Enums.ESummonStats.Health)] -= actualDamage;
-        if (stats[((int)Enums.ESummonStats.Health)] <= 0) { isAlive = false; }
+        if (stats[((int)Enums.ESummonStats.Health)] <= 0) {
+            deadTime = GameManager.instance.GameTime;
+            isAlive = false;
+            Destroy(this);
+        }
     }
 
     public void GiveDamage(Summon target, float damage)
