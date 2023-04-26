@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BehaviorTree;
 public class SenorZorro : Summon
 {
     [SerializeField] Animator animator;  //애니메이션
@@ -35,25 +35,39 @@ public class SenorZorro : Summon
             skills[skillIndex].Execute(this, target);
         }
     }
-
     public override void Attack(Summon target, float damage)
     {
         animator.SetTrigger("Attack");
         TakeDamage(stats[((int)Enums.ESummonStats.NormalDamage)]);
     }
-}
-public class FootworkSkill : Skill
-{
-    public override void Execute(Summon user, Summon target)
-    {
-        // Implement the Footwork skill
-    }
-}
 
-public class FlecheSkill : Skill
-{
-    public override void Execute(Summon user, Summon target)
+    protected override Node CreateBehaviorTree()
     {
-        // Implement the Fleche skill
+        Node root = new Selector(new List<Node>
+        {
+            new Sequence(new List<Node>
+            {
+                new AttackNode(),
+                new SkillNode(),
+            }),
+            new MoveNode(),
+        });
+
+        return root;
+    }
+    public class FootworkSkill : Skill
+    {
+        public override void Execute(Summon user, Summon target)
+        {
+            // Implement the Footwork skill
+        }
+    }
+
+    public class FlecheSkill : Skill
+    {
+        public override void Execute(Summon user, Summon target)
+        {
+            // Implement the Fleche skill
+        }
     }
 }

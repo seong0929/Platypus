@@ -56,6 +56,9 @@ public abstract class Summon : SummonBase
     public abstract void Attack(Summon target, float damage);
     public abstract void UseSkill(int skillIndex, Summon target);   //skillIndex == 0: 스킬, skillIndex == 1: 궁
 
+    // BehaviorTree에서 사용할 메서드
+    protected abstract Node CreateBehaviorTree();
+
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);

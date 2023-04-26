@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 
 namespace BehaviorTree
@@ -10,7 +9,7 @@ namespace BehaviorTree
         FAILURE
     }
 
-    public class Node 
+    public class Node
     {
         protected NodeState state;
 
@@ -26,10 +25,10 @@ namespace BehaviorTree
         public Node(List<Node> children)
         {
             foreach (Node child in children)
-                _Attach(child);
+                AddChild(child);
         }
 
-        private void _Attach(Node node)
+        private void AddChild(Node node)
         {
             node.parent = this;
             children.Add(node);
@@ -77,6 +76,40 @@ namespace BehaviorTree
             }
             return false;
         }
-
+    }
+    //노드 선언
+    public class IdleNode : Node
+    {
+        public override NodeState Evaluate()
+        {
+            // 원하는 노드들을 생성하여 루트 노드를 반환하는 코드
+            return NodeState.SUCCESS;
+        }
+    }
+    public class AttackNode : Node {
+        public override NodeState Evaluate() {
+            return NodeState.SUCCESS;
+        }
+    }
+    public class MoveNode : Node
+    {
+        public override NodeState Evaluate()
+        {
+            return NodeState.SUCCESS;
+        }
+    }
+    public class SkillNode : Node
+    {
+        public override NodeState Evaluate()
+        {
+            return NodeState.SUCCESS;
+        }
+    }
+    public class UltNode : Node
+    {
+        public override NodeState Evaluate()
+        {
+            return NodeState.SUCCESS;
+        }
     }
 }
