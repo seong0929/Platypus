@@ -8,7 +8,7 @@ public class SenorZorro : Summon
     public SenorZorro()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 0.8f, 0.2f, 150f, 8f, 2f };
+        float[] summonStats = { 0.8f, 1f, 150f, 8f, 2f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;

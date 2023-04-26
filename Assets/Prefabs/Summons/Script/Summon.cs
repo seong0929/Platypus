@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using BehaviorTree;
 
 //공통적이되 함수 내용이 달라지는 클래스
 public abstract class Summon : SummonBase
@@ -25,7 +26,14 @@ public abstract class Summon : SummonBase
         if (opponent != null)
         {
             float distance = Vector2.Distance(transform.position, opponent.transform.position);
-
+            if (transform.position.x < opponent.transform.position.x)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+            }
             if (distance <= base.circleCollider.radius)
             {
                 Attack(opponent.GetComponent<Summon>(), stats[((int)Enums.ESummonStats.NormalDamage)]);
