@@ -35,4 +35,12 @@ public class ToggleButtons : MonoBehaviour
             }
         }
     }
+
+    public void CloseAll()
+    {
+        foreach (Transform panel in panelSet.transform) // Off panel that is not target Panel
+        {
+            panel.gameObject.SetActive(false);            
+        }
+    }
 }
