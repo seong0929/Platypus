@@ -77,39 +77,4 @@ namespace BehaviorTree
             return false;
         }
     }
-    //노드 선언
-    public class IdleNode : Node
-    {
-        public override NodeState Evaluate()
-        {
-            // 원하는 노드들을 생성하여 루트 노드를 반환하는 코드
-            return NodeState.SUCCESS;
-        }
-    }
-    public class AttackNode : Node {
-        public override NodeState Evaluate() {
-            return NodeState.SUCCESS;
-        }
-    }
-    public class MoveNode : Node
-    {
-        public override NodeState Evaluate()
-        {
-            return NodeState.SUCCESS;
-        }
-    }
-    public class SkillNode : Node
-    {
-        public override NodeState Evaluate()
-        {
-            return NodeState.SUCCESS;
-        }
-    }
-    public class UltNode : Node
-    {
-        public override NodeState Evaluate()
-        {
-            return NodeState.SUCCESS;
-        }
-    }
 }

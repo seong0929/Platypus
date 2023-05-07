@@ -45,12 +45,70 @@ public class SenorZorro : Summon
     {
         Node root = new Selector(new List<Node>
         {
-            new Sequence(new List<Node>
-            {
-                new AttackNode(),
-                new SkillNode(),
-            }),
-            new MoveNode(),
+            //행동 결정
+            new Selector(new List<Node>{
+                //캐릭터 생존 여부 확인 후, 리스폰
+                new Sequence(new List<Node>
+                {
+                    new CheckIfAlive(),
+                    new TaskDie(),
+                    new TaskWait(),
+                    new TaskRespawn()
+                }),
+                //적이 씬 안에 있다면, 행동
+                new Sequence(new List<Node>
+                {
+                    new CheckEnemyInScene(),
+                    new Selector(new List<Node>
+                    {
+                        //적이 멀리 있다면, 가까이 이동
+                        new Sequence(new List<Node>
+                        {
+                            new CheckEnemyOutOfRange(),
+                            //스킬이 있다면 스킬 사용, 아니면 이동
+                            new Selector(new List<Node>
+                            {
+                                new Sequence(new List<Node>
+                                {
+                                    new CheckSkill(),
+                                    new TaskSkill()
+                                }),
+                                new TaskMoveToEnemy()
+                            })
+                            
+                        }),
+                        //적이 공격 범위 안에 있다면, 공격
+                        new Sequence(new List<Node>
+                        {
+                            new CheckEnemyInAttackRange(),
+                            new CheckEnemyNotToClose(),
+                            new TaskAttack()
+                        }),
+                        //적이 너무 가까우면, 이동
+                        new Sequence(new List<Node>
+                        {
+                            new CheckEnemyTooClose(),
+                            //스킬이 있다면 스킬 사용, 아니면 이동
+                            new Selector(new List<Node>
+                            {
+                                new Sequence(new List<Node>
+                                {
+                                    new CheckSkill(),
+                                    new TaskSkill()
+                                }),
+                                new TaskMoveToEnemy()
+                            })
+
+                        })
+                    })
+                }),
+                //적이 씬 안에 없다면, Idle
+                new Sequence(new List<Node>
+                {
+                    new CheckEnemyInScene(),
+                    new TaskIdle()
+                })
+            })
         });
 
         return root;
