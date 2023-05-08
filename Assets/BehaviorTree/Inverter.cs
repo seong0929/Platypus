@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace BehaviorTree
 {
-    public class InverterNode : Node
+    public class Inverter : Node
     {
         protected Node child;
 
-        public InverterNode(Node child)
+        public Inverter(Node child)
         {
             this.child = child;
             this.child.parent = this;

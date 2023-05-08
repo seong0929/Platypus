@@ -50,7 +50,7 @@ public class SenorZorro : Summon
                 //캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
-                    new CheckIfAlive(),
+                    new Inverter(new CheckIfAlive(isAlive)),
                     new TaskDie(),
                     new TaskWait(),
                     new TaskRespawn()
@@ -105,7 +105,7 @@ public class SenorZorro : Summon
                 //적이 씬 안에 없다면, Idle
                 new Sequence(new List<Node>
                 {
-                    new CheckEnemyInScene(),
+                    new Inverter(new CheckEnemyInScene()),
                     new TaskIdle()
                 })
             })

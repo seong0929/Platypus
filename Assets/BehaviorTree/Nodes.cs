@@ -1,17 +1,38 @@
 using System.Collections.Generic;
+using UnityEngine;
+
 //공통 노드 선언
 namespace BehaviorTree
 {
+    //생존 확인
     public class CheckIfAlive : Node
     {
+        private bool isAlive;
+
+        public CheckIfAlive(bool isAlive)
+        {
+            this.isAlive = isAlive;
+        }
+
         public override NodeState Evaluate()
         {
-            // 원하는 노드들을 생성하여 루트 노드를 반환하는 코드
-            return NodeState.SUCCESS;
+            if (isAlive == true)
+            {
+                return NodeState.SUCCESS;
+            }
+            else
+            {
+                return NodeState.FAILURE;
+            }
         }
     }
+    //소환수 죽음 행동
     public class TaskDie : Node
     {
+        //Todo: 죽는 행위 로드
+        public TaskDie()
+        {
+        }
         public override NodeState Evaluate()
         {
             return NodeState.SUCCESS;

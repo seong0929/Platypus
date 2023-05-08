@@ -20,7 +20,17 @@ public abstract class Summon : SummonBase
         opponent = SearchOpponent();
         MoveForOpponent();
     }
-
+    //Todo: 다시 생각해보자 이 함수가 필요한가? 옳바른가?
+    public virtual bool Die()
+    {
+        if(stats[((int)Enums.ESummonStats.Health)] <= 0)
+        {
+            isAlive = false;
+            return isAlive;
+        }
+        isAlive = true;
+        return isAlive;
+    }
     public virtual void MoveForOpponent()
     {
         if (opponent != null)
