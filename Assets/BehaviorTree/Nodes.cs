@@ -69,28 +69,18 @@ namespace BehaviorTree
     }
     public class CheckEnemyInScene : Node
     {
-        private List<GameObject> enemies;
+        private bool isEnemies;
 
-        public CheckEnemyInScene(List<GameObject> enemies)
+        public CheckEnemyInScene(bool isEnemies)
         {
-            this.enemies = enemies;
+            this.isEnemies = isEnemies;
         }
         public override NodeState Evaluate()
         {
             // 현재 씬에 있는 모든 GameObject들을 가져와서 enemies 리스트에 추가합니다.
-            GameObject[] allObjects = Object.FindObjectsOfType<GameObject>();
-            foreach (GameObject obj in allObjects)
-            {
-                if (obj.CompareTag("Summon"))
-                {
-                    if (!enemies.Contains(obj))
-                    {
-                        enemies.Add(obj);
-                    }
-                }
-            }
-            if (allObjects == null) { return NodeState.FAILURE; }
-            return NodeState.SUCCESS;
+            if (isEnemies == true)
+            { return NodeState.SUCCESS; }
+            else { return NodeState.FAILURE; }
         }
     }
     public class CheckEnemyOutOfRange : Node

@@ -9,7 +9,8 @@ public abstract class Summon : SummonBase
     public bool isAlive = true;
 
     //ToDo: GameManager에서 팀 판별 초기화
-    public bool myTeam;
+    public List<GameObject> myTeam;
+    public List<GameObject> theirTeam;
     float deadTime;
 
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
@@ -20,15 +21,11 @@ public abstract class Summon : SummonBase
         opponent = SearchOpponent();
         MoveForOpponent();
     }
-    public virtual GameObject[] IsEnemy(bool myteam) {
-        GameObject Team[];
-        if (myteam != true){
-            //팀구별
-            return Team;
-        }
-        return null;
+    public virtual bool IsEnemy() {
+        if (theirTeam.Count != 0){ return true;}
+        else { return false; }
     }
-    public virtual bool IsDie()
+    public virtual bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
         {
