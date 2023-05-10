@@ -20,14 +20,11 @@ public class SenorZorro : Summon
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
     }
-
     public override void MoveForOpponent()
     {
         base.MoveForOpponent();
         animator.SetBool("Move", base.isMoving);
     }
-
-
     public override void UseSkill(int skillIndex, Summon target)
     {
         if (skillIndex >= 0 && skillIndex < skills.Count)
@@ -38,9 +35,25 @@ public class SenorZorro : Summon
     public override void Attack(Summon target, float damage)
     {
         animator.SetTrigger("Attack");
-        TakeDamage(stats[((int)Enums.ESummonStats.NormalDamage)]);
+        GiveDamage(target,stats[((int)Enums.ESummonStats.NormalDamage)]);
     }
-
+    public override void Die()
+    {
+        //죽음 행동
+        animator.SetBool("Die", true);
+        //ToDo: 팀 리스트 필요
+        /*죽은 캐릭터에 대한 정보를 모든 캐릭터들에게 전달
+        foreach (var character in characters)
+        {
+            character.OnCharacterDeath(deadCharacter);
+        }
+         */
+        /* 다른 캐릭터들에서 이 캐릭터를 타겟팅에서 제외
+        foreach (var otherCharacter in otherCharacters)
+        {
+            otherCharacter.RemoveTarget(this);
+        }*/
+    }
     protected override Node CreateBehaviorTree()
     {
         Node root = new Selector(new List<Node>
@@ -50,15 +63,15 @@ public class SenorZorro : Summon
                 //캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
-                    new Inverter(new CheckIfAlive(isAlive)),
+                    new Inverter(new CheckIfAlive(IsDie())),
                     new TaskDie(),
-                    new TaskWait(),
+                    new TaskWait(Constants.respawntime),
                     new TaskRespawn()
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
                 {
-                    new CheckEnemyInScene(),
+                    new CheckEnemyInScene(IsEnemy(myTeam)),
                     new Selector(new List<Node>
                     {
                         //적이 멀리 있다면, 가까이 이동

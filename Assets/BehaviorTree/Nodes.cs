@@ -40,11 +40,26 @@ namespace BehaviorTree
     }
     public class TaskWait : Node
     {
+        float delay;
+        float timer;
+        public TaskWait(float delay)
+        {
+            this.delay = delay;
+        }
         public override NodeState Evaluate()
         {
+            while (true)
+            {
+                timer += Time.deltaTime;
+                if (timer > delay)
+                {
+                    break;
+                }
+            }
             return NodeState.SUCCESS;
         }
     }
+
     public class TaskRespawn : Node
     {
         public override NodeState Evaluate()
@@ -54,8 +69,27 @@ namespace BehaviorTree
     }
     public class CheckEnemyInScene : Node
     {
+        private List<GameObject> enemies;
+
+        public CheckEnemyInScene(List<GameObject> enemies)
+        {
+            this.enemies = enemies;
+        }
         public override NodeState Evaluate()
         {
+            // 현재 씬에 있는 모든 GameObject들을 가져와서 enemies 리스트에 추가합니다.
+            GameObject[] allObjects = Object.FindObjectsOfType<GameObject>();
+            foreach (GameObject obj in allObjects)
+            {
+                if (obj.CompareTag("Summon"))
+                {
+                    if (!enemies.Contains(obj))
+                    {
+                        enemies.Add(obj);
+                    }
+                }
+            }
+            if (allObjects == null) { return NodeState.FAILURE; }
             return NodeState.SUCCESS;
         }
     }

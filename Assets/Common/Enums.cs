@@ -12,4 +12,9 @@ public class Enums
         NormalDamage,   //일반 공격 데미지
         Defence         //방어력
     }
+    public enum ESummonAction
+    {
+        Skill,
+        Ult
+    }
 }

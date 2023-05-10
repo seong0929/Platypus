@@ -9,7 +9,7 @@ public abstract class Summon : SummonBase
     public bool isAlive = true;
 
     //ToDo: GameManager에서 팀 판별 초기화
-    private bool myteam;
+    public bool myTeam;
     float deadTime;
 
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
@@ -20,8 +20,15 @@ public abstract class Summon : SummonBase
         opponent = SearchOpponent();
         MoveForOpponent();
     }
-    //Todo: 다시 생각해보자 이 함수가 필요한가? 옳바른가?
-    public virtual bool Die()
+    public virtual GameObject[] IsEnemy(bool myteam) {
+        GameObject Team[];
+        if (myteam != true){
+            //팀구별
+            return Team;
+        }
+        return null;
+    }
+    public virtual bool IsDie()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
         {
@@ -62,7 +69,7 @@ public abstract class Summon : SummonBase
             //ToDo: 생성 위치
         }
     }
-    
+    public abstract void Die();
     public abstract void Attack(Summon target, float damage);
     public abstract void UseSkill(int skillIndex, Summon target);   //skillIndex == 0: 스킬, skillIndex == 1: 궁
 
