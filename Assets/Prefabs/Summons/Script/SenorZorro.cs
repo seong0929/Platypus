@@ -8,7 +8,7 @@ public class SenorZorro : Summon
     public SenorZorro()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 0.8f, 1f, 150f, 8f, 2f, 0.3f, 5f, 100f };
+        float[] summonStats = { 0.8f, 1f, 150f, 8f, 2f, 0.3f, 5f, 15f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -37,7 +37,7 @@ public class SenorZorro : Summon
                 // 리스폰
                 new Sequence(new List<Node>
                 {
-                    new CheckRespawn(),
+                    new CheckRespawn(this.gameObject),
                     new TaskRespawn(this.transform)
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
@@ -161,6 +161,14 @@ public class SenorZorro : Summon
 
             Vector3 appearPosition = target.transform.position + direction * appearDistance;
             summon.transform.position = appearPosition;
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = false;
+            }
         }
     }
 }

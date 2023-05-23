@@ -6,15 +6,18 @@ namespace BehaviorTree
     // 리스폰 확인
     public class CheckRespawn : Node
     {
+        private GameObject _gameObject;
+        public CheckRespawn(GameObject gameObject) { _gameObject = gameObject; }
         public override NodeState Evaluate()
         {
-            object s = GetData("Self");
+            object s = GetData("State");
             if (s == null)
             {
-                parent.parent.SetData("Self", SummonState.RUNNING);
+                parent.parent.SetData("State", SummonState.RUNNING);
+                parent.parent.SetData("Self", _gameObject);
                 return NodeState.FAILURE;
             }
-            if (GetData("Self").Equals(SummonState.RESPAWN))
+            if (GetData("State").Equals(SummonState.RESPAWN))
             {
                 return NodeState.SUCCESS;
             }
@@ -34,7 +37,7 @@ namespace BehaviorTree
         {
             //ToDo: 리스폰 위치에 순간이동, 게임 메니저에서 리스폰 지점 찾기
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
-            SetData("Self", SummonState.RUNNING);
+            SetData("State", SummonState.RUNNING);
             return NodeState.RUNNING;
         }
     }
@@ -52,12 +55,12 @@ namespace BehaviorTree
         {
             if (isAlive == true)
             {
-                parent.parent.SetData("Self", SummonState.RUNNING);
+                parent.parent.SetData("State", SummonState.RUNNING);
                 return NodeState.SUCCESS;
             }
             else
             {
-                parent.parent.SetData("Self", SummonState.DEAD);
+                parent.parent.SetData("State", SummonState.DEAD);
                 return NodeState.FAILURE;
             }
         }
@@ -87,7 +90,7 @@ namespace BehaviorTree
             {
                 otherCharacter.RemoveTarget(this);
             }*/
-            parent.parent.SetData("Self", SummonState.RESPAWN);
+            parent.parent.SetData("State", SummonState.RESPAWN);
             while (true)
             {
                 timer += Time.deltaTime;
@@ -102,28 +105,26 @@ namespace BehaviorTree
     // 상대방 있는 지 확인
     public class CheckEnemyInScene : Node
     {
-        //ToDo: 상대방 리스트로 관리가 필요하지 않을까?
         public override NodeState Evaluate()
         {
-            object t = GetData("target");
-            if (t == null)
-            {
-                GameObject target = GameObject.FindGameObjectWithTag("Summon");
+            //ToDo: 상대방 리스트로 관리가 필요하지 않을까?
+            GameObject[] summons = GameObject.FindGameObjectsWithTag("Summon");
+            GameObject self = (GameObject)GetData("Self");
 
-                if (target != null)
+            foreach (GameObject summon in summons)
+            {
+                if (summon != self)
                 {
-                    parent.parent.SetData("target", target.transform);
+                    parent.parent.SetData("target", summon.transform);
                     return NodeState.SUCCESS;
                 }
-                else
-                {
-                    ClearData("target");
-                    return NodeState.FAILURE;
-                }
             }
-            return NodeState.SUCCESS;
+
+            ClearData("target");
+            return NodeState.FAILURE;
         }
     }
+
     // 사거리 밖에 있는 지 확인
     public class CheckEnemyOutOfAttackRange : Node
     {
