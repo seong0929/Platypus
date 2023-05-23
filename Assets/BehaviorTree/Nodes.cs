@@ -1,11 +1,12 @@
 using UnityEngine;
 
-//°øÅë ³ëµå ¼±¾ğ
+//ê³µí†µ ë…¸ë“œ ì„ ì–¸
 namespace BehaviorTree
 {
-    // ¸®½ºÆù È®ÀÎ
+    // ë¦¬ìŠ¤í° í™•ì¸
     public class CheckRespawn : Node
     {
+    // ToDo: SetData ì´ˆê¸°í™”ë¥¼ GamaManagerì— ë„£ê¸°
         private GameObject _gameObject;
         public CheckRespawn(GameObject gameObject) { _gameObject = gameObject; }
         public override NodeState Evaluate()
@@ -24,7 +25,7 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
-    // ¸®½ºÆù ÇÏ±â
+    // ë¦¬ìŠ¤í° í•˜ê¸°
     public class TaskRespawn : Node
     {
         private Animator _animator;
@@ -35,13 +36,13 @@ namespace BehaviorTree
         }
         public override NodeState Evaluate()
         {
-            //ToDo: ¸®½ºÆù À§Ä¡¿¡ ¼ø°£ÀÌµ¿, °ÔÀÓ ¸Ş´ÏÀú¿¡¼­ ¸®½ºÆù ÁöÁ¡ Ã£±â
-            //_animator.SetTrigger("Respawn"); ToDo: ¸®½ºÆù ¾Ö´Ï¸ŞÀÌ¼Ç °í·Á
+            //ToDo: ë¦¬ìŠ¤í° ìœ„ì¹˜ì— ìˆœê°„ì´ë™, ê²Œì„ ë©”ë‹ˆì €ì—ì„œ ë¦¬ìŠ¤í° ì§€ì  ì°¾ê¸°
+            //_animator.SetTrigger("Respawn"); ToDo: ë¦¬ìŠ¤í° ì• ë‹ˆë©”ì´ì…˜ ê³ ë ¤
             SetData("State", SummonState.RUNNING);
             return NodeState.RUNNING;
         }
     }
-    //»ıÁ¸ È®ÀÎ
+    //ìƒì¡´ í™•ì¸
     public class CheckIfAlive : Node
     {
         private bool isAlive;
@@ -65,7 +66,7 @@ namespace BehaviorTree
             }
         }
     }
-    // Á×±â
+    // ì£½ê¸°
     public class TaskDie : Node
     {
         private Animator _animator;
@@ -78,14 +79,14 @@ namespace BehaviorTree
         public override NodeState Evaluate()
         {
             _animator.SetTrigger("Dead");
-            //ToDo: ÆÀ ¸®½ºÆ® ÇÊ¿ä
-            /* Á×Àº Ä³¸¯ÅÍ¿¡ ´ëÇÑ Á¤º¸¸¦ ¸ğµç Ä³¸¯ÅÍµé¿¡°Ô Àü´Ş
+            //ToDo: íŒ€ ë¦¬ìŠ¤íŠ¸ í•„ìš”
+            /* ì£½ì€ ìºë¦­í„°ì— ëŒ€í•œ ì •ë³´ë¥¼ ëª¨ë“  ìºë¦­í„°ë“¤ì—ê²Œ ì „ë‹¬
             foreach (var character in characters)
             {
                 character.OnCharacterDeath(deadCharacter);
             }
              */
-            /* ´Ù¸¥ Ä³¸¯ÅÍµé¿¡¼­ ÀÌ Ä³¸¯ÅÍ¸¦ Å¸°ÙÆÃ¿¡¼­ Á¦¿Ü
+            /* ë‹¤ë¥¸ ìºë¦­í„°ë“¤ì—ì„œ ì´ ìºë¦­í„°ë¥¼ íƒ€ê²ŸíŒ…ì—ì„œ ì œì™¸
             foreach (var otherCharacter in otherCharacters)
             {
                 otherCharacter.RemoveTarget(this);
@@ -102,12 +103,12 @@ namespace BehaviorTree
             return NodeState.RUNNING;
         }
     }
-    // »ó´ë¹æ ÀÖ´Â Áö È®ÀÎ
+    // ìƒëŒ€ë°© ìˆëŠ” ì§€ í™•ì¸
     public class CheckEnemyInScene : Node
     {
         public override NodeState Evaluate()
         {
-            //ToDo: »ó´ë¹æ ¸®½ºÆ®·Î °ü¸®°¡ ÇÊ¿äÇÏÁö ¾ÊÀ»±î?
+            //ToDo: ìƒëŒ€ë°© ë¦¬ìŠ¤íŠ¸ë¡œ ê´€ë¦¬ê°€ í•„ìš”í•˜ì§€ ì•Šì„ê¹Œ?
             GameObject[] summons = GameObject.FindGameObjectsWithTag("Summon");
             GameObject self = (GameObject)GetData("Self");
 
@@ -125,7 +126,7 @@ namespace BehaviorTree
         }
     }
 
-    // »ç°Å¸® ¹Û¿¡ ÀÖ´Â Áö È®ÀÎ
+    // ì‚¬ê±°ë¦¬ ë°–ì— ìˆëŠ” ì§€ í™•ì¸
     public class CheckEnemyOutOfAttackRange : Node
     {
         private Transform _transform;
@@ -153,7 +154,7 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
-    //ÀûÀ» ÇâÇØ ¿òÁ÷ÀÌ±â
+    //ì ì„ í–¥í•´ ì›€ì§ì´ê¸°
     public class TaskMoveToEnemy : Node
     {
         private Animator _animator;
@@ -171,8 +172,8 @@ namespace BehaviorTree
         public override NodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            // ToDo: ¿©·¯ »ó´ë¹æ Áß ¾î¶² »ó´ë¹æ?
-            // »ó´ë¹æ ¹Ù¶óº¸±â
+            // ToDo: ì—¬ëŸ¬ ìƒëŒ€ë°© ì¤‘ ì–´ë–¤ ìƒëŒ€ë°©?
+            // ìƒëŒ€ë°© ë°”ë¼ë³´ê¸°
             if (target != null)
             {
                 if (_transform.position.x < target.transform.position.x)
@@ -191,7 +192,7 @@ namespace BehaviorTree
             return NodeState.RUNNING;
         }
     }
-    // »ç°Å¸® ÀÌ³»¿¡ ÀÖ´Â Áö È®ÀÎ
+    // ì‚¬ê±°ë¦¬ ì´ë‚´ì— ìˆëŠ” ì§€ í™•ì¸
     public class CheckEnemyInAttackRange : Node
     {
         private Transform _transform;
@@ -219,10 +220,10 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
-    // ÀÏ¹İ °ø°İÇÏ±â
+    // ì¼ë°˜ ê³µê²©í•˜ê¸°
     public class TaskAttack : Node
     {
-        // Ã¼·Â °¨¼Ò¿¡ °üÇÑ
+        // ì²´ë ¥ ê°ì†Œì— ê´€í•œ
         private Animator _animator;
 
         //private Transform _lastTarget;
@@ -237,7 +238,7 @@ namespace BehaviorTree
 
         public override NodeState Evaluate()
         {
-            /* µ¥¹ÌÁö °ü·Ã
+            /* ë°ë¯¸ì§€ ê´€ë ¨
             Transform target = (Transform)GetData("target");
             if (target != _lastTarget)
             {
@@ -256,7 +257,7 @@ namespace BehaviorTree
             return NodeState.RUNNING;
         }
     }
-    // Idle »óÅÂ
+    // Idle ìƒíƒœ
     public class TaskIdle : Node
     {
         private Animator _animator;
@@ -274,7 +275,7 @@ namespace BehaviorTree
             return NodeState.RUNNING;
         }
     }
-    // ½ºÅ³ »ç¿ë °¡´É ¿©ºÎ È®ÀÎ
+    // ìŠ¤í‚¬ ì‚¬ìš© ê°€ëŠ¥ ì—¬ë¶€ í™•ì¸
     public class CheckSkill : Node
     {
         private Skill _skill;
@@ -297,7 +298,7 @@ namespace BehaviorTree
             }
         }
     }
-    // ½ºÅ³ »ç¿ëÇÏ±â
+    // ìŠ¤í‚¬ ì‚¬ìš©í•˜ê¸°
     public class TaskSkill : Node
     {
         private Skill _skill;
@@ -316,10 +317,10 @@ namespace BehaviorTree
             return NodeState.RUNNING;
         }
     }
-    // ±Ã±Ø±â »ç¿ë °¡´É ¿©ºÎ È®ÀÎ
+    // ê¶ê·¹ê¸° ì‚¬ìš© ê°€ëŠ¥ ì—¬ë¶€ í™•ì¸
     public class CheckUltGage : Node
     {
-        //ToDo: °ÔÀÌÁö Çü½ÄÀ¸·Î º¯È¯
+        //ToDo: ê²Œì´ì§€ í˜•ì‹ìœ¼ë¡œ ë³€í™˜
         private Skill _skill;
         private float _coolTime;
         public CheckUltGage(Skill skill, float coolTime)
@@ -339,7 +340,7 @@ namespace BehaviorTree
             }
         }
     }
-    // ±Ã±Ø±â »ç¿ëÇÏ±â
+    // ê¶ê·¹ê¸° ì‚¬ìš©í•˜ê¸°
     public class TaskUlt : Node
     {
         private Skill _skill;
@@ -358,8 +359,8 @@ namespace BehaviorTree
             return NodeState.RUNNING;
         }
     }
-    //Æ¯¼ö ³ëÆ®
-    // ¿ø°Å¸® Ä³¸¯ÅÍ Àü¿ë +(¹Ğ´ç Ä³¸¯ÅÍ)
+    //íŠ¹ìˆ˜ ë…¸íŠ¸
+    // ì›ê±°ë¦¬ ìºë¦­í„° ì „ìš© +(ë°€ë‹¹ ìºë¦­í„°)
     public class CheckEnemyTooClose : Node
     {
         private Transform _transform;
