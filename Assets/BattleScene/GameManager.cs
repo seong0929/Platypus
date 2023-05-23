@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
     [Header("# Game Control")]
     public float GameTime;
     public float MaxGameTime = Constants.playtime;   //전투시간
-
     private void Awake()
     {
         instance = this;
@@ -30,5 +29,9 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1;
+    }
+    public void AssignTeam()
+    {
+        
     }
 }

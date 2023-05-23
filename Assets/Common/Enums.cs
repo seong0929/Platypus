@@ -6,12 +6,22 @@ public static class Enums
     }
     public enum ESummonStats
     {
-        AttackRange,    //»ç°Å¸®
-        MovementSpeed,    //ÀÌµ¿¼Óµµ
-        Health,         //Ã¼·Â
-        NormalDamage,   //ÀÏ¹İ °ø°İ µ¥¹ÌÁö
-        Defence         //¹æ¾î·Â
+        AttackRange,    //ì‚¬ê±°ë¦¬
+        MovementSpeed,    //ì´ë™ì†ë„
+        Health,         //ì²´ë ¥
+        NormalDamage,   //ì¼ë°˜ ê³µê²© ë°ë¯¸ì§€
+        Defence,         //ë°©ì–´ë ¥
+        PersonalDistance,    //ë„ˆë¬´ ê°€ê¹Œìš´ ê±°ë¦¬ íŒë³„
+        CoolTime,    //ìŠ¤í‚¬ ì¿¨ íƒ€ì„
+        UltGauge   //ê¶ê·¹ê¸° ê²Œì´ì§€
     }
+
+    public enum ESummonAction
+    {
+        Skill,
+        Ult
+    }
+
     public enum ELeague
     {
         Amature
