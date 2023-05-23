@@ -6,13 +6,6 @@ public class SummonBase : MonoBehaviour
     public string summonName;
     public GameObject opponent;
 
-    protected CircleCollider2D circleCollider; //»ç°Å¸®
-
-    private void Start()
-    {
-        circleCollider = GetComponentInChildren<CircleCollider2D>();
-    }
-
     protected GameObject SearchOpponent()
     {
         GameObject[] opponents = GameObject.FindGameObjectsWithTag("Summon");

@@ -14,13 +14,8 @@ public abstract class Summon : SummonBase
     float deadTime;
 
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
-    protected List<Skill> skills = new List<Skill>();
+    protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 스킬, skillIndex == 1: 궁
 
-    private void Update()
-    {
-        opponent = SearchOpponent();
-        MoveForOpponent();
-    }
     public virtual bool IsEnemy() {
         if (theirTeam.Count != 0){ return true;}
         else { return false; }
@@ -35,40 +30,7 @@ public abstract class Summon : SummonBase
         isAlive = true;
         return isAlive;
     }
-    public virtual void MoveForOpponent()
-    {
-        if (opponent != null)
-        {
-            float distance = Vector2.Distance(transform.position, opponent.transform.position);
-            if (transform.position.x < opponent.transform.position.x)
-            {
-                GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                GetComponent<SpriteRenderer>().flipX = false;
-            }
-            if (distance <= base.circleCollider.radius)
-            {
-                Attack(opponent.GetComponent<Summon>(), stats[((int)Enums.ESummonStats.NormalDamage)]);
-                isMoving = false;
-                return; // 사거리 이내에 있으면 이동을 멈춤
-            }
-            isMoving = true;
-            Vector3 direction = (opponent.transform.position - transform.position).normalized;
-            transform.position += direction * stats[((int)Enums.ESummonStats.MovementSpeed)] * Time.deltaTime;
-        }
-    }
-    public virtual void Respawne()
-    {
-        if (Constants.respawntime == GameManager.instance.GameTime - deadTime)
-        {
-            //ToDo: 생성 위치
-        }
-    }
-    public abstract void Die();
     public abstract void Attack(Summon target, float damage);
-    public abstract void UseSkill(int skillIndex, Summon target);   //skillIndex == 0: 스킬, skillIndex == 1: 궁
 
     // BehaviorTree에서 사용할 메서드
     protected abstract Node CreateBehaviorTree();
@@ -80,7 +42,6 @@ public abstract class Summon : SummonBase
         if (stats[((int)Enums.ESummonStats.Health)] <= 0) {
             deadTime = GameManager.instance.GameTime;
             isAlive = false;
-            Destroy(this);
         }
     }
 
@@ -91,10 +52,10 @@ public abstract class Summon : SummonBase
 }
 public class Skill
 {
+    //ToDo: name의 필요 이유?
     public string name;
-    public int cooldown;
-
-    public virtual void Execute(Summon user, Summon target)
+    public float skiilCounter = 0;
+    public virtual void Execute(GameObject target)
     {
         // Implement the basic behavior of the skill here
     }
