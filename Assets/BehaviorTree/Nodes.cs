@@ -1,9 +1,48 @@
 using UnityEngine;
 
-//°øÅë ³ëµå ¼±¾ğ
+//ê³µí†µ ë…¸ë“œ ì„ ì–¸
 namespace BehaviorTree
 {
-    //»ıÁ¸ È®ÀÎ
+    // ë¦¬ìŠ¤í° í™•ì¸
+    public class CheckRespawn : Node
+    {
+    // ToDo: SetData ì´ˆê¸°í™”ë¥¼ GamaManagerì— ë„£ê¸°
+        private GameObject _gameObject;
+        public CheckRespawn(GameObject gameObject) { _gameObject = gameObject; }
+        public override NodeState Evaluate()
+        {
+            object s = GetData("State");
+            if (s == null)
+            {
+                parent.parent.SetData("State", SummonState.RUNNING);
+                parent.parent.SetData("Self", _gameObject);
+                return NodeState.FAILURE;
+            }
+            if (GetData("State").Equals(SummonState.RESPAWN))
+            {
+                return NodeState.SUCCESS;
+            }
+            return NodeState.FAILURE;
+        }
+    }
+    // ë¦¬ìŠ¤í° í•˜ê¸°
+    public class TaskRespawn : Node
+    {
+        private Animator _animator;
+
+        public TaskRespawn(Transform transform)
+        {
+            _animator = transform.GetComponent<Animator>();
+        }
+        public override NodeState Evaluate()
+        {
+            //ToDo: ë¦¬ìŠ¤í° ìœ„ì¹˜ì— ìˆœê°„ì´ë™, ê²Œì„ ë©”ë‹ˆì €ì—ì„œ ë¦¬ìŠ¤í° ì§€ì  ì°¾ê¸°
+            //_animator.SetTrigger("Respawn"); ToDo: ë¦¬ìŠ¤í° ì• ë‹ˆë©”ì´ì…˜ ê³ ë ¤
+            SetData("State", SummonState.RUNNING);
+            return NodeState.RUNNING;
+        }
+    }
+    //ìƒì¡´ í™•ì¸
     public class CheckIfAlive : Node
     {
         private bool isAlive;
@@ -17,48 +56,42 @@ namespace BehaviorTree
         {
             if (isAlive == true)
             {
+                parent.parent.SetData("State", SummonState.RUNNING);
                 return NodeState.SUCCESS;
             }
             else
             {
+                parent.parent.SetData("State", SummonState.DEAD);
                 return NodeState.FAILURE;
             }
         }
     }
-    //¼ÒÈ¯¼ö Á×À½ Çàµ¿
+    // ì£½ê¸°
     public class TaskDie : Node
     {
         private Animator _animator;
-
+        float waitTime = Constants.respawntime;
+        float timer;
         public TaskDie(Transform transform)
         {
             _animator = transform.GetComponent<Animator>();
         }
         public override NodeState Evaluate()
         {
-            _animator.SetBool("Dead", true);
-            //ToDo: ÆÀ ¸®½ºÆ® ÇÊ¿ä
-            /* Á×Àº Ä³¸¯ÅÍ¿¡ ´ëÇÑ Á¤º¸¸¦ ¸ğµç Ä³¸¯ÅÍµé¿¡°Ô Àü´Ş
+            _animator.SetTrigger("Dead");
+            //ToDo: íŒ€ ë¦¬ìŠ¤íŠ¸ í•„ìš”
+            /* ì£½ì€ ìºë¦­í„°ì— ëŒ€í•œ ì •ë³´ë¥¼ ëª¨ë“  ìºë¦­í„°ë“¤ì—ê²Œ ì „ë‹¬
             foreach (var character in characters)
             {
                 character.OnCharacterDeath(deadCharacter);
             }
              */
-            /* ´Ù¸¥ Ä³¸¯ÅÍµé¿¡¼­ ÀÌ Ä³¸¯ÅÍ¸¦ Å¸°ÙÆÃ¿¡¼­ Á¦¿Ü
+            /* ë‹¤ë¥¸ ìºë¦­í„°ë“¤ì—ì„œ ì´ ìºë¦­í„°ë¥¼ íƒ€ê²ŸíŒ…ì—ì„œ ì œì™¸
             foreach (var otherCharacter in otherCharacters)
             {
                 otherCharacter.RemoveTarget(this);
             }*/
-            return NodeState.RUNNING;
-        }
-    }
-    //¸®½ºÆù ½Ã°£
-    public class TaskWait : Node
-    {
-        float waitTime = Constants.respawntime;
-        float timer;
-        public override NodeState Evaluate()
-        {
+            parent.parent.SetData("State", SummonState.RESPAWN);
             while (true)
             {
                 timer += Time.deltaTime;
@@ -67,46 +100,33 @@ namespace BehaviorTree
                     break;
                 }
             }
-            return NodeState.SUCCESS;
-        }
-    }
-    
-    public class TaskRespawn : Node
-    {
-        private Animator _animator;
-
-        public TaskRespawn(Transform transform)
-        {
-            _animator = transform.GetComponent<Animator>();
-        }
-        public override NodeState Evaluate()
-        {
-            //ToDo: ¸®½ºÆù À§Ä¡¿¡ ¼ø°£ÀÌµ¿
-            _animator.SetBool("Respawn", true);
             return NodeState.RUNNING;
         }
     }
-
+    // ìƒëŒ€ë°© ìˆëŠ” ì§€ í™•ì¸
     public class CheckEnemyInScene : Node
     {
-        //ToDo: »ó´ë¹æ ¸®½ºÆ®·Î °ü¸®°¡ ÇÊ¿äÇÏÁö ¾ÊÀ»±î?
         public override NodeState Evaluate()
         {
-            object t = GetData("target");
-            if (t == null)
-            {
-                GameObject target = GameObject.FindGameObjectWithTag("Summon");
+            //ToDo: ìƒëŒ€ë°© ë¦¬ìŠ¤íŠ¸ë¡œ ê´€ë¦¬ê°€ í•„ìš”í•˜ì§€ ì•Šì„ê¹Œ?
+            GameObject[] summons = GameObject.FindGameObjectsWithTag("Summon");
+            GameObject self = (GameObject)GetData("Self");
 
-                if (target != null)
+            foreach (GameObject summon in summons)
+            {
+                if (summon != self)
                 {
-                    parent.parent.SetData("target", target.transform);
+                    parent.parent.SetData("target", summon.transform);
                     return NodeState.SUCCESS;
                 }
-                return NodeState.FAILURE;
             }
-            return NodeState.SUCCESS;
+
+            ClearData("target");
+            return NodeState.FAILURE;
         }
     }
+
+    // ì‚¬ê±°ë¦¬ ë°–ì— ìˆëŠ” ì§€ í™•ì¸
     public class CheckEnemyOutOfAttackRange : Node
     {
         private Transform _transform;
@@ -134,6 +154,7 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
+    //ì ì„ í–¥í•´ ì›€ì§ì´ê¸°
     public class TaskMoveToEnemy : Node
     {
         private Animator _animator;
@@ -151,8 +172,8 @@ namespace BehaviorTree
         public override NodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            // ToDo: ¿©·¯ »ó´ë¹æ Áß ¾î¶² »ó´ë¹æ?
-            // »ó´ë¹æ ¹Ù¶óº¸±â
+            // ToDo: ì—¬ëŸ¬ ìƒëŒ€ë°© ì¤‘ ì–´ë–¤ ìƒëŒ€ë°©?
+            // ìƒëŒ€ë°© ë°”ë¼ë³´ê¸°
             if (target != null)
             {
                 if (_transform.position.x < target.transform.position.x)
@@ -164,13 +185,14 @@ namespace BehaviorTree
                     _spriteRenderer.flipX = false;
                 }
             }
-            _animator.SetBool("IDLE", false);
+            _animator.SetBool("Idle", false);
             _animator.SetBool("Move", true);
             Vector3 direction = (target.transform.position - _transform.position).normalized;
             _transform.position += direction * _moveSpeed * Time.deltaTime;
             return NodeState.RUNNING;
         }
     }
+    // ì‚¬ê±°ë¦¬ ì´ë‚´ì— ìˆëŠ” ì§€ í™•ì¸
     public class CheckEnemyInAttackRange : Node
     {
         private Transform _transform;
@@ -198,15 +220,16 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
+    // ì¼ë°˜ ê³µê²©í•˜ê¸°
     public class TaskAttack : Node
     {
-        // Ã¼·Â °¨¼Ò¿¡ °üÇÑ
+        // ì²´ë ¥ ê°ì†Œì— ê´€í•œ
         private Animator _animator;
 
-        private Transform _lastTarget;
+        //private Transform _lastTarget;
 
-        private float _attackTime = 1f;
-        private float _attackCounter = 0f;
+        //private float _attackTime = 1f;
+        //private float _attackCounter = 0f;
 
         public TaskAttack(Transform transform)
         {
@@ -215,7 +238,7 @@ namespace BehaviorTree
 
         public override NodeState Evaluate()
         {
-            /* µ¥¹ÌÁö °ü·Ã
+            /* ë°ë¯¸ì§€ ê´€ë ¨
             Transform target = (Transform)GetData("target");
             if (target != _lastTarget)
             {
@@ -228,12 +251,13 @@ namespace BehaviorTree
                     _attackCounter = 0f;
             }
              */
-            _animator.SetBool("IDLE", false);
+            _animator.SetBool("Idle", false);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", true);
             return NodeState.RUNNING;
         }
     }
+    // Idle ìƒíƒœ
     public class TaskIdle : Node
     {
         private Animator _animator;
@@ -245,12 +269,13 @@ namespace BehaviorTree
 
         public override NodeState Evaluate()
         {
-            _animator.SetBool("IDLE", true);
+            _animator.SetBool("Idle", true);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", false);
             return NodeState.RUNNING;
         }
     }
+    // ìŠ¤í‚¬ ì‚¬ìš© ê°€ëŠ¥ ì—¬ë¶€ í™•ì¸
     public class CheckSkill : Node
     {
         private Skill _skill;
@@ -273,23 +298,29 @@ namespace BehaviorTree
             }
         }
     }
+    // ìŠ¤í‚¬ ì‚¬ìš©í•˜ê¸°
     public class TaskSkill : Node
     {
         private Skill _skill;
-        public TaskSkill(Skill skill)
+        private Transform _transform;
+        private Animator _animator;
+        public TaskSkill(Transform transform, Skill skill)
         {
             _skill = skill;
+            _transform = transform;
+            _animator = transform.GetComponent<Animator>();
         }
         public override NodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            _skill.Execute(target.gameObject);
+            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return NodeState.RUNNING;
         }
     }
+    // ê¶ê·¹ê¸° ì‚¬ìš© ê°€ëŠ¥ ì—¬ë¶€ í™•ì¸
     public class CheckUltGage : Node
     {
-        //ToDo: °ÔÀÌÁö Çü½ÄÀ¸·Î º¯È¯
+        //ToDo: ê²Œì´ì§€ í˜•ì‹ìœ¼ë¡œ ë³€í™˜
         private Skill _skill;
         private float _coolTime;
         public CheckUltGage(Skill skill, float coolTime)
@@ -309,22 +340,27 @@ namespace BehaviorTree
             }
         }
     }
+    // ê¶ê·¹ê¸° ì‚¬ìš©í•˜ê¸°
     public class TaskUlt : Node
     {
         private Skill _skill;
-        public TaskUlt(Skill skill)
+        private Transform _transform;
+        private Animator _animator;
+        public TaskUlt(Transform transform, Skill skill)
         {
             _skill = skill;
+            _transform = transform;
+            _animator = transform.GetComponent<Animator>();
         }
         public override NodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            _skill.Execute(target.gameObject);
+            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return NodeState.RUNNING;
         }
     }
-    //Æ¯¼ö ³ëÆ®
-    // ¿ø°Å¸® Ä³¸¯ÅÍ Àü¿ë +(¹Ğ´ç Ä³¸¯ÅÍ)
+    //íŠ¹ìˆ˜ ë…¸íŠ¸
+    // ì›ê±°ë¦¬ ìºë¦­í„° ì „ìš© +(ë°€ë‹¹ ìºë¦­í„°)
     public class CheckEnemyTooClose : Node
     {
         private Transform _transform;

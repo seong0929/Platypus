@@ -9,6 +9,12 @@ namespace BehaviorTree
         FAILURE
     }
 
+    public enum SummonState
+    {
+        RUNNING,
+        DEAD,
+        RESPAWN
+    }
     public class Node
     {
         protected NodeState state;
