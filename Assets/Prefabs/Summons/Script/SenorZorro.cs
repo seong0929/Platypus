@@ -56,7 +56,7 @@ public class SenorZorro : Summon
                                     new CheckSkill(skills[0], stats[((int)Enums.ESummonStats.CoolTime)]),
                                     new TaskSkill(skills[0])
                                 }),
-                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MovementSpeed)])
+                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
                             })
                             
                         }),
@@ -86,7 +86,7 @@ public class SenorZorro : Summon
                                     new CheckSkill(skills[0], stats[((int)Enums.ESummonStats.CoolTime)]),
                                     new TaskSkill(skills[0])
                                 }),
-                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MovementSpeed)])
+                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
                             })
 
                         })
