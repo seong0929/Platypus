@@ -6,22 +6,19 @@ namespace BehaviorTree
     // 리스폰 확인
     public class CheckRespawn : Node
     {
-        // GameManager에서 초기 SummonState을 지정
         public override NodeState Evaluate()
         {
+            object s = GetData("Self");
+            if (s == null)
+            {
+                parent.parent.SetData("Self", SummonState.RUNNING);
+                return NodeState.FAILURE;
+            }
             if (GetData("Self").Equals(SummonState.RESPAWN))
             {
                 return NodeState.SUCCESS;
             }
-            else if (!GetData("Self").Equals(SummonState.DEAD))
-            {
-                SetData("Self", SummonState.RUNNING);
-                return NodeState.FAILURE;
-            }
-            else
-            {
-                return NodeState.FAILURE;
-            }
+            return NodeState.FAILURE;
         }
     }
     // 리스폰 하기

@@ -20,6 +20,10 @@ public class SenorZorro : Summon
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
     }
+    private void Update()
+    {
+        CreateBehaviorTree().Evaluate();
+    }
     public override void Attack(Summon target, float damage)
     {
         GiveDamage(target,stats[((int)Enums.ESummonStats.NormalDamage)]);
