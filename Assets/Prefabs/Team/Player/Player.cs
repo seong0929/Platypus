@@ -14,18 +14,4 @@ public class Player : MonoBehaviour
     public int Defense;
 
     public Dictionary<Enums.ESummon, int> Proficiency { get; set; } // The player's proficiency for each summon
-
-    /*
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-     */
 }

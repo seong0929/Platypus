@@ -29,19 +29,4 @@ public class Team : MonoBehaviour
 
     // Equipment
     public List<Enums.EEquipment> Equipment { get; set; } // The equipment owned by the team
-
-
-/*
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
- */
 }

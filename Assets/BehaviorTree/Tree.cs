@@ -19,5 +19,4 @@ namespace BehaviorTree
 
         protected abstract Node SetupTree();
     }
-
 }

@@ -52,8 +52,6 @@ public abstract class Summon : SummonBase
 }
 public class Skill
 {
-    //ToDo: name의 필요 이유?
-    public string name;
     public float skiilCounter = 0;
     public virtual void Execute(GameObject target)
     {
