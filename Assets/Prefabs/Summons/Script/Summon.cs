@@ -49,11 +49,16 @@ public abstract class Summon : SummonBase
     {
         target.TakeDamage(damage);
     }
+    public float[] Stats
+    {
+        get { return stats; }
+        set { stats = value; }
+    }
 }
 public class Skill
 {
     public float skiilCounter = 0;
-    public virtual void Execute(GameObject target)
+    public virtual void Execute(GameObject summon, GameObject target, Animator animator)
     {
         // Implement the basic behavior of the skill here
     }

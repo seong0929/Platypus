@@ -30,13 +30,17 @@ public class SenorZorro : Summon
         {
             //행동 결정
             new Selector(new List<Node>{
-                //캐릭터 생존 여부 확인 후, 리스폰
+                // 리스폰
+                new Sequence(new List<Node>
+                {
+                    new CheckRespawn(),
+                    new TaskRespawn(this.transform)
+                }),
+                // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckIfAlive(IsDead())),
                     new TaskDie(this.transform),
-                    new TaskWait(),
-                    new TaskRespawn(this.transform)
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -54,11 +58,11 @@ public class SenorZorro : Summon
                                 new Sequence(new List<Node>
                                 {
                                     new CheckSkill(skills[0], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(skills[0])
+                                    new TaskSkill(this.transform, skills[0])
                                 }),
                                 new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
                             })
-                            
+
                         }),
                         //적이 공격 범위 안에 있다면, 공격
                         new Sequence(new List<Node>
@@ -69,7 +73,7 @@ public class SenorZorro : Summon
                                 new Sequence(new List<Node>
                                 {
                                     new CheckUltGage(skills[1], stats[((int)Enums.ESummonStats.UltGauge)]),
-                                    new TaskUlt(skills[1])
+                                    new TaskUlt(this.transform, skills[1])
                                 }),
                                 new TaskAttack(this.transform)
                             })
@@ -84,7 +88,7 @@ public class SenorZorro : Summon
                                 new Sequence(new List<Node>
                                 {
                                     new CheckSkill(skills[0], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(skills[0])
+                                    new TaskSkill(this.transform, skills[0])
                                 }),
                                 new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
                             })
@@ -105,17 +109,54 @@ public class SenorZorro : Summon
     }
     public class FootworkSkill : Skill
     {
-        public override void Execute(GameObject target)
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
-            // Implement the Footwork skill, 애니메이션 추가
+            Vector2 summonPosition = summon.transform.position;
+            Vector2 targetPosition = target.transform.position;
+            float distance = Vector2.Distance(summonPosition, targetPosition);
+
+            Vector2 moveDirection;
+            if (summonPosition.x < targetPosition.x)
+            {
+                moveDirection = Vector2.right;
+            }
+            else
+            {
+                moveDirection = Vector2.left;
+            }
+
+            animator.SetTrigger("Skill");
+            
+            if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
+            {
+                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+            }
+            else
+            {
+                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+            }
         }
     }
 
     public class FlecheSkill : Skill
     {
-        public override void Execute(GameObject target)
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
-            // Implement the Fleche skill, 애니메이션 추가
+            float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
+
+            animator.SetTrigger("UltIn");
+
+            Vector3 direction = (target.transform.position - summon.transform.position).normalized;
+            float distance = Vector3.Distance(summon.transform.position, target.transform.position);
+            float teleportDistance = distance - appearDistance;
+
+            Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
+            summon.transform.position = teleportPosition;
+
+            animator.SetTrigger("UltOut");
+
+            Vector3 appearPosition = target.transform.position + direction * appearDistance;
+            summon.transform.position = appearPosition;
         }
     }
 }

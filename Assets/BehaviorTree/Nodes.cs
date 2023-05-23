@@ -3,6 +3,44 @@ using UnityEngine;
 //공통 노드 선언
 namespace BehaviorTree
 {
+    // 리스폰 확인
+    public class CheckRespawn : Node
+    {
+        // GameManager에서 초기 SummonState을 지정
+        public override NodeState Evaluate()
+        {
+            if (GetData("Self").Equals(SummonState.RESPAWN))
+            {
+                return NodeState.SUCCESS;
+            }
+            else if (!GetData("Self").Equals(SummonState.DEAD))
+            {
+                SetData("Self", SummonState.RUNNING);
+                return NodeState.FAILURE;
+            }
+            else
+            {
+                return NodeState.FAILURE;
+            }
+        }
+    }
+    // 리스폰 하기
+    public class TaskRespawn : Node
+    {
+        private Animator _animator;
+
+        public TaskRespawn(Transform transform)
+        {
+            _animator = transform.GetComponent<Animator>();
+        }
+        public override NodeState Evaluate()
+        {
+            //ToDo: 리스폰 위치에 순간이동, 게임 메니저에서 리스폰 지점 찾기
+            //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
+            SetData("Self", SummonState.RUNNING);
+            return NodeState.RUNNING;
+        }
+    }
     //생존 확인
     public class CheckIfAlive : Node
     {
@@ -17,26 +55,29 @@ namespace BehaviorTree
         {
             if (isAlive == true)
             {
+                parent.parent.SetData("Self", SummonState.RUNNING);
                 return NodeState.SUCCESS;
             }
             else
             {
+                parent.parent.SetData("Self", SummonState.DEAD);
                 return NodeState.FAILURE;
             }
         }
     }
-    //소환수 죽음 행동
+    // 죽기
     public class TaskDie : Node
     {
         private Animator _animator;
-
+        float waitTime = Constants.respawntime;
+        float timer;
         public TaskDie(Transform transform)
         {
             _animator = transform.GetComponent<Animator>();
         }
         public override NodeState Evaluate()
         {
-            _animator.SetBool("Dead", true);
+            _animator.SetTrigger("Dead");
             //ToDo: 팀 리스트 필요
             /* 죽은 캐릭터에 대한 정보를 모든 캐릭터들에게 전달
             foreach (var character in characters)
@@ -49,16 +90,7 @@ namespace BehaviorTree
             {
                 otherCharacter.RemoveTarget(this);
             }*/
-            return NodeState.RUNNING;
-        }
-    }
-    //리스폰 시간
-    public class TaskWait : Node
-    {
-        float waitTime = Constants.respawntime;
-        float timer;
-        public override NodeState Evaluate()
-        {
+            parent.parent.SetData("Self", SummonState.RESPAWN);
             while (true)
             {
                 timer += Time.deltaTime;
@@ -67,26 +99,10 @@ namespace BehaviorTree
                     break;
                 }
             }
-            return NodeState.SUCCESS;
-        }
-    }
-    
-    public class TaskRespawn : Node
-    {
-        private Animator _animator;
-
-        public TaskRespawn(Transform transform)
-        {
-            _animator = transform.GetComponent<Animator>();
-        }
-        public override NodeState Evaluate()
-        {
-            //ToDo: 리스폰 위치에 순간이동
-            _animator.SetBool("Respawn", true);
             return NodeState.RUNNING;
         }
     }
-
+    // 상대방 있는 지 확인
     public class CheckEnemyInScene : Node
     {
         //ToDo: 상대방 리스트로 관리가 필요하지 않을까?
@@ -102,11 +118,16 @@ namespace BehaviorTree
                     parent.parent.SetData("target", target.transform);
                     return NodeState.SUCCESS;
                 }
-                return NodeState.FAILURE;
+                else
+                {
+                    ClearData("target");
+                    return NodeState.FAILURE;
+                }
             }
             return NodeState.SUCCESS;
         }
     }
+    // 사거리 밖에 있는 지 확인
     public class CheckEnemyOutOfAttackRange : Node
     {
         private Transform _transform;
@@ -134,6 +155,7 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
+    //적을 향해 움직이기
     public class TaskMoveToEnemy : Node
     {
         private Animator _animator;
@@ -164,13 +186,14 @@ namespace BehaviorTree
                     _spriteRenderer.flipX = false;
                 }
             }
-            _animator.SetBool("IDLE", false);
+            _animator.SetBool("Idle", false);
             _animator.SetBool("Move", true);
             Vector3 direction = (target.transform.position - _transform.position).normalized;
             _transform.position += direction * _moveSpeed * Time.deltaTime;
             return NodeState.RUNNING;
         }
     }
+    // 사거리 이내에 있는 지 확인
     public class CheckEnemyInAttackRange : Node
     {
         private Transform _transform;
@@ -198,15 +221,16 @@ namespace BehaviorTree
             return NodeState.FAILURE;
         }
     }
+    // 일반 공격하기
     public class TaskAttack : Node
     {
         // 체력 감소에 관한
         private Animator _animator;
 
-        private Transform _lastTarget;
+        //private Transform _lastTarget;
 
-        private float _attackTime = 1f;
-        private float _attackCounter = 0f;
+        //private float _attackTime = 1f;
+        //private float _attackCounter = 0f;
 
         public TaskAttack(Transform transform)
         {
@@ -228,12 +252,13 @@ namespace BehaviorTree
                     _attackCounter = 0f;
             }
              */
-            _animator.SetBool("IDLE", false);
+            _animator.SetBool("Idle", false);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", true);
             return NodeState.RUNNING;
         }
     }
+    // Idle 상태
     public class TaskIdle : Node
     {
         private Animator _animator;
@@ -245,12 +270,13 @@ namespace BehaviorTree
 
         public override NodeState Evaluate()
         {
-            _animator.SetBool("IDLE", true);
+            _animator.SetBool("Idle", true);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", false);
             return NodeState.RUNNING;
         }
     }
+    // 스킬 사용 가능 여부 확인
     public class CheckSkill : Node
     {
         private Skill _skill;
@@ -273,20 +299,26 @@ namespace BehaviorTree
             }
         }
     }
+    // 스킬 사용하기
     public class TaskSkill : Node
     {
         private Skill _skill;
-        public TaskSkill(Skill skill)
+        private Transform _transform;
+        private Animator _animator;
+        public TaskSkill(Transform transform, Skill skill)
         {
             _skill = skill;
+            _transform = transform;
+            _animator = transform.GetComponent<Animator>();
         }
         public override NodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            _skill.Execute(target.gameObject);
+            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return NodeState.RUNNING;
         }
     }
+    // 궁극기 사용 가능 여부 확인
     public class CheckUltGage : Node
     {
         //ToDo: 게이지 형식으로 변환
@@ -309,17 +341,22 @@ namespace BehaviorTree
             }
         }
     }
+    // 궁극기 사용하기
     public class TaskUlt : Node
     {
         private Skill _skill;
-        public TaskUlt(Skill skill)
+        private Transform _transform;
+        private Animator _animator;
+        public TaskUlt(Transform transform, Skill skill)
         {
             _skill = skill;
+            _transform = transform;
+            _animator = transform.GetComponent<Animator>();
         }
         public override NodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            _skill.Execute(target.gameObject);
+            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return NodeState.RUNNING;
         }
     }
