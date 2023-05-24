@@ -51,6 +51,7 @@ public class Team : MonoBehaviour
         }
 
         Players.Add(player);
+        player.Team = this;
         return;
     }
     public void ReleasePlayer(Player player)
@@ -62,6 +63,7 @@ public class Team : MonoBehaviour
         }
 
         Players.Remove(player);
+        player.Team = null;
         return;
     }
 
