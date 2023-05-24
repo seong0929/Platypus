@@ -51,7 +51,23 @@ public class Team : MonoBehaviour
         }
 
         Players.Add(player);
+        player.Team = this;
         return;
+    }
+    public void ScoutPlayers(List<Player> players)
+    {
+        if (MAX_PLAYER <= Players.Count + players.Count)
+        {
+            Debug.LogWarning("Team is already Fulled! the player can not be scouted");
+            return;
+        }
+        
+        foreach(Player player in players)
+        {
+            player.Team = this;
+            Players.Add(player);
+        }
+
     }
     public void ReleasePlayer(Player player)
     {
@@ -62,6 +78,7 @@ public class Team : MonoBehaviour
         }
 
         Players.Remove(player);
+        player.Team = null;
         return;
     }
 

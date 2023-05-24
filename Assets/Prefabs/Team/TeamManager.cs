@@ -6,6 +6,12 @@ public class TeamManager : MonoBehaviour
 {
     private List<Team> Teams;
 
+    public TeamManager()
+    {
+        Teams = new List<Team>();
+    }
+
+
     public string GenerateRandomName(string[] nameList)
     {
         int randomIndex = UnityEngine.Random.Range(0, nameList.Length);
@@ -24,5 +30,23 @@ public class TeamManager : MonoBehaviour
 
             Teams.Add(team);
         }
+    }
+    
+    public Team CreateTeam(string name = "Unknown", Enums.ELeague league = Enums.ELeague.Amature)
+    {
+        if(name == "Unknown")
+        {
+            name = GenerateRandomName(NameLists.TeamNames);
+        }
+
+        Team team = new Team(name, league);
+
+        Teams.Add(team);
+        return team;
+    }
+
+    public void AddTeam(Team team)
+    {
+        Teams.Add(team);
     }
 }
