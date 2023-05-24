@@ -6,14 +6,10 @@ public class PlayerManager : MonoBehaviour
 {
     public List<Player> Players;
 
-    // To Do: put thses somewhere else
-    private static string[] firstNameList = { "John", "Emma", "Michael", "Sophia", "William", "Olivia" };
-    private static string[] lastNameList = { "Smith", "Johnson", "Brown", "Jones", "Davis", "Miller" };
-
     public string GenerateRandomName()
     {
-        string firstName = GetRandomName(firstNameList);
-        string lastName = GetRandomName(lastNameList);
+        string firstName = GetRandomName(NameLists.PlayerFirstNames);
+        string lastName = GetRandomName(NameLists.PlayerLastNames);
 
         return firstName + " " + lastName;
     }
@@ -23,21 +19,14 @@ public class PlayerManager : MonoBehaviour
         return nameList[randomIndex];
     }
 
-    // To Do: Add more parameter - will be needed for the depenedency
-    public void CreatePlayer()
+    public void CreatePlayers(int num = 1, int level = 1)
     {
-        string name = GenerateRandomName();
-        int level = 1;
-        Player player = new Player(name, level);
-        Players.Add(player);
-    }
-
-    public void CreatePlayer(int num)
-    {
-        for(int i = 0; i < num; i++)
+        for (int i = 0; i < num; i++)
         {
-            CreatePlayer();
+            string name = GenerateRandomName();
+            Player player = new Player(name, level);
+
+            Players.Add(player);
         }
     }
-
 }
