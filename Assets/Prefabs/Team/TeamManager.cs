@@ -31,4 +31,17 @@ public class TeamManager : MonoBehaviour
             Teams.Add(team);
         }
     }
+    
+    public Team CreateTeam(string name, Enums.ELeague league = Enums.ELeague.Amature)
+    {
+        Team team = new Team(name, league);
+
+        Teams.Add(team);
+        return team;
+    }
+
+    public void AddTeam(Team team)
+    {
+        Teams.Add(team);
+    }
 }

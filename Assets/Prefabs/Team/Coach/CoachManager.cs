@@ -22,6 +22,15 @@ public class CoachManager : MonoBehaviour
         }
     }
 
+    public Coach CreateCoach(string name, int level)
+    {
+        Coach coach = new Coach(name, level);
+
+        Coaches.Add(coach);
+
+        return coach;
+    }
+
     private string GetRandomName(string[] nameList)
     {
         int randomIndex = UnityEngine.Random.Range(0, nameList.Length);
