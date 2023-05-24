@@ -225,6 +225,7 @@ namespace BehaviorTree
     {
         // 체력 감소에 관한
         private Animator _animator;
+        private Transform _transform;
 
         //private Transform _lastTarget;
 
@@ -233,6 +234,7 @@ namespace BehaviorTree
 
         public TaskAttack(Transform transform)
         {
+            _transform = transform;
             _animator = transform.GetComponent<Animator>();
         }
 
@@ -251,6 +253,15 @@ namespace BehaviorTree
                     _attackCounter = 0f;
             }
              */
+            Transform target = (Transform)GetData("target");
+            if (_transform.position.x < target.position.x)
+            {
+                _transform.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                _transform.GetComponent<SpriteRenderer>().flipX = false;
+            }
             _animator.SetBool("Idle", false);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", true);

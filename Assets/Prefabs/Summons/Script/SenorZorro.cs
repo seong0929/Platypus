@@ -129,6 +129,14 @@ public class SenorZorro : Summon
                 moveDirection = Vector2.left;
             }
 
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = false;
+            }
             animator.SetTrigger("Skill");
             
             if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
