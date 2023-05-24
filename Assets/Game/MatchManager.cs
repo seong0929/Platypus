@@ -40,7 +40,7 @@ public class Group
     public List<Enums.ESummon> SelectedSummon;
     public List<Enums.ESummon> BannedSummon;
 
-    Group(Team team, List<Player> selecetedOne)
+    Group(Team team, List<Player> selectedOne)
     {
         Team = team;
         SelectedPlayers = selectedOne;
