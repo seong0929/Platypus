@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager //: MonoBehaviour
 {
     public List<Player> Players;
 
@@ -25,12 +25,13 @@ public class PlayerManager : MonoBehaviour
         return nameList[randomIndex];
     }
 
-    public void CreatePlayers(int num = 1, int level = 1)
+    public void CreatePlayers(int num = 1, int level = 1, Team team = null)
     {
         for (int i = 0; i < num; i++)
         {
             string name = GenerateRandomName();
-            Player player = new Player(name, level);
+            Player player = new Player(name, level, team);
+            team.ScoutPlayer(player);
 
             Players.Add(player);
         }
@@ -39,7 +40,7 @@ public class PlayerManager : MonoBehaviour
     public List<Player> CreatePlayers(int num = 1, int levelMin = 1, int levelMax =1)
     {
         List<Player> players = new List<Player>();
-
+        
         for (int i = 0; i < num; i++)
         {
             string name = GenerateRandomName();

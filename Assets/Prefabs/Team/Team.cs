@@ -2,121 +2,106 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Team : MonoBehaviour
+public class Team //: MonoBehaviour
 {
     //PlayerLimit
     const int MAX_PLAYER = 10;
     const int MAX_ROSTER = 6;
 
-    public string Name { get; set; } // The name of the team
-    public Enums.ELeague League { get; set; } // The league the team belongs to -- might need furthur disccusion --- needs ENUM
-    public int Reputation { get; set; } // The reputation of the team 
-
-
-    // Money
-    public int Money { get; set; } // The amount of money the team has
-    // Crystal
-    public int Crystal { get; set; } // The number of magic crystals the team has
-    // Sponsor
-    public Enums.ESponsor Sponsor { get; set; } // The sponsor of the team
+    public string Name { get; set; }
+    public Enums.ELeague League { get; set; }
+    public int Reputation { get; set; }
+    public int Money { get; set; }
+    public int Crystal { get; set; }
+    public Enums.ESponsor Sponsor { get; set; }
+    public Coach Coach { get; set; }
+    public List<Player> Players { get; set; }
+    public List<Player> Roster { get; set; }
+    public List<Enums.EEquipment> Equipment { get; set; }
 
     public Team(string name = "Unknown", Enums.ELeague league = Enums.ELeague.Amature)
     {
         Name = name;
         League = league;
+        Players = new List<Player>();
+        Roster = new List<Player>();
     }
 
-    // Coach 
-    public Coach Coach { get; set; } // The coach of the team
-
-    // Players
-    public List<Player> Players { get; set; } // The list of players in the team
-
-    // Roster
-    public List<Player> Roster { get; set; } // The current roster for the team
-
-    // Equipment
-    public List<Enums.EEquipment> Equipment { get; set; } // The equipment owned by the team
     public void ScoutPlayer(Player player)
     {
-        if (MAX_PLAYER <= Players.Count)
+        if (Players.Count >= MAX_PLAYER)
         {
-            Debug.LogWarning("Team is already Fulled! the player can not be scouted");
+            Debug.LogWarning("Team is already full! The player cannot be scouted.");
             return;
         }
-        if (player = null)
+        if (player == null)
         {
-            Debug.LogWarning("The player is invalid, can not be scouted");
+            Debug.LogWarning("The player is invalid. The player cannot be scouted.");
             return;
         }
 
+        player.Team?.ReleasePlayer(player);
         Players.Add(player);
         player.Team = this;
-        return;
     }
+
     public void ScoutPlayers(List<Player> players)
     {
-        if (MAX_PLAYER <= Players.Count + players.Count)
+        if (Players.Count + players.Count > MAX_PLAYER)
         {
-            Debug.LogWarning("Team is already Fulled! the player can not be scouted");
+            Debug.LogWarning("Too many players to fit in! The players cannot be scouted.");
             return;
         }
-        
-        foreach(Player player in players)
-        {
-            player.Team = this;
-            Players.Add(player);
-        }
 
+        foreach (Player player in players)
+        {
+            player.Team?.ReleasePlayer(player);
+            Players.Add(player);
+            player.Team = this;
+        }
     }
+
     public void ReleasePlayer(Player player)
     {
-        if (Players.Contains(player)!)
+        if (!Players.Contains(player))
         {
-            Debug.LogWarning("No Such player in this team. The player can not be released");
+            Debug.LogWarning("No such player in this team. The player cannot be released.");
             return;
         }
 
-        Players.Remove(player);
         player.Team = null;
-        return;
+        Players.Remove(player);
     }
 
-    public void AddPlayerOnRoster(Player player)
+    public void AddPlayerToRoster(Player player)
     {
-        if (Players.Contains(player)!)
+        if (!Players.Contains(player))
         {
-            Debug.LogWarning("No Such player in this team. The player can not be one the roaster");
+            Debug.LogWarning("No such player in this team. The player cannot be on the roster.");
             return;
         }
-        if (MAX_ROSTER <= Players.Count)
+        if (Roster.Count >= MAX_ROSTER)
         {
-            Debug.LogWarning("Roaster is already Fulled!");
+            Debug.LogWarning("Roster is already full!");
             return;
         }
 
-        Players.Add(player);
-        return;
+        Roster.Add(player);
     }
-    public void RemovePlayerOnRoster(Player player)
+    public void RemovePlayerFromRoster(Player player)
     {
-        if (Roster.Contains(player)!)
+        if (!Roster.Contains(player))
         {
-            Debug.LogWarning("No Such player in the Roaster");
+            Debug.LogWarning("No such player in the roster.");
             return;
         }
 
         Roster.Remove(player);
-        return;
     }
 
     public bool IsRosterValid(int minNum)
     {
-        if (Roster.Count < minNum)
-        {
-            return false;
-        }
-        return true;
+        return Roster.Count >= minNum;
     }
 
 }

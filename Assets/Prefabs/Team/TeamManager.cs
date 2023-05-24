@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TeamManager : MonoBehaviour
+public class TeamManager //: MonoBehaviour
 {
     private List<Team> Teams;
+    public Team FAs;
 
     public TeamManager()
     {
         Teams = new List<Team>();
+        FAs = new Team("FA");
+        Teams.Add(FAs);
     }
 
 

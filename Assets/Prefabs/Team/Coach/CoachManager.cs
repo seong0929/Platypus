@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoachManager : MonoBehaviour
+public class CoachManager// : MonoBehaviour
 {
     private List<Coach> Coaches;
 
