@@ -6,28 +6,23 @@ public class TeamManager : MonoBehaviour
 {
     private List<Team> Teams;
 
-    // To Do: put thses somewhere else
-    private static string[] TeamNameList = { "Seoul", "NewYork", "London", "Jeju", "Tokyo", "Paris" };
-
-    public string GenerateRandomName()
+    public string GenerateRandomName(string[] nameList)
     {
-        int randomIndex = UnityEngine.Random.Range(0, TeamNameList.Length);
-        string name = TeamNameList[randomIndex];
+        int randomIndex = UnityEngine.Random.Range(0, nameList.Length);
+        string name = nameList[randomIndex];
 
         return name;
     }
 
-    public void CreateTeam()
+//Making random teams
+    public void CreateTeams(int num =1, Enums.ELeague league = Enums.ELeague.Amature)
     {
-        string name = GenerateRandomName();
-        Team team = new Team(name);
-        Teams.Add(team);
-    }
-    public void CreateTeam(int num)
-    {
-        for (int i = 0; i < num; i++)
+        for(int i =0; i < num; i++)
         {
-            CreateTeam();
+            string name = GenerateRandomName(NameLists.TeamNames);
+            Team team = new Team(name, league);
+
+            Teams.Add(team);
         }
     }
 }

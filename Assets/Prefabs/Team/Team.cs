@@ -20,9 +20,10 @@ public class Team : MonoBehaviour
     // Sponsor
     public Enums.ESponsor Sponsor { get; set; } // The sponsor of the team
 
-    public Team(string name)
+    public Team(string name = "Unknown", Enums.ELeague league = Enums.ELeague.Amature)
     {
         Name = name;
+        League = league;
     }
 
     // Coach 
