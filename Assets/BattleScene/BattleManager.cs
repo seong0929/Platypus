@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class BattleManager : MonoBehaviour
 {
     //Singleton Instance ¼±¾ð
-    public static GameManager instance = null;
+    public static BattleManager instance = null;
 
     [Header("# Game Control")]
     public float GameTime;
