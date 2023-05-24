@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
 
         return firstName + " " + lastName;
     }
+
     private string GetRandomName(string[] nameList)
     {
         int randomIndex = UnityEngine.Random.Range(0, nameList.Length);
@@ -33,5 +34,23 @@ public class PlayerManager : MonoBehaviour
 
             Players.Add(player);
         }
+    }
+
+    public List<Player> CreatePlayers(int num = 1, int levelMin = 1, int levelMax =1)
+    {
+        List<Player> players = new List<Player>();
+
+        for (int i = 0; i < num; i++)
+        {
+            string name = GenerateRandomName();
+            int level = UnityEngine.Random.Range(levelMin, levelMax);
+
+            Player player = new Player(name, level);
+
+            Players.Add(player);
+            players.Add(player);
+        }
+
+        return players;
     }
 }

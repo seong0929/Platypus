@@ -32,8 +32,13 @@ public class TeamManager : MonoBehaviour
         }
     }
     
-    public Team CreateTeam(string name, Enums.ELeague league = Enums.ELeague.Amature)
+    public Team CreateTeam(string name = "Unknown", Enums.ELeague league = Enums.ELeague.Amature)
     {
+        if(name == "Unknown")
+        {
+            name = GenerateRandomName(NameLists.TeamNames);
+        }
+
         Team team = new Team(name, league);
 
         Teams.Add(team);

@@ -22,8 +22,13 @@ public class CoachManager : MonoBehaviour
         }
     }
 
-    public Coach CreateCoach(string name, int level)
+    public Coach CreateCoach(string name = "Unknown", int level = 1)
     {
+        if(name == "Unknown")
+        {
+            name = GetRandomName(NameLists.CoachNames);
+        }
+
         Coach coach = new Coach(name, level);
 
         Coaches.Add(coach);

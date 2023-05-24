@@ -23,10 +23,18 @@ public class GameManager : MonoBehaviour
         User.Coach = CoachManager.CreateCoach("User", 1);
         User.Team = TeamManager.CreateTeam("User's Team");
 
+        BuildFilledTeam();
 
+        PlayerManager.CreatePlayers(10, 1);
 
-//        CoachManager.CreateCoach(coachNum: 1, level: 1);
-//        TeamManager.CreateTeams();
+    }
 
+    private void BuildFilledTeam()
+    {
+        Team team = TeamManager.CreateTeam();
+        team.Coach = CoachManager.CreateCoach("Unknown", 1); // might cause Confusion
+
+        List<Player> players = PlayerManager.CreatePlayers(3,1,2);
+        team.ScoutPlayers(players);
     }
 }
