@@ -6,6 +6,11 @@ public class PlayerManager : MonoBehaviour
 {
     public List<Player> Players;
 
+    public PlayerManager()
+    {
+        Players = new List<Player>();
+    }
+
     public string GenerateRandomName()
     {
         string firstName = GetRandomName(NameLists.PlayerFirstNames);

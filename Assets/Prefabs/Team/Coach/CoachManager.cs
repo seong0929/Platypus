@@ -6,6 +6,11 @@ public class CoachManager : MonoBehaviour
 {
     private List<Coach> Coaches;
 
+    public CoachManager()
+    {
+        Coaches = new List<Coach>();
+    }
+
     public void CreateCoach(int coachNum = 1,int level = 1, List<Enums.EStrategy> strategies = null)
     {
         for (int i = 0; i < coachNum; i++)

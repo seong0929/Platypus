@@ -6,6 +6,12 @@ public class TeamManager : MonoBehaviour
 {
     private List<Team> Teams;
 
+    public TeamManager()
+    {
+        Teams = new List<Team>();
+    }
+
+
     public string GenerateRandomName(string[] nameList)
     {
         int randomIndex = UnityEngine.Random.Range(0, nameList.Length);
