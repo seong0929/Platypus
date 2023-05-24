@@ -287,7 +287,7 @@ namespace BehaviorTree
         }
         public override NodeState Evaluate()
         {
-            if (GameManager.instance.GameTime - (_skill.skiilCounter * _coolTime) >= _coolTime)
+            if (BattleManager.instance.GameTime - (_skill.skiilCounter * _coolTime) >= _coolTime)
             {
                 _skill.skiilCounter += 1;
                 return NodeState.SUCCESS;
@@ -330,7 +330,7 @@ namespace BehaviorTree
         }
         public override NodeState Evaluate()
         {
-            if (GameManager.instance.GameTime - (_skill.skiilCounter * _coolTime) >= _coolTime)
+            if (BattleManager.instance.GameTime - (_skill.skiilCounter * _coolTime) >= _coolTime)
             {
                 _skill.skiilCounter += 1;
                 return NodeState.SUCCESS;

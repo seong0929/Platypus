@@ -40,7 +40,7 @@ public abstract class Summon : SummonBase
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
         stats[((int)Enums.ESummonStats.Health)] -= actualDamage;
         if (stats[((int)Enums.ESummonStats.Health)] <= 0) {
-            deadTime = GameManager.instance.GameTime;
+            deadTime = BattleManager.instance.GameTime;
             isAlive = false;
         }
     }
