@@ -9,7 +9,24 @@ public class GameManager : MonoBehaviour
     private CoachManager CoachManager;
     private PlayerManager PlayerManager;
 
+    // Singleton instance
+    public static GameManager Instance { get; private set; }
 
+    // Other GameManager variables and methods...
+
+    private void Awake()
+    {
+        // Ensure only one instance of the GameManager exists
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void NewGame()
     {
