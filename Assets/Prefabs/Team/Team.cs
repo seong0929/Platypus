@@ -82,7 +82,7 @@ public class Team : MonoBehaviour
         return;
     }
 
-    public void AddPlayerOnRoaster(Player player)
+    public void AddPlayerOnRoster(Player player)
     {
         if (Players.Contains(player)!)
         {
