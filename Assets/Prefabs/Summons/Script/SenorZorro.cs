@@ -61,8 +61,8 @@ public class SenorZorro : Summon
                             {
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[0], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(this.transform, skills[0])
+                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
+                                    new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
                                 }),
                                 new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
                             })
@@ -76,7 +76,7 @@ public class SenorZorro : Summon
                             new Selector(new List<Node>{
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckUltGage(skills[1], stats[((int)Enums.ESummonStats.UltGauge)]),
+                                    new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)], stats[((int)Enums.ESummonStats.UltGauge)]),
                                     new TaskUlt(this.transform, skills[1])
                                 }),
                                 new TaskAttack(this.transform)
@@ -91,8 +91,8 @@ public class SenorZorro : Summon
                             {
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[0], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(this.transform, skills[0])
+                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
+                                    new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
                                 }),
                                 new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
                             })

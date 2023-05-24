@@ -114,10 +114,17 @@ namespace BehaviorTree
 
             foreach (GameObject summon in summons)
             {
-                if (summon != self)
+                if (summon != self) // && summon.GetComponent<Summon>().myTeam == false
                 {
+                    //if(summon.GetComponent<Summon>().myTeam == false){
                     parent.parent.SetData("target", summon.transform);
                     return NodeState.SUCCESS;
+                    //}
+                    //else
+                    //{
+                    //parent.parent.SetData("target", summon.transform);
+                    //return NodeState.SUCCESS;
+                    //}
                 }
             }
 

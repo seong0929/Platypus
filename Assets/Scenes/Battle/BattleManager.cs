@@ -30,8 +30,16 @@ public class BattleManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
-    public void AssignTeam()
+    //ToDo: 배틀씬에서 넘어온 소환수를 인수에 넣기
+    public void AssignTeam(GameObject[] summons)
     {
-        
+        //ToDo: 배틀씬에서 user가 선택했는 지 안 했는 지 판단하는 함수 필요
+        foreach (GameObject summon in summons)
+        {
+            //if() 배틀씬에서 선택을 했다면
+            summon.GetComponent<Summon>().myTeam = true;
+            //else배틀씬에서 선택은 되지 않았지만, 넘어 온 경우
+            summon.GetComponent<Summon>().myTeam = false;
+        }
     }
 }
