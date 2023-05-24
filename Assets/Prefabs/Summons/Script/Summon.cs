@@ -8,18 +8,13 @@ public abstract class Summon : SummonBase
     public bool isMoving;
     public bool isAlive = true;
 
-    //ToDo: GameManager에서 팀 판별 초기화
-    public List<GameObject> myTeam;
-    public List<GameObject> theirTeam;
+    //ToDo: BattleManager에서 팀 판별 초기화
+    public bool myTeam;
     float deadTime;
 
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 스킬, skillIndex == 1: 궁
 
-    public virtual bool IsEnemy() {
-        if (theirTeam.Count != 0){ return true;}
-        else { return false; }
-    }
     public virtual bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
@@ -34,7 +29,7 @@ public abstract class Summon : SummonBase
 
     // BehaviorTree에서 사용할 메서드
     protected abstract Node CreateBehaviorTree();
-
+    // ToDo: 피격 타격 노드화
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
