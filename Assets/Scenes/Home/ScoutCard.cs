@@ -6,7 +6,8 @@ public class ScoutCard : MonoBehaviour
 {
     private GameManager gameManager;
 
-    private int nth = 0;
+    [SerializeField]
+    private int nth;
 
     [SerializeField]
     private Text Name;
