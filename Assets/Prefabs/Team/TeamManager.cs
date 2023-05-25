@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TeamManager //: MonoBehaviour
 {
-    private List<Team> Teams;
+    public List<Team> Teams;
     public Team FAs;
 
     public TeamManager()

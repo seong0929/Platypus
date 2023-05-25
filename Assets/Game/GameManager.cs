@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public TeamManager TeamManager;
     private CoachManager CoachManager;
     private PlayerManager PlayerManager;
+    public MatchManager MatchManager;
+
+//    private MatchManager MatchManager;
 
     // Singleton instance
     public static GameManager Instance { get; private set; }
@@ -43,7 +46,6 @@ public class GameManager : MonoBehaviour
         User.Coach = CoachManager.CreateCoach("User", 1);
         User.Team = TeamManager.CreateTeam("User's Team");
 
- 
         for (int i = 0; i<3; i++)
         {
             BuildFilledTeam();
@@ -63,5 +65,23 @@ public class GameManager : MonoBehaviour
         team.ScoutPlayers(players);
 
         return team;
+    }
+
+    public void MakeMatch()
+    {
+        // get from schedule or something
+        // ---- START: FOR THE TEST --- //
+        Team Opponent;
+        Opponent = TeamManager.Teams[2];
+        // ---- END: FOR THE TEST --- //
+
+        MatchManager = new MatchManager(2, User.Team, Opponent);
+
+        // ---- START: FOR THE TEST --- //
+        List<Player> opponentSelected = new List<Player>();
+        opponentSelected.Add(Opponent.Players[0]);
+        opponentSelected.Add(Opponent.Players[1]);
+        MatchManager.GroupB.SelectedPlayers = opponentSelected;
+        // ---- END: FOR THE TEST --- //
     }
 }
