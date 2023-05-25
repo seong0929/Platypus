@@ -28,6 +28,14 @@ public class MoveScene : MonoBehaviour
     public void ToSelectPlayers()
     {
         Debug.Log("Scene: SelectPlayers");
+
+        // ---- START: FOR THE TEST --- //
+        GameManager gameManager;
+        gameManager = FindObjectOfType<GameManager>();
+
+        gameManager.MakeMatch();
+        // ---- END: FOR THE TEST --- //
+
         SceneManager.LoadScene("SelectPlayers");
     }
     public void ToStrategyCoaching()

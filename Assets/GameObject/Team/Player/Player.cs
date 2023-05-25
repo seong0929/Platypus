@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player //: MonoBehaviour
 {
     
     public string Name { get; set; } // The name of the Player
@@ -17,11 +17,11 @@ public class Player : MonoBehaviour
     public Dictionary<Enums.ESummon, int> Proficiency { get; set; } // The player's proficiency for each summon
 
 
-    public Player(string name = "Unknown", int level = 1)
+    public Player(string name = "Unknown", int level = 1, Team team = null)
     {
         Name = name;
         Level = level;
-        Team = null;
+        Team = team;
 
         SetSkillByLevel(level);
     }

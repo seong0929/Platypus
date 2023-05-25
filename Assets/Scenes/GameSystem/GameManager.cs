@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private UserState User;
-    private TeamManager TeamManager;
+    public UserState User;
+    public TeamManager TeamManager;
     private CoachManager CoachManager;
     private PlayerManager PlayerManager;
+    public MatchManager MatchManager;
+
+//    private MatchManager MatchManager;
 
     // Singleton instance
     public static GameManager Instance { get; private set; }
@@ -21,6 +24,8 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            NewGame();
         }
         else
         {
@@ -32,33 +37,23 @@ public class GameManager : MonoBehaviour
     {
         // initialing UserState
         User = new UserState();
-
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
 
+
+
         User.Coach = CoachManager.CreateCoach("User", 1);
         User.Team = TeamManager.CreateTeam("User's Team");
 
-//        BuildFilledTeam();
-        Team Opponent = BuildFilledTeam();
+        for (int i = 0; i<3; i++)
+        {
+            BuildFilledTeam();
+        }
 
-        PlayerManager.CreatePlayers(10, 1);
-
-        // FILL USER'S TEAM with RANDOM Players
-        Team UserTeam = User.Team;
-        UserTeam.ScoutPlayers(PlayerManager.CreatePlayers(5, 1, 3));
-        //FILL User's Roster
-        UserTeam.AddPlayerOnRoster(UserTeam.Players[0]);
-        UserTeam.AddPlayerOnRoster(UserTeam.Players[1]);
-
-        //Fill Opponent's Roaster
-        Opponent.AddPlayerOnRoster(Opponent.Players[0]);
-        Opponent.AddPlayerOnRoster(Opponent.Players[1]);
-        Opponent.AddPlayerOnRoster(Opponent.Players[2]);
-
-        //Set Selected Players
+        PlayerManager.CreatePlayers(10, 1, TeamManager.FAs);
     }
+
 
     //    private void BuildFilledTeam()
     private Team BuildFilledTeam()
@@ -70,5 +65,23 @@ public class GameManager : MonoBehaviour
         team.ScoutPlayers(players);
 
         return team;
+    }
+
+    public void MakeMatch()
+    {
+        // get from schedule or something
+        // ---- START: FOR THE TEST --- //
+        Team Opponent;
+        Opponent = TeamManager.Teams[2];
+        // ---- END: FOR THE TEST --- //
+
+        MatchManager = new MatchManager(2, User.Team, Opponent);
+
+        // ---- START: FOR THE TEST --- //
+        List<Player> opponentSelected = new List<Player>();
+        opponentSelected.Add(Opponent.Players[0]);
+        opponentSelected.Add(Opponent.Players[1]);
+        MatchManager.GroupB.SelectedPlayers = opponentSelected;
+        // ---- END: FOR THE TEST --- //
     }
 }

@@ -2,18 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MatchManager : MonoBehaviour
+public class MatchManager
 {
-    private Group groupA;
-    private Group groupB;
+    public int PlayerNum;
+
+    public Group GroupA;
+    public Group GroupB;
 
 //    private int PlayerNum;
 
-    MatchManager(Group a, Group b)//, int playerNum)
+    public MatchManager(int playerNum, Team teamA, Team teamB)//Group a, Group b)//, int playerNum)
     {
-        groupA = a;
-        groupB = b;
-//        PlayerNum = playerNum;
+        PlayerNum = playerNum;
+
+        GroupA = new Group(teamA);
+        GroupB = new Group(teamB);
+
+        //        groupA = a;
+        //        groupB = b;
+        //        PlayerNum = playerNum;
     }
     public void SetSelectedPlayer(bool isA, List<Player> selectedOne)
     {
@@ -40,10 +47,10 @@ public class Group
     public List<Enums.ESummon> SelectedSummon;
     public List<Enums.ESummon> BannedSummon;
 
-    Group(Team team, List<Player> selectedOne)
+    public Group(Team team)//, List<Player> selectedOne)
     {
         Team = team;
-        SelectedPlayers = selectedOne;
+        SelectedPlayers = new List<Player>();
         SelectedSummon = new List<Enums.ESummon>();
         BannedSummon = new List<Enums.ESummon>();
     }
