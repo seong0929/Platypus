@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class BattleManager : MonoBehaviour
 {
@@ -6,26 +7,30 @@ public class BattleManager : MonoBehaviour
     public static BattleManager instance = null;
 
     [Header("# Game Control")]
-    public float GameTime;
+    public float GameTime;  // 경과 시간
     public float MaxGameTime = Constants.playtime;   //전투시간
+    public TMP_Text timerText;       // 타이머 UI
+    
     private void Awake()
     {
         instance = this;
-        //Scene 이동 시 삭제 되지 않도록 처리
-        //DontDestroyOnLoad(this.gameObject);
     }
+    
     private void Update()
     {
         GameTime += Time.deltaTime;
         if (GameTime > MaxGameTime)
         {
-            GameTime = MaxGameTime;
+            // ToDo: 게임 종료
         }
+        UpdateTimerUI();
     }
+    //일시정지
     public void PauseGame()
     {
         Time.timeScale = 0;
     }
+    // 재시작
     public void ResumeGame()
     {
         Time.timeScale = 1;
@@ -41,5 +46,15 @@ public class BattleManager : MonoBehaviour
             //else배틀씬에서 선택은 되지 않았지만, 넘어 온 경우
             summon.GetComponent<Summon>().myTeam = false;
         }
+    }
+    // UI에 타이머 값을 표시
+    private void UpdateTimerUI()
+    {
+        float remainingTime = Mathf.Max(MaxGameTime - GameTime, 0f);
+
+        int minutes = Mathf.FloorToInt(remainingTime / 60f);
+        int seconds = Mathf.FloorToInt(remainingTime % 60f);
+
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }
