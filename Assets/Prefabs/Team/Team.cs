@@ -39,6 +39,11 @@ public class Team //: MonoBehaviour
             Debug.LogWarning("The player is invalid. The player cannot be scouted.");
             return;
         }
+        if (Players.Contains(player))
+        {
+            Debug.Log(player.Name + "already Scouted");
+            return;
+        }
 
         player.Team?.ReleasePlayer(player);
         Players.Add(player);
@@ -55,9 +60,14 @@ public class Team //: MonoBehaviour
 
         foreach (Player player in players)
         {
-            player.Team?.ReleasePlayer(player);
-            Players.Add(player);
-            player.Team = this;
+            if (Players.Contains(player)) { Debug.Log(player.Name + "already Scouted");}
+            else
+            {
+                player.Team?.ReleasePlayer(player);
+                Players.Add(player);
+                player.Team = this;
+            }
+
         }
     }
 
@@ -83,6 +93,11 @@ public class Team //: MonoBehaviour
         if (Roster.Count >= MAX_ROSTER)
         {
             Debug.LogWarning("Roster is already full!");
+            return;
+        }
+        if(Roster.Contains(player))
+        {
+            Debug.LogWarning("The player is already in the roster.");
             return;
         }
 
