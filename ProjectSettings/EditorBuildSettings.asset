@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Home/Home.unity
     guid: f79d23db637ae2d49bf21269d3ce1115
   - enabled: 1
-    path: Assets/Scenes/Option.unity
+    path: Assets/Scenes/Option/Option.unity
     guid: c80a1473208298e44b3109c7d214716d
   - enabled: 1
     path: Assets/Scenes/SelectingPlayer/SelectPlayers.unity
