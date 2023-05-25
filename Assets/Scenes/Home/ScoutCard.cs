@@ -42,8 +42,13 @@ public class ScoutCard : MonoBehaviour
 
     public void Scout()
     {
+
         gameManager.User.Team.ScoutPlayer(thePlayer);
-        Debug.Log("Scout button has been clicked");
+        Debug.Log("Scout"+thePlayer.Name);
+
+        /////////////// NEED FIX LATER /////////////
+        gameManager.User.Team.AddPlayerToRoster(thePlayer);
+        Debug.Log("Roster player num: " + gameManager.User.Team.Roster.Count);
     }
 
 }
