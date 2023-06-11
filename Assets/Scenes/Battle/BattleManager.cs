@@ -8,7 +8,7 @@ public class BattleManager : MonoBehaviour
 
     [Header("# Game Control")]
     public float GameTime;  // 경과 시간
-    public float MaxGameTime = Constants.playtime;   //전투시간
+    public float MaxGameTime = Constants.Play_TIME;   //전투시간
     public TMP_Text timerText;       // 타이머 UI
     
     private void Awake()

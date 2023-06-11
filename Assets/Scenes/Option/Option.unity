@@ -840,7 +840,6 @@ GameObject:
   m_Component:
   - component: {fileID: 828143039}
   - component: {fileID: 828143040}
-  - component: {fileID: 828143041}
   m_Layer: 5
   m_Name: BGM
   m_TagString: Untagged
@@ -923,19 +922,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &828143041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 828143038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0f079ccb2944eb4ea8e699813077337, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeSlider: {fileID: 828143040}
 --- !u!1 &1000194838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1264,8 +1250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cd2ed851a52fb54896e5d34842667bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmSlider: {fileID: 0}
-  soundEffectSlider: {fileID: 0}
+  BgmSlider: {fileID: 828143040}
+  SoundEffectSlider: {fileID: 1847108764}
 --- !u!1 &1364004318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1541,7 +1527,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1847108763}
   - component: {fileID: 1847108764}
-  - component: {fileID: 1847108765}
   m_Layer: 5
   m_Name: SoundEffect
   m_TagString: Untagged
@@ -1624,19 +1609,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1847108765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847108762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0f079ccb2944eb4ea8e699813077337, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeSlider: {fileID: 1847108764}
 --- !u!1 &2091582962
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,4 +1962,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61f60ef23a9c81b4a96c679c8facce6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 1
+  BgmVolume: 1
+  SoundEffectVolume: 1

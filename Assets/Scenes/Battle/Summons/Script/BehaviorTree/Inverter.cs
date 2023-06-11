@@ -11,28 +11,26 @@ namespace BehaviorTree
             this.child = child;
             this.child.parent = this;
         }
-
-        public override NodeState Evaluate()
+        public override ENodeState Evaluate()
         {
             switch (child.Evaluate())
             {
-                case NodeState.SUCCESS:
-                    state = NodeState.FAILURE;
+                case ENodeState.SUCCESS:
+                    state = ENodeState.FAILURE;
                     break;
 
-                case NodeState.FAILURE:
-                    state = NodeState.SUCCESS;
+                case ENodeState.FAILURE:
+                    state = ENodeState.SUCCESS;
                     break;
 
-                case NodeState.RUNNING:
-                    state = NodeState.RUNNING;
+                case ENodeState.RUNNING:
+                    state = ENodeState.RUNNING;
                     break;
 
                 default:
-                    state = NodeState.FAILURE;
+                    state = ENodeState.FAILURE;
                     break;
             }
-
             return state;
         }
     }
