@@ -9,13 +9,12 @@ public class BattleManager : MonoBehaviour
     [Header("# Game Control")]
     public float GameTime;  // 경과 시간
     public float MaxGameTime = Constants.Play_TIME;   //전투시간
-    public TMP_Text timerText;       // 타이머 UI
+    public TMP_Text TimerText;       // 타이머 UI
     
     private void Awake()
     {
         instance = this;
     }
-    
     private void Update()
     {
         GameTime += Time.deltaTime;
@@ -42,9 +41,9 @@ public class BattleManager : MonoBehaviour
         foreach (GameObject summon in summons)
         {
             //if() 배틀씬에서 선택을 했다면
-            summon.GetComponent<Summon>().myTeam = true;
+            summon.GetComponent<Summon>().MyTeam = true;
             //else배틀씬에서 선택은 되지 않았지만, 넘어 온 경우
-            summon.GetComponent<Summon>().myTeam = false;
+            summon.GetComponent<Summon>().MyTeam = false;
         }
     }
     // UI에 타이머 값을 표시
@@ -55,6 +54,6 @@ public class BattleManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(remainingTime / 60f);
         int seconds = Mathf.FloorToInt(remainingTime % 60f);
 
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }

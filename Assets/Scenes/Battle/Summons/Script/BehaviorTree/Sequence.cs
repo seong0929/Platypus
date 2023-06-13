@@ -14,20 +14,20 @@ namespace BehaviorTree
             {
                 switch (node.Evaluate())
                 {
-                    case ENodeState.FAILURE:
-                        state = ENodeState.FAILURE;
+                    case ENodeState.Failure:
+                        state = ENodeState.Failure;
                         return state;
-                    case ENodeState.SUCCESS:
+                    case ENodeState.Success:
                         continue;
-                    case ENodeState.RUNNING:
+                    case ENodeState.Running:
                         anyChildIsRunning = true;
                         continue;
                     default:
-                        state = ENodeState.SUCCESS;
+                        state = ENodeState.Success;
                         return state;
                 }
             }
-            state = anyChildIsRunning ? ENodeState.RUNNING : ENodeState.SUCCESS;
+            state = anyChildIsRunning ? ENodeState.Running : ENodeState.Success;
             return state;
         }
     }

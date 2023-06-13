@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,17 +5,14 @@ public class GameManager : MonoBehaviour
 {
     public UserState User;
     public TeamManager TeamManager;
+    public MatchManager MatchManager;
     private CoachManager CoachManager;
     private PlayerManager PlayerManager;
-    public MatchManager MatchManager;
-
-//    private MatchManager MatchManager;
+    //    private MatchManager MatchManager;
 
     // Singleton instance
     public static GameManager Instance { get; private set; }
-
     // Other GameManager variables and methods...
-
     private void Awake()
     {
         // Ensure only one instance of the GameManager exists
@@ -32,7 +28,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     public void NewGame()
     {
         // initialing UserState
@@ -40,8 +35,6 @@ public class GameManager : MonoBehaviour
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
-
-
 
         User.Coach = CoachManager.CreateCoach("User", 1);
         User.Team = TeamManager.CreateTeam("User's Team");
@@ -53,8 +46,6 @@ public class GameManager : MonoBehaviour
 
         PlayerManager.CreatePlayers(10, 1, TeamManager.FAs);
     }
-
-
     //    private void BuildFilledTeam()
     private Team BuildFilledTeam()
     {
@@ -66,7 +57,6 @@ public class GameManager : MonoBehaviour
 
         return team;
     }
-
     public void MakeMatch()
     {
         // get from schedule or something

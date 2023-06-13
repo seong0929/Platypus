@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class MatchManager
 {
@@ -9,7 +7,7 @@ public class MatchManager
     public Group GroupA;
     public Group GroupB;
 
-//    private int PlayerNum;
+//    private int _playerNum;
 
     public MatchManager(int playerNum, Team teamA, Team teamB)//Group a, Group b)//, int playerNum)
     {
@@ -20,7 +18,7 @@ public class MatchManager
 
         //        groupA = a;
         //        groupB = b;
-        //        PlayerNum = playerNum;
+        //        _playerNum = playerNum;
     }
     public void SetSelectedPlayer(bool isA, List<Player> selectedOne)
     {
@@ -54,5 +52,4 @@ public class Group
         SelectedSummon = new List<Enums.ESummon>();
         BannedSummon = new List<Enums.ESummon>();
     }
-
 }

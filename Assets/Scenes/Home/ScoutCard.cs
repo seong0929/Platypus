@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class ScoutCard : MonoBehaviour
 {
     private GameManager gameManager;
@@ -19,7 +18,7 @@ public class ScoutCard : MonoBehaviour
 
     private Player thePlayer;
 
-    void Start()
+    private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
         thePlayer = gameManager.TeamManager.FAs.Players[nth];

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace BehaviorTree
 {
     public class Inverter : Node
@@ -9,26 +7,26 @@ namespace BehaviorTree
         public Inverter(Node child)
         {
             this.child = child;
-            this.child.parent = this;
+            this.child.Parent = this;
         }
         public override ENodeState Evaluate()
         {
             switch (child.Evaluate())
             {
-                case ENodeState.SUCCESS:
-                    state = ENodeState.FAILURE;
+                case ENodeState.Success:
+                    state = ENodeState.Failure;
                     break;
 
-                case ENodeState.FAILURE:
-                    state = ENodeState.SUCCESS;
+                case ENodeState.Failure:
+                    state = ENodeState.Success;
                     break;
 
-                case ENodeState.RUNNING:
-                    state = ENodeState.RUNNING;
+                case ENodeState.Running:
+                    state = ENodeState.Running;
                     break;
 
                 default:
-                    state = ENodeState.FAILURE;
+                    state = ENodeState.Failure;
                     break;
             }
             return state;

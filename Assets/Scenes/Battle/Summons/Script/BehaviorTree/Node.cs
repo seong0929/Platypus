@@ -4,27 +4,27 @@ namespace BehaviorTree
 {
     public enum ENodeState
     {
-        RUNNING,
-        SUCCESS,
-        FAILURE
+        Running,
+        Success,
+        Failure
     }
     public enum ESummonState
     {
-        RUNNING,
-        DEAD,
-        RESPAWN
+        Running,
+        Dead,
+        Respawn
     }
 
     public class Node
     {
-        public Node parent;
+        public Node Parent;
         protected ENodeState state;
         protected List<Node> children = new List<Node>();
         private Dictionary<string, object> _dataContext = new Dictionary<string, object>();
 
         public Node()
         {
-            parent = null;
+            Parent = null;
         }
         public Node(List<Node> children)
         {
@@ -33,10 +33,10 @@ namespace BehaviorTree
         }
         private void AddChild(Node node)
         {
-            node.parent = this;
+            node.Parent = this;
             children.Add(node);
         }
-        public virtual ENodeState Evaluate() => ENodeState.FAILURE;
+        public virtual ENodeState Evaluate() => ENodeState.Failure;
         public void SetData(string key, object value){ _dataContext[key] = value; }
         public object GetData(string key)
         {
@@ -44,13 +44,13 @@ namespace BehaviorTree
             if (_dataContext.TryGetValue(key, out value))
                 return value;
 
-            Node node = parent;
+            Node node = Parent;
             while (node != null)
             {
                 value = node.GetData(key);
                 if (value != null)
                     return value;
-                node = node.parent;
+                node = node.Parent;
             }
             return null;
         }
@@ -61,13 +61,13 @@ namespace BehaviorTree
                 _dataContext.Remove(key);
                 return true;
             }
-            Node node = parent;
+            Node node = Parent;
             while (node != null)
             {
                 bool cleared = node.ClearData(key);
                 if (cleared)
                     return true;
-                node = node.parent;
+                node = node.Parent;
             }
             return false;
         }

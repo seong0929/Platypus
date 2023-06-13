@@ -188,6 +188,5 @@ MonoBehaviour:
   opponent: {fileID: 0}
   isMoving: 0
   isAlive: 1
-  myTeam: []
-  theirTeam: []
-  animator: {fileID: 8544673299357075896}
+  myTeam: 0
+  _animator: {fileID: 8544673299357075896}

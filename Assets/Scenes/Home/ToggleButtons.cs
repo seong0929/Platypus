@@ -22,7 +22,6 @@ public class ToggleButtons : MonoBehaviour
     {
         targetPanel = panelSet.transform.GetChild((int)targetName).gameObject;
     }
-
     public void TogglePanel()
     {
         targetPanel.SetActive(!targetPanel.activeSelf); // Toggle the active state of the panel
@@ -35,7 +34,6 @@ public class ToggleButtons : MonoBehaviour
             }
         }
     }
-
     public void CloseAll()
     {
         foreach (Transform panel in panelSet.transform) // Off panel that is not target Panel

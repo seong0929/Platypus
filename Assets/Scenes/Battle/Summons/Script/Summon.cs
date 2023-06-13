@@ -3,43 +3,41 @@ using UnityEngine;
 using BehaviorTree;
 
 //공통적이되 함수 내용이 달라지는 클래스
-public abstract class Summon : SummonBase
+public abstract class Summon : MonoBehaviour
 {
-    public bool isMoving;
-    public bool isAlive = true;
-
+    public string SummonName;
+    public GameObject Opponent;
+    public bool IsMoving;
+    public bool IsAlive = true;
     //ToDo: BattleManager에서 팀 판별 초기화
-    public bool myTeam;
-    float deadTime;
-
+    public bool MyTeam;
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 스킬, skillIndex == 1: 궁
+    private float _deadTime;
 
     public virtual bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
         {
-            isAlive = false;
-            return isAlive;
+            IsAlive = false;
+            return IsAlive;
         }
-        isAlive = true;
-        return isAlive;
+        IsAlive = true;
+        return IsAlive;
     }
     public abstract void Attack(Summon target, float damage);
 
     // BehaviorTree에서 사용할 메서드
     protected abstract Node CreateBehaviorTree();
-    // ToDo: 피격 타격 노드화
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
         stats[((int)Enums.ESummonStats.Health)] -= actualDamage;
         if (stats[((int)Enums.ESummonStats.Health)] <= 0) {
-            deadTime = BattleManager.instance.GameTime;
-            isAlive = false;
+            _deadTime = BattleManager.instance.GameTime;
+            IsAlive = false;
         }
     }
-
     public void GiveDamage(Summon target, float damage)
     {
         target.TakeDamage(damage);
