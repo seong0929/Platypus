@@ -15,13 +15,11 @@ public static class Enums
         CoolTime,    //스킬 쿨 타임
         UltGauge   //궁극기 게이지
     }
-
     public enum ESummonAction
     {
         Skill,
         Ult
     }
-
     public enum ELeague
     {
         Amature

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraResolution : MonoBehaviour
@@ -22,6 +20,5 @@ public class CameraResolution : MonoBehaviour
         }
         camera.rect = rect;
     }
-
     void OnPreCull() => GL.Clear(true, true, Color.black);
 }

@@ -10,13 +10,11 @@ namespace BehaviorTree
         {
             _root = SetupTree();
         }
-
         private void Update()
         {
             if (_root != null)
                 _root.Evaluate();
         }
-
         protected abstract Node SetupTree();
     }
 }
