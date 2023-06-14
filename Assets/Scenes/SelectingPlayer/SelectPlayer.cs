@@ -11,18 +11,13 @@ public class SelectPlayer : MonoBehaviour
 
     private int _selectedNum;
 
-    [SerializeField]
-    public GameObject rosterCardPrefab;
-    [SerializeField]
-    private GameObject RosterBox;
-    [SerializeField]
-    private GameObject SelectedBox;
-    [SerializeField]
-    private GameObject NextButton;
+    [SerializeField] GameObject _rosterCardPrefab;
+    [SerializeField] GameObject _rosterBox;
+    [SerializeField] GameObject _selectedBox;
+    [SerializeField] GameObject _nextButton;
 
     private Text _selectedCounterTxt;
 
-    // Start is called before the first frame update
     private void Start()
     {
         _gameManager = FindObjectOfType<GameManager>();
@@ -37,17 +32,17 @@ public class SelectPlayer : MonoBehaviour
         SetRosterCard();
         SetSelectedCard();
 
-        Button theButton = NextButton.GetComponent<Button>();
+        Button theButton = _nextButton.GetComponent<Button>();
         theButton.onClick.AddListener(() => SendMatchManager());
     }
     private void SetSelectedCounterTxt()
     {
-        _selectedCounterTxt = SelectedBox.GetComponent<Text>();
+        _selectedCounterTxt = _selectedBox.GetComponent<Text>();
         _selectedCounterTxt.text = "( " + _selected.Count.ToString() + " / " + _selectedNum.ToString() + " )";
     }
     private void SetRosterCard()
     {
-        foreach (Transform child in RosterBox.transform)
+        foreach (Transform child in _rosterBox.transform)
         {
             Destroy(child.gameObject);
         }
@@ -55,7 +50,7 @@ public class SelectPlayer : MonoBehaviour
         for (int i = 0; i <_roster.Count; i++)
         {
             Vector3 vector = new Vector3(0, 200 -150 * i, 0);
-            GameObject rosterCard = Instantiate(rosterCardPrefab, RosterBox.transform);
+            GameObject rosterCard = Instantiate(_rosterCardPrefab, _rosterBox.transform);
             rosterCard.transform.localPosition = vector; // Set the local position of the roster card
 
             Button cardButton = rosterCard.GetComponentInChildren<Button>();
@@ -88,7 +83,7 @@ public class SelectPlayer : MonoBehaviour
     }
     void SetSelectedCard()
     {
-        foreach (Transform child in SelectedBox.transform)
+        foreach (Transform child in _selectedBox.transform)
         {
             Destroy(child.gameObject);
         }
@@ -96,7 +91,7 @@ public class SelectPlayer : MonoBehaviour
         for (int i = 0; i < _selected.Count; i++)
         {
             Vector3 vector = new Vector3(0, 200 - 150 * i, 0);
-            GameObject SelectedCard = Instantiate(rosterCardPrefab, SelectedBox.transform);
+            GameObject SelectedCard = Instantiate(_rosterCardPrefab, _selectedBox.transform);
             SelectedCard.transform.localPosition = vector;
 
             Button cardButton = SelectedCard.GetComponentInChildren<Button>();

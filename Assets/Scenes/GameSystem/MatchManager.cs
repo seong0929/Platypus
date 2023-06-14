@@ -16,8 +16,8 @@ public class MatchManager
         GroupA = new Group(teamA);
         GroupB = new Group(teamB);
 
-        //        groupA = a;
-        //        groupB = b;
+        //        GroupA = a;
+        //        GroupB = b;
         //        _playerNum = playerNum;
     }
     public void SetSelectedPlayer(bool isA, List<Player> selectedOne)

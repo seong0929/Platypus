@@ -1,34 +1,32 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-enum HomeButtonPanelName
+enum EHomeButtonPanelName
 {
-    TEAMANAGEMENT,
-    RESOURCEMANAGEMENT,
-    COMPETITION,
-    SYSTEM
+    TeamManagement,
+    ResourceManagement,
+    Competition,
+    System
 }
 
 public class ToggleButtons : MonoBehaviour
 {
-    [SerializeField]
-    private HomeButtonPanelName targetName;
-    [SerializeField]
-    private GameObject panelSet; // The panel containing the buttons to toggle
+    [SerializeField] EHomeButtonPanelName _targetName;
+    [SerializeField] GameObject _panelSet; // The panel containing the buttons to toggle
 
-    private GameObject targetPanel;
+    private GameObject _targetPanel;
 
-    public void Start()
+    private void Start()
     {
-        targetPanel = panelSet.transform.GetChild((int)targetName).gameObject;
+        _targetPanel = _panelSet.transform.GetChild((int)_targetName).gameObject;
     }
     public void TogglePanel()
     {
-        targetPanel.SetActive(!targetPanel.activeSelf); // Toggle the active state of the panel
+        _targetPanel.SetActive(!_targetPanel.activeSelf); // Toggle the active state of the panel
 
-        foreach (Transform panel in panelSet.transform) // Off panel that is not target Panel
+        foreach (Transform panel in _panelSet.transform) // Off panel that is not target Panel
         {
-            if (panel.gameObject != targetPanel)
+            if (panel.gameObject != _targetPanel)
             {
                 panel.gameObject.SetActive(false);
             }
@@ -36,7 +34,7 @@ public class ToggleButtons : MonoBehaviour
     }
     public void CloseAll()
     {
-        foreach (Transform panel in panelSet.transform) // Off panel that is not target Panel
+        foreach (Transform panel in _panelSet.transform) // Off panel that is not target Panel
         {
             panel.gameObject.SetActive(false);            
         }

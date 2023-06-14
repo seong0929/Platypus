@@ -5,36 +5,30 @@ public class ScoutCard : MonoBehaviour
 {
     private GameManager gameManager;
 
-    [SerializeField]
-    private int nth;
+    [SerializeField] int _nth;
+    [SerializeField] Text _name;
+    [SerializeField] Text _level;
+    [SerializeField] GameObject _scoutButton;
 
-    [SerializeField]
-    private Text Name;
-    [SerializeField]
-    private Text Level;
-
-    [SerializeField]
-    private GameObject ScoutButton;
-
-    private Player thePlayer;
+    private Player _thePlayer;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        thePlayer = gameManager.TeamManager.FAs.Players[nth];
+        _thePlayer = gameManager.TeamManager.FAs.Players[_nth];
 
         if (gameManager != null)
         {
             // Access the data from GameManager and update the UI text
-            Name.text = thePlayer.Name;
-            Level.text = "Level:" + thePlayer.Level.ToString();
+            _name.text = _thePlayer.Name;
+            _level.text = "Level:" + _thePlayer.Level.ToString();
 
-            ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
+            _scoutButton.GetComponent<Button>().onClick.AddListener(Scout);
         }
         else
         {
-            Name.text = "error";
-            Level.text = "Level:" + "error";
+            _name.text = "error";
+            _level.text = "Level:" + "error";
 
         }
     }
@@ -42,11 +36,11 @@ public class ScoutCard : MonoBehaviour
     public void Scout()
     {
 
-        gameManager.User.Team.ScoutPlayer(thePlayer);
-        Debug.Log("Scout"+thePlayer.Name);
+        gameManager.User.Team.ScoutPlayer(_thePlayer);
+        Debug.Log("Scout"+_thePlayer.Name);
 
         /////////////// NEED FIX LATER /////////////
-        gameManager.User.Team.AddPlayerToRoster(thePlayer);
+        gameManager.User.Team.AddPlayerToRoster(_thePlayer);
         Debug.Log("Roster player num: " + gameManager.User.Team.Roster.Count);
     }
 

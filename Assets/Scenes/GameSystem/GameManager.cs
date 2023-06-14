@@ -3,16 +3,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
     public UserState User;
     public TeamManager TeamManager;
     public MatchManager MatchManager;
-    private CoachManager CoachManager;
-    private PlayerManager PlayerManager;
-    //    private MatchManager MatchManager;
+    private CoachManager _coachManager;
+    private PlayerManager _playerManager;
+    //    private MatchManager _matchManager;
 
     // Singleton instance
-    public static GameManager Instance { get; private set; }
-    // Other GameManager variables and methods...
     private void Awake()
     {
         // Ensure only one instance of the GameManager exists
@@ -33,10 +32,10 @@ public class GameManager : MonoBehaviour
         // initialing UserState
         User = new UserState();
         TeamManager = new TeamManager();
-        CoachManager = new CoachManager();
-        PlayerManager = new PlayerManager();
+        _coachManager = new CoachManager();
+        _playerManager = new PlayerManager();
 
-        User.Coach = CoachManager.CreateCoach("User", 1);
+        User.Coach = _coachManager.CreateCoach("User", 1);
         User.Team = TeamManager.CreateTeam("User's Team");
 
         for (int i = 0; i<3; i++)
@@ -44,18 +43,7 @@ public class GameManager : MonoBehaviour
             BuildFilledTeam();
         }
 
-        PlayerManager.CreatePlayers(10, 1, TeamManager.FAs);
-    }
-    //    private void BuildFilledTeam()
-    private Team BuildFilledTeam()
-    {
-        Team team = TeamManager.CreateTeam();
-        team.Coach = CoachManager.CreateCoach("Unknown", 1); // might cause Confusion
-
-        List<Player> players = PlayerManager.CreatePlayers(3,1,2);
-        team.ScoutPlayers(players);
-
-        return team;
+        _playerManager.CreatePlayers(10, 1, TeamManager.FAs);
     }
     public void MakeMatch()
     {
@@ -73,5 +61,16 @@ public class GameManager : MonoBehaviour
         opponentSelected.Add(Opponent.Players[1]);
         MatchManager.GroupB.SelectedPlayers = opponentSelected;
         // ---- END: FOR THE TEST --- //
+    }
+    //    private void BuildFilledTeam()
+    private Team BuildFilledTeam()
+    {
+        Team team = TeamManager.CreateTeam();
+        team.Coach = _coachManager.CreateCoach("Unknown", 1); // might cause Confusion
+
+        List<Player> players = _playerManager.CreatePlayers(3,1,2);
+        team.ScoutPlayers(players);
+
+        return team;
     }
 }
