@@ -106,6 +106,45 @@ namespace BehaviorTree
             return ENodeState.Running;
         }
     }
+    // CC기 걸렸는 지 확인
+    public class CheckCC : Node
+    {
+        private Transform _transform;
+
+        public CheckCC(Transform transform)
+        {
+            _transform = transform;
+        }
+        public override ENodeState Evaluate()
+        {
+            if (_transform.GetComponent<Summon>().IsCC)
+            {
+                return ENodeState.Success;
+            }
+            else 
+            {
+                return ENodeState.Failure;
+            }
+        }
+    }
+    // CC기 걸린 행동
+    public class TaskCC : Node 
+    {
+        public override ENodeState Evaluate() 
+        {
+            /*
+             switch()
+            {
+                case Enums.ECC.Stan:
+                    break;
+                default:
+                    IsCC = false;
+                    break;
+            }
+             */
+            return ENodeState.Running;
+        }
+    }
     // 상대방 있는 지 확인
     public class CheckEnemyInScene : Node
     {
@@ -225,7 +264,7 @@ namespace BehaviorTree
             return ENodeState.Failure;
         }
     }
-    // 일반 공격하기
+    // 일반 공격하기 행동
     public class TaskAttack : Node
     {
         private Animator _animator;

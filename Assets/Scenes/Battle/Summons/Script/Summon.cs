@@ -12,9 +12,10 @@ public abstract class Summon : MonoBehaviour
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 스킬, skillIndex == 1: 궁
     private bool _isAlive = true;
+    private bool _isCC = false;
     private float _deadTime;
 
-    public virtual bool IsDead()
+    public bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
         {
@@ -39,6 +40,11 @@ public abstract class Summon : MonoBehaviour
     public void GiveDamage(Summon target, float damage)
     {
         target.TakeDamage(damage);
+    }
+    public bool IsCC
+    {
+        get { return _isCC; }
+        set { IsCC = value; }
     }
     public float[] Stats
     {

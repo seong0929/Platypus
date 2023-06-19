@@ -114,6 +114,12 @@ public class SenorZorro : Summon
                     new Inverter(new CheckIfAlive(IsDead())),
                     new TaskDie(this.transform),
                 }),
+                // CC 여부 확인
+                new Sequence(new List<Node>
+                {
+                    new CheckCC(this.transform),
+                    new TaskCC(),
+                }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
                 {
