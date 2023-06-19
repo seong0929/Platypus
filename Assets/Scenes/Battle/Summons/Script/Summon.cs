@@ -10,7 +10,8 @@ public abstract class Summon : MonoBehaviour
     //ToDo: BattleManager에서 팀 판별 초기화
     public bool MyTeam;
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
-    protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 스킬, skillIndex == 1: 궁
+    protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 일반 공격, 1: 스킬, 2: 궁
+
     private bool _isAlive = true;
     private bool _isCC = false;
     private float _deadTime;
@@ -25,7 +26,6 @@ public abstract class Summon : MonoBehaviour
         _isAlive = true;
         return _isAlive;
     }
-    public abstract void Attack(Summon target, float damage);
     protected abstract Node CreateBehaviorTree();
     public void TakeDamage(float damage)
     {

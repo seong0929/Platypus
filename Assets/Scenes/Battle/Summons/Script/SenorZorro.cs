@@ -18,6 +18,7 @@ public class SenorZorro : Summon
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        skills.Add(new Attack());
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
     }
@@ -25,9 +26,22 @@ public class SenorZorro : Summon
     {
         CreateBehaviorTree().Evaluate();
     }
-    public override void Attack(Summon target, float damage)
+    public class Attack: Skill
     {
-        GiveDamage(target,stats[((int)Enums.ESummonStats.NormalDamage)]);
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        {
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.transform.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                summon.transform.GetComponent<SpriteRenderer>().flipX = false;
+            }
+            animator.SetBool("Idle", false);
+            animator.SetBool("Move", false);
+            animator.SetBool("Attack", true);
+        }
     }
     public class FootworkSkill : Skill
     {
@@ -151,9 +165,9 @@ public class SenorZorro : Summon
                                 new Sequence(new List<Node>
                                 {
                                     new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)], stats[((int)Enums.ESummonStats.UltGauge)]),
-                                    new TaskUlt(this.transform, skills[1])
+                                    new TaskUlt(this.transform, skills[((int)Enums.ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(this.transform)
+                                new TaskAttack(this.transform, skills[((int)Enums.ESummonAction.Attack)]),
                             })
                         }),
                         //적이 너무 가까우면, 이동

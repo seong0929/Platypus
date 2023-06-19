@@ -267,28 +267,20 @@ namespace BehaviorTree
     // 일반 공격하기 행동
     public class TaskAttack : Node
     {
-        private Animator _animator;
         private Transform _transform;
+        private Skill _skill;
+        private Animator _animator;
 
-        public TaskAttack(Transform transform)
+        public TaskAttack(Transform transform, Skill skill)
         {
             _transform = transform;
+            _skill = skill;
             _animator = transform.GetComponent<Animator>();
         }
         public override ENodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            if (_transform.position.x < target.position.x)
-            {
-                _transform.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                _transform.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            _animator.SetBool("Idle", false);
-            _animator.SetBool("Move", false);
-            _animator.SetBool("Attack", true);
+            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return ENodeState.Running;
         }
     }
