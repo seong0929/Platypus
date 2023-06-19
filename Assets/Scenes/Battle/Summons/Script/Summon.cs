@@ -7,35 +7,33 @@ public abstract class Summon : MonoBehaviour
 {
     public string SummonName;
     public GameObject Opponent;
-    public bool IsMoving;
-    public bool IsAlive = true;
     //ToDo: BattleManager에서 팀 판별 초기화
     public bool MyTeam;
     protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 스킬, skillIndex == 1: 궁
+    private bool _isAlive = true;
     private float _deadTime;
 
     public virtual bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
         {
-            IsAlive = false;
-            return IsAlive;
+            _isAlive = false;
+            return _isAlive;
         }
-        IsAlive = true;
-        return IsAlive;
+        _isAlive = true;
+        return _isAlive;
     }
     public abstract void Attack(Summon target, float damage);
-
-    // BehaviorTree에서 사용할 메서드
     protected abstract Node CreateBehaviorTree();
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
         stats[((int)Enums.ESummonStats.Health)] -= actualDamage;
-        if (stats[((int)Enums.ESummonStats.Health)] <= 0) {
+        if (stats[((int)Enums.ESummonStats.Health)] <= 0) 
+        {
             _deadTime = BattleManager.instance.GameTime;
-            IsAlive = false;
+            _isAlive = false;
         }
     }
     public void GiveDamage(Summon target, float damage)
@@ -46,6 +44,18 @@ public abstract class Summon : MonoBehaviour
     {
         get { return stats; }
         set { stats = value; }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch (collision.name)
+        {
+            case "Summon":
+                //TODO: 투사체 혹은 공격의 데미지 가져오기
+                TakeDamage(collision.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.NormalDamage)]);
+                break;
+            default:
+                break;
+        }
     }
 }
 public class Skill

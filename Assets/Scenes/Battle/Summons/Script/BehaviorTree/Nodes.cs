@@ -228,13 +228,8 @@ namespace BehaviorTree
     // 일반 공격하기
     public class TaskAttack : Node
     {
-        // 체력 감소에 관한
         private Animator _animator;
         private Transform _transform;
-
-        //private Transform _lastTarget;
-        //private float _attackTime = 1f;
-        //private float _attackCounter = 0f;
 
         public TaskAttack(Transform transform)
         {
@@ -243,19 +238,6 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            /* 데미지 관련
-            Transform target = (Transform)GetData("target");
-            if (target != _lastTarget)
-            {
-                _lastTarget = target;
-            }
-
-            _attackCounter += Time.deltaTime;
-            if (_attackCounter >= _attackTime)
-            {
-                    _attackCounter = 0f;
-            }
-             */
             Transform target = (Transform)GetData("target");
             if (_transform.position.x < target.position.x)
             {

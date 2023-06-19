@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
+
 public class SenorZorro : Summon
 {
     [SerializeField] Animator _animator;  //애니메이션
@@ -175,7 +176,6 @@ public class SenorZorro : Summon
                 })
             })
         });
-
         return root;
     }
 }
