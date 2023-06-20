@@ -106,6 +106,45 @@ namespace BehaviorTree
             return ENodeState.Running;
         }
     }
+    // CC기 걸렸는 지 확인
+    public class CheckCC : Node
+    {
+        private Transform _transform;
+
+        public CheckCC(Transform transform)
+        {
+            _transform = transform;
+        }
+        public override ENodeState Evaluate()
+        {
+            if (_transform.GetComponent<Summon>().IsCC)
+            {
+                return ENodeState.Success;
+            }
+            else 
+            {
+                return ENodeState.Failure;
+            }
+        }
+    }
+    // CC기 걸린 행동
+    public class TaskCC : Node 
+    {
+        public override ENodeState Evaluate() 
+        {
+            /*
+             switch()
+            {
+                case Enums.ECC.Stan:
+                    break;
+                default:
+                    IsCC = false;
+                    break;
+            }
+             */
+            return ENodeState.Running;
+        }
+    }
     // 상대방 있는 지 확인
     public class CheckEnemyInScene : Node
     {
@@ -225,49 +264,23 @@ namespace BehaviorTree
             return ENodeState.Failure;
         }
     }
-    // 일반 공격하기
+    // 일반 공격하기 행동
     public class TaskAttack : Node
     {
-        // 체력 감소에 관한
-        private Animator _animator;
         private Transform _transform;
+        private Skill _skill;
+        private Animator _animator;
 
-        //private Transform _lastTarget;
-        //private float _attackTime = 1f;
-        //private float _attackCounter = 0f;
-
-        public TaskAttack(Transform transform)
+        public TaskAttack(Transform transform, Skill skill)
         {
             _transform = transform;
+            _skill = skill;
             _animator = transform.GetComponent<Animator>();
         }
         public override ENodeState Evaluate()
         {
-            /* 데미지 관련
             Transform target = (Transform)GetData("target");
-            if (target != _lastTarget)
-            {
-                _lastTarget = target;
-            }
-
-            _attackCounter += Time.deltaTime;
-            if (_attackCounter >= _attackTime)
-            {
-                    _attackCounter = 0f;
-            }
-             */
-            Transform target = (Transform)GetData("target");
-            if (_transform.position.x < target.position.x)
-            {
-                _transform.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                _transform.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            _animator.SetBool("Idle", false);
-            _animator.SetBool("Move", false);
-            _animator.SetBool("Attack", true);
+            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return ENodeState.Running;
         }
     }

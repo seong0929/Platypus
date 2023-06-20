@@ -17,6 +17,7 @@ public static class Enums
     }
     public enum ESummonAction
     {
+        Attack,
         Skill,
         Ult
     }
