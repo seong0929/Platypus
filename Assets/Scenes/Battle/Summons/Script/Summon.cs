@@ -24,6 +24,27 @@ public abstract class Summon : MonoBehaviour
     {
         Enums.ECC[] cCs = new Enums.ECC[] { Enums.ECC.None };
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch (collision.name)
+        {
+            case "Summon":
+                //TODO: 투사체 혹은 공격의 데미지 가져오기
+                TakeDamage(collision.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.NormalDamage)]);
+                break;
+            default:
+                break;
+        }
+    }
+    public float[] Stats
+    {
+        get { return stats; }
+        set { stats = value; }
+    }
+    protected abstract Node CreateBehaviorTree();
+
+    //피격 타격
+    #region
     public bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
@@ -48,6 +69,9 @@ public abstract class Summon : MonoBehaviour
     {
         target.TakeDamage(damage);
     }
+    #endregion
+    // CC
+    #region
     public void ApplyCC(Enums.ECC ccType)
     {
         _isCC = true;
@@ -91,26 +115,9 @@ public abstract class Summon : MonoBehaviour
                 break;
         }
     }
-    public float[] Stats
-    {
-        get { return stats; }
-        set { stats = value; }
-    }
-    protected abstract Node CreateBehaviorTree();
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        switch (collision.name)
-        {
-            case "Summon":
-                //TODO: 투사체 혹은 공격의 데미지 가져오기
-                TakeDamage(collision.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.NormalDamage)]);
-                break;
-            default:
-                break;
-        }
-    }
+    #endregion
 }
+
 public class Skill
 {
     public float skiilCounter = 0;
