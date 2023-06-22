@@ -132,7 +132,7 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new CheckCC(this.transform),
-                    new TaskCC(),
+                    new TaskCC(this.GetComponent<Summon>()),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>

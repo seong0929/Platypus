@@ -41,4 +41,10 @@ public static class Enums
     {
         Mad
     }
+    public enum ECC
+    {
+        None,
+        Stun,
+        Silence
+    }
 }

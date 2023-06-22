@@ -4,42 +4,43 @@ namespace BehaviorTree
     {
         private int _successChildrenNum;
         private int _failureChildrenNum;
-        private int _thresholdM;
 
-        public ParallelNode(int thresholdM)
+        public ParallelNode()
         {
             _successChildrenNum = 0;
             _failureChildrenNum = 0;
-            this._thresholdM = thresholdM;
         }
         public override ENodeState Evaluate()
         {
-            _successChildrenNum = 0;
-            _failureChildrenNum = 0;
+            bool hasRunningChild = false;
 
             foreach (Node child in children)
             {
                 ENodeState childState = child.Evaluate();
 
-                switch (childState)
+                if (childState == ENodeState.Success)
                 {
-                    case ENodeState.Success:
-                        _successChildrenNum++;
-                        break;
-                    case ENodeState.Failure:
-                        _failureChildrenNum++;
-                        break;
+                    _successChildrenNum++;
+                }
+                else if (childState == ENodeState.Failure)
+                {
+                    _failureChildrenNum++;
+                }
+                else if (childState == ENodeState.Running)
+                {
+                    hasRunningChild = true;
                 }
             }
-            if (_successChildrenNum >= _thresholdM)
+
+            if (_successChildrenNum > 0)
             {
                 state = ENodeState.Success;
             }
-            else if (_failureChildrenNum > children.Count - _thresholdM)
+            else if (_failureChildrenNum == children.Count)
             {
                 state = ENodeState.Failure;
             }
-            else
+            else if (hasRunningChild)
             {
                 state = ENodeState.Running;
             }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 //공통 노드 선언
 namespace BehaviorTree
@@ -109,6 +110,7 @@ namespace BehaviorTree
     // CC기 걸렸는 지 확인
     public class CheckCC : Node
     {
+        private Enums.ECC _currentCC;
         private Transform _transform;
 
         public CheckCC(Transform transform)
@@ -119,30 +121,46 @@ namespace BehaviorTree
         {
             if (_transform.GetComponent<Summon>().IsCC)
             {
+                _currentCC = _transform.GetComponent<Summon>().CurrentCC;
                 return ENodeState.Success;
             }
-            else 
+            else
             {
+                _currentCC = Enums.ECC.None;
                 return ENodeState.Failure;
             }
         }
     }
-    // CC기 걸린 행동
-    public class TaskCC : Node 
+    // CC 기 행동
+    public class TaskCC : Node
     {
-        public override ENodeState Evaluate() 
+        private Summon _summon;
+        private float _ccTimer;
+        public TaskCC(Summon summon)
         {
-            /*
-             switch()
+            _summon = summon;
+            _ccTimer = 0f;
+        }
+        public override ENodeState Evaluate()
+        {
+            if (_summon.IsCC && (_summon.CurrentCC != Enums.ECC.None))
             {
-                case Enums.ECC.Stan:
-                    break;
-                default:
-                    IsCC = false;
-                    break;
+                if (_ccTimer >= _summon.GetCCDuration(_summon.CurrentCC))
+                {
+                    _summon.RemoveCC();
+                    return ENodeState.Success;
+                }
+                else
+                {
+                    _summon.PerformCCAction(_summon.CurrentCC);
+                    _ccTimer += Time.deltaTime;
+                    return ENodeState.Running;
+                }
             }
-             */
-            return ENodeState.Running;
+            else
+            {
+                return ENodeState.Failure;
+            }
         }
     }
     // 상대방 있는 지 확인
