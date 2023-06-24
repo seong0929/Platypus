@@ -9,4 +9,7 @@ public class SummonScriptableObject : ScriptableObject
     public float Health;
     public float NormalDamage;
     public float Defence;
+    public float PersonalDistance;
+    public float CoolTime;
+    public float UltGauge;
 }

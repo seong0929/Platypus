@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
+
 public class SenorZorro : Summon
 {
-    [SerializeField] Animator animator;  //애니메이션
+    [SerializeField] Animator _animator;  //애니메이션
 
     public SenorZorro()
     {
@@ -16,7 +17,8 @@ public class SenorZorro : Summon
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
+        skills.Add(new Attack());
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
     }
@@ -24,9 +26,89 @@ public class SenorZorro : Summon
     {
         CreateBehaviorTree().Evaluate();
     }
-    public override void Attack(Summon target, float damage)
+    public class Attack: Skill
     {
-        GiveDamage(target,stats[((int)Enums.ESummonStats.NormalDamage)]);
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        {
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.transform.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                summon.transform.GetComponent<SpriteRenderer>().flipX = false;
+            }
+            animator.SetBool("Idle", false);
+            animator.SetBool("Move", false);
+            animator.SetBool("Attack", true);
+        }
+    }
+    public class FootworkSkill : Skill
+    {
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        {
+            Vector2 summonPosition = summon.transform.position;
+            Vector2 targetPosition = target.transform.position;
+            float distance = Vector2.Distance(summonPosition, targetPosition);
+
+            Vector2 moveDirection;
+            if (summonPosition.x < targetPosition.x)
+            {
+                moveDirection = Vector2.right;
+            }
+            else
+            {
+                moveDirection = Vector2.left;
+            }
+
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = false;
+            }
+            animator.SetTrigger("Skill");
+
+            if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
+            {
+                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+            }
+            else
+            {
+                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+            }
+        }
+    }
+    public class FlecheSkill : Skill
+    {
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        {
+            float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
+
+            animator.SetTrigger("UltIn");
+
+            Vector3 direction = (target.transform.position - summon.transform.position).normalized;
+            float distance = Vector3.Distance(summon.transform.position, target.transform.position);
+            float teleportDistance = distance - appearDistance;
+
+            Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
+            summon.transform.position = teleportPosition;
+
+            animator.SetTrigger("UltOut");
+
+            Vector3 appearPosition = target.transform.position + direction * appearDistance;
+            summon.transform.position = appearPosition;
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                summon.GetComponent<SpriteRenderer>().flipX = false;
+            }
+        }
     }
     protected override Node CreateBehaviorTree()
     {
@@ -45,6 +127,12 @@ public class SenorZorro : Summon
                 {
                     new Inverter(new CheckIfAlive(IsDead())),
                     new TaskDie(this.transform),
+                }),
+                // CC 여부 확인
+                new Sequence(new List<Node>
+                {
+                    new CheckCC(this.transform),
+                    new TaskCC(this.GetComponent<Summon>()),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -77,9 +165,9 @@ public class SenorZorro : Summon
                                 new Sequence(new List<Node>
                                 {
                                     new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)], stats[((int)Enums.ESummonStats.UltGauge)]),
-                                    new TaskUlt(this.transform, skills[1])
+                                    new TaskUlt(this.transform, skills[((int)Enums.ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(this.transform)
+                                new TaskAttack(this.transform, skills[((int)Enums.ESummonAction.Attack)]),
                             })
                         }),
                         //적이 너무 가까우면, 이동
@@ -108,75 +196,6 @@ public class SenorZorro : Summon
                 })
             })
         });
-
         return root;
-    }
-    public class FootworkSkill : Skill
-    {
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
-        {
-            Vector2 summonPosition = summon.transform.position;
-            Vector2 targetPosition = target.transform.position;
-            float distance = Vector2.Distance(summonPosition, targetPosition);
-
-            Vector2 moveDirection;
-            if (summonPosition.x < targetPosition.x)
-            {
-                moveDirection = Vector2.right;
-            }
-            else
-            {
-                moveDirection = Vector2.left;
-            }
-
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            animator.SetTrigger("Skill");
-            
-            if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
-            {
-                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
-            }
-            else
-            {
-                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
-            }
-        }
-    }
-
-    public class FlecheSkill : Skill
-    {
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
-        {
-            float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
-
-            animator.SetTrigger("UltIn");
-
-            Vector3 direction = (target.transform.position - summon.transform.position).normalized;
-            float distance = Vector3.Distance(summon.transform.position, target.transform.position);
-            float teleportDistance = distance - appearDistance;
-
-            Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
-            summon.transform.position = teleportPosition;
-
-            animator.SetTrigger("UltOut");
-
-            Vector3 appearPosition = target.transform.position + direction * appearDistance;
-            summon.transform.position = appearPosition;
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
-            }
-        }
     }
 }
