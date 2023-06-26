@@ -3,11 +3,12 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance;
+    public float MasterVolume = 1.0f;
     public float BgmVolume = 1.0f;
     public float SoundEffectVolume = 1.0f;
 
-    private AudioSource bgmAudioSource;
-    private AudioSource soundEffectAudioSource;
+    private AudioSource _bgmAudioSource;
+    private AudioSource _soundEffectAudioSource;
 
     private void Awake()
     {
@@ -23,22 +24,22 @@ public class SoundManager : MonoBehaviour
     }
     private void Start()
     {
-        bgmAudioSource = gameObject.AddComponent<AudioSource>();
-        soundEffectAudioSource = gameObject.AddComponent<AudioSource>();
+        _bgmAudioSource = gameObject.AddComponent<AudioSource>();
+        _soundEffectAudioSource = gameObject.AddComponent<AudioSource>();
     }
     public void PlayBGM(AudioClip bgmClip)
     {
-        bgmAudioSource.clip = bgmClip;
-        bgmAudioSource.volume = BgmVolume;
-        bgmAudioSource.loop = true;
-        bgmAudioSource.Play();
+        _bgmAudioSource.clip = bgmClip;
+        _bgmAudioSource.volume = MasterVolume * BgmVolume;
+        _bgmAudioSource.loop = true;
+        _bgmAudioSource.Play();
     }
     public void StopBGM()
     {
-        bgmAudioSource.Stop();
+        _bgmAudioSource.Stop();
     }
     public void PlaySoundEffect(AudioClip soundEffectClip)
     {
-        soundEffectAudioSource.PlayOneShot(soundEffectClip, SoundEffectVolume);
+        _soundEffectAudioSource.PlayOneShot(soundEffectClip, MasterVolume * SoundEffectVolume);
     }
 }
