@@ -17,7 +17,6 @@ public class OptionController : MonoBehaviour
         _BgmSlider.onValueChanged.AddListener(OnBgmVolumeChanged);
         _SoundEffectSlider.onValueChanged.AddListener(OnSoundEffectVolumeChanged);
     }
-
     private void OnBgmVolumeChanged(float value)
     {
         // BGM 볼륨 값을 변경
