@@ -385,17 +385,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: effc3d6f759505643825c8d63a9d39e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ATKnum: 1
+  DFSnum: 2
+  LVnum: 3
   CardPanel: {fileID: 331442020013702835}
   PlayerPanel: {fileID: 331442020387170247}
   ATKPanel: {fileID: 331442018862786298}
-  ATKText: {fileID: 331442018740244715}
-  ATKNum: {fileID: 2466854422358438004}
+  ATKText: {fileID: 331442018740244717}
+  ATKNum: {fileID: 3110132641875601117}
   DFSPanel: {fileID: 331442020023629967}
-  DFSText: {fileID: 5079928370465059821}
-  DFSNum: {fileID: 4852736880762248984}
+  DFSText: {fileID: 1984716484699745182}
+  DFSNum: {fileID: 3260879207574868554}
   LVPanel: {fileID: 331442019404690128}
-  LVText: {fileID: 2702832770553671275}
-  LVNum: {fileID: 2273817286609586939}
+  LVText: {fileID: 6020157127921924296}
+  LVNum: {fileID: 6930285194469957147}
   ProficientPanel0: {fileID: 6175029967060480826}
   ProficientPanel1: {fileID: 8321635932558719009}
   ProficientPanel2: {fileID: 6779714667941991554}
@@ -407,7 +410,7 @@ MonoBehaviour:
   ProficientPanelSprite0: {fileID: -1629250715, guid: 4ae9c4b80e541c046bffbe0b4aa0ebff, type: 3}
   ProficientPanelSprite1: {fileID: 750665667, guid: 4ae9c4b80e541c046bffbe0b4aa0ebff, type: 3}
   ProficientPanelSprite2: {fileID: 1612913726, guid: 4ae9c4b80e541c046bffbe0b4aa0ebff, type: 3}
-  bA: 1
+  bA: 0
 --- !u!1 &331442020023629967
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,23 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 using static Enums; 
 
 public class PlayerCard : MonoBehaviour
 {
+    [Header("Stat Control")]
+    public int ATKnum;
+    public int DFSnum;
+    public int LVnum;
+
     // GameObject
     [Header ("GameObject")]
     [SerializeField] GameObject CardPanel;
     [SerializeField] GameObject PlayerPanel;
     [SerializeField] GameObject ATKPanel;
-    [SerializeField] GameObject ATKText;
-    [SerializeField] GameObject ATKNum;
+    [SerializeField] TextMeshProUGUI ATKText;
+    [SerializeField] TextMeshProUGUI ATKNum;
     [SerializeField] GameObject DFSPanel;
-    [SerializeField] GameObject DFSText;
-    [SerializeField] GameObject DFSNum;
+    [SerializeField] TextMeshProUGUI DFSText;
+    [SerializeField] TextMeshProUGUI DFSNum;
     [SerializeField] GameObject LVPanel;
-    [SerializeField] GameObject LVText;
-    [SerializeField] GameObject LVNum;
+    [SerializeField] TextMeshProUGUI LVText;
+    [SerializeField] TextMeshProUGUI LVNum;
     [SerializeField] GameObject ProficientPanel0;
     [SerializeField] GameObject ProficientPanel1;
     [SerializeField] GameObject ProficientPanel2;
@@ -54,6 +60,11 @@ public class PlayerCard : MonoBehaviour
     private Image proficientPanelImage2;
     private List<Image> proficientSummonImages;
 
+    private Color textColor0 = new Color(1f, 1f, 0.9f);
+    private Color textColor1 = new Color(0.6f, 0.2f, 0.2f);
+    private Color statColor0 = new Color(1f, 0.56f, 0.4f);
+    private Color statColor1 = new Color(0.6f, 0.2f, 0.2f);
+    private Color statColor2 = new Color(0.23f, 0.63f, 0.43f);
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +73,8 @@ public class PlayerCard : MonoBehaviour
         fetchComponents();
         UpdatePanels();
 
+
+        SetStats();
         //Set Font's color
 
     }
@@ -79,6 +92,7 @@ public class PlayerCard : MonoBehaviour
     }
     public void UpdatePanels()
     {
+        // Update Panels if it is team B's cards.
         if(bA == false)
         {
             cardPanelImage.sprite = CardPanelSprite;
@@ -89,11 +103,26 @@ public class PlayerCard : MonoBehaviour
             proficientPanelImage0.sprite = ProficientPanelSprite0;
             proficientPanelImage1.sprite = ProficientPanelSprite1;
             proficientPanelImage2.sprite = ProficientPanelSprite2;
+
+            //Update Text's color if it is the team B's cards.
+            ATKText.color = textColor0;
+            DFSText.color = textColor1;
+            LVText.color = textColor0;
+
+            ATKNum.color = statColor0;
+            DFSNum.color = statColor1;
+            LVNum.color = statColor2;
         }
     }
     public void setPlayerImage(Image playerImage)
     {
 
+    }
+    private void SetStats()
+    {
+        ATKNum.text = ATKnum.ToString();
+        DFSNum.text = DFSnum.ToString();
+        LVNum.text = LVnum.ToString();
     }
     public void setATK(int atk)
     {
