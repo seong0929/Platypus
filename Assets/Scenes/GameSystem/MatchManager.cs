@@ -9,7 +9,7 @@ public class MatchManager
     public Group GroupA;
     public Group GroupB;
 
-//    private int PlayerNum;
+    //    private int PlayerNum;
 
     public MatchManager(int playerNum, Team teamA, Team teamB)//Group a, Group b)//, int playerNum)
     {

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BanPickUI : MonoBehaviour
 {
     private GameManager gameManager;
+    private MatchManager matchManager;
 
     private List<Player> TeamA;
     private List<Player> TeamB;
@@ -18,14 +19,21 @@ public class BanPickUI : MonoBehaviour
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
-        TeamA = gameManager.MatchManager.GroupA.SelectedPlayers;
-        TeamB = gameManager.MatchManager.GroupB.SelectedPlayers;
+        matchManager = gameManager.MatchManager;
+        TeamA = matchManager.GroupA.SelectedPlayers;
+        TeamB = matchManager.GroupB.SelectedPlayers;
     }
 
     void Start()
     {
         InitializeTeamPanel(TeamPanelA, TeamA, true);
         InitializeTeamPanel(TeamPanelB, TeamB, false);
+
+        List<Enums.ESummon> sumons = new List<Enums.ESummon>();
+        sumons.Add(Enums.ESummon.SenorZorro);
+        sumons.Add(Enums.ESummon.SenorZorro);
+
+        setSummons(sumons, sumons);
     }
 
     private void InitializeTeamPanel(GameObject panelGameObject, List<Player> teamMembers, bool isTeamA)
@@ -50,5 +58,9 @@ public class BanPickUI : MonoBehaviour
 
         panel.CreateCards(teamMembers.Count);
     }
-
+    private void setSummons(List<Enums.ESummon> teamASummons, List<Enums.ESummon> teamBSummons)
+    {
+        matchManager.GroupA.SelectedSummon = teamASummons;
+        matchManager.GroupB.SelectedSummon = teamBSummons;
+    }
 }

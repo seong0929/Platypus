@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     private PlayerManager PlayerManager;
     public MatchManager MatchManager;
 
-//    private MatchManager MatchManager;
+    public Group GroupA;
+    public Group GroupB;
+
+    //    private MatchManager MatchManager;
 
     // Singleton instance
     public static GameManager Instance { get; private set; }
