@@ -23,7 +23,7 @@ public class SelectPlayer : MonoBehaviour
     private Text SelectedCounterTxt;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         Team team = gameManager.User.Team;
@@ -129,6 +129,8 @@ public class SelectPlayer : MonoBehaviour
 
     private void SendMatchManager()
     {
+        //gameManager.MatchManager.GroupA.SelectedPlayers = selected;
+        gameManager.MakeMatch();
         gameManager.MatchManager.GroupA.SelectedPlayers = selected;
         List<Player> SelectedPlayers = gameManager.MatchManager.GroupA.SelectedPlayers;
         Debug.Log("selected Players:" + SelectedPlayers[0].Name + ", " + SelectedPlayers[1].Name);

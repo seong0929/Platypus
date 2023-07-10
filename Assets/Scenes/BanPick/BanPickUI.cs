@@ -10,13 +10,15 @@ public class BanPickUI : MonoBehaviour
     private List<Player> TeamB;
 
     [SerializeField]
-    public GameObject PlayerCardPrefab;
+    GameObject TeamPanelA;
+    [SerializeField]
+    GameObject TeamPanelB;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        TeamA = gameManager.GroupA.SelectedPlayers;
+        TeamA = gameManager.MatchManager.GroupA.SelectedPlayers;
         Team team = gameManager.User.Team;
 
         TeamA = team.Roster;
