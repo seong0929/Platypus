@@ -9,7 +9,7 @@ public class TeamPanel : MonoBehaviour
 
     public int CardNum = 3;
     private bool bA;
-    private List<GameObject> cards = new List<GameObject>();
+    private List<PlayerCard> cards = new List<PlayerCard>();
     private List<int> atkList = new List<int>();
     private List<int> dfsList = new List<int>();
     private List<int> lvList = new List<int>();
@@ -17,6 +17,7 @@ public class TeamPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
         // Get Stats of Players + team
         for (int i = 0; i < CardNum; i++)
         {
@@ -25,10 +26,11 @@ public class TeamPanel : MonoBehaviour
             lvList.Add(i+100);
         }
         bA = true;
+         */
 
         destroyChildObjects();
         // Create Cards
-        createCards();
+        //createCards();
     }
     
 
@@ -49,11 +51,10 @@ public class TeamPanel : MonoBehaviour
     {
         bA = team;
 
-        int childCount = transform.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
+        int childCount = cards.Count;
+        for (int i = 0; i < childCount ; i++)
         {
-            GameObject child = transform.GetChild(i).gameObject;
-            PlayerCard playerCard = child.GetComponent<PlayerCard>();
+            PlayerCard playerCard = cards[i];
 
             playerCard.SetTeam(bA);
         }
@@ -68,8 +69,9 @@ public class TeamPanel : MonoBehaviour
             Destroy(child);
         }
     }
-    private void createCards()
+    public void CreateCards(int cardNum)
     {
+        CardNum = cardNum;
         for (int i = 0; i < CardNum; i++)
         {
             GameObject instantiatedPrefab = Instantiate(PlayerCardPrefab, transform);
@@ -81,7 +83,7 @@ public class TeamPanel : MonoBehaviour
             playerCard.SetLV(lvList[i]);
             playerCard.SetTeam(bA);
 
-            cards.Add(instantiatedPrefab);
+            cards.Add(playerCard);
         }
     }
 

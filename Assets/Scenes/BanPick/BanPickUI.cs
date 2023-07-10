@@ -24,9 +24,31 @@ public class BanPickUI : MonoBehaviour
 
     void Start()
     {
-        TeamPanel PanelA = TeamPanelA.GetComponent<TeamPanel>();
-        PanelA.SetTeam(true);
-        TeamPanel PanelB = TeamPanelB.GetComponent<TeamPanel>();
-        PanelB.SetTeam(false);
+        InitializeTeamPanel(TeamPanelA, TeamA, true);
+        InitializeTeamPanel(TeamPanelB, TeamB, false);
     }
+
+    private void InitializeTeamPanel(GameObject panelGameObject, List<Player> teamMembers, bool isTeamA)
+    {
+        TeamPanel panel = panelGameObject.GetComponent<TeamPanel>();
+        panel.SetTeam(isTeamA);
+
+        List<int> atkList = new List<int>();
+        List<int> dfsList = new List<int>();
+        List<int> lvList = new List<int>();
+
+        foreach (Player member in teamMembers)
+        {
+            atkList.Add(member.Attack);
+            dfsList.Add(member.Defense);
+            lvList.Add(member.Level);
+        }
+
+        panel.SetATKs(atkList);
+        panel.SetDFSs(dfsList);
+        panel.SetLVs(lvList);
+
+        panel.CreateCards(teamMembers.Count);
+    }
+
 }
