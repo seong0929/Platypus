@@ -67,16 +67,13 @@ public class PlayerCard : MonoBehaviour
     private Color statColor2 = new Color(0.23f, 0.63f, 0.43f);
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //Set Panels Images
         fetchComponents();
-        UpdatePanels();
-
+        SetTeam(bA);
 
         SetStats();
-        //Set Font's color
-
     }
 
     private void fetchComponents()
@@ -90,7 +87,12 @@ public class PlayerCard : MonoBehaviour
         proficientPanelImage1 = ProficientPanel1.GetComponent<Image>();
         proficientPanelImage2 = ProficientPanel2.GetComponent<Image>();
     }
-    public void UpdatePanels()
+    public void SetTeam(bool isA)
+    {
+        bA = isA;
+        chnageSprite();
+    }
+    private void chnageSprite()
     {
         // Update Panels if it is team B's cards.
         if(bA == false)
@@ -124,16 +126,21 @@ public class PlayerCard : MonoBehaviour
         DFSNum.text = DFSnum.ToString();
         LVNum.text = LVnum.ToString();
     }
-    public void setATK(int atk)
+    public void SetATK(int atk)
     {
+        ATKnum = atk;
+        ATKNum.text = ATKnum.ToString();
+    }
+    public void SetDFS(int dfs)
+    {
+        DFSnum = dfs;
+        DFSNum.text = DFSnum.ToString();
 
     }
-    public void setDFS(int dfs)
+    public void SetLV(int lv)
     {
-
-    }
-    public void setLV(int lv)
-    {
+        LVnum = lv;
+        LVNum.text = LVnum.ToString();
 
     }
     public void SetProficient(List<ESummon> proficientList)

@@ -410,7 +410,7 @@ MonoBehaviour:
   ProficientPanelSprite0: {fileID: -1629250715, guid: 4ae9c4b80e541c046bffbe0b4aa0ebff, type: 3}
   ProficientPanelSprite1: {fileID: 750665667, guid: 4ae9c4b80e541c046bffbe0b4aa0ebff, type: 3}
   ProficientPanelSprite2: {fileID: 1612913726, guid: 4ae9c4b80e541c046bffbe0b4aa0ebff, type: 3}
-  bA: 0
+  bA: 1
 --- !u!1 &331442020023629967
 GameObject:
   m_ObjectHideFlags: 0
