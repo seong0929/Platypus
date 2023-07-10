@@ -24,7 +24,7 @@ public class TeamPanel : MonoBehaviour
             dfsList.Add(i+10);
             lvList.Add(i+100);
         }
-        bA = false;
+        bA = true;
 
         destroyChildObjects();
         // Create Cards
@@ -48,6 +48,15 @@ public class TeamPanel : MonoBehaviour
     public void SetTeam(bool team)
     {
         bA = team;
+
+        int childCount = transform.childCount;
+        for (int i = childCount - 1; i >= 0; i--)
+        {
+            GameObject child = transform.GetChild(i).gameObject;
+            PlayerCard playerCard = child.GetComponent<PlayerCard>();
+
+            playerCard.SetTeam(bA);
+        }
     }
 
     private void destroyChildObjects()

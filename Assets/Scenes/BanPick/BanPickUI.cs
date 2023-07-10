@@ -15,15 +15,18 @@ public class BanPickUI : MonoBehaviour
     GameObject TeamPanelB;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         TeamA = gameManager.MatchManager.GroupA.SelectedPlayers;
-        Team team = gameManager.User.Team;
-
-        TeamA = team.Roster;
-
+        TeamB = gameManager.MatchManager.GroupB.SelectedPlayers;
     }
 
-
+    void Start()
+    {
+        TeamPanel PanelA = TeamPanelA.GetComponent<TeamPanel>();
+        PanelA.SetTeam(true);
+        TeamPanel PanelB = TeamPanelB.GetComponent<TeamPanel>();
+        PanelB.SetTeam(false);
+    }
 }
