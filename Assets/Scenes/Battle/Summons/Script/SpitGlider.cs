@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 
-public class SenorZorro : Summon
+public class SpitGlider : Summon
 {
     [SerializeField] Animator _animator;  //애니메이션
-
-    public SenorZorro()
+    #region Settings
+    public SpitGlider()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
         float[] summonStats = { 0.8f, 1f, 150f, 8f, 2f, 0.3f, 5f, 15f };
@@ -19,15 +19,16 @@ public class SenorZorro : Summon
     {
         _animator = GetComponent<Animator>();
         skills.Add(new Attack());
-        skills.Add(new FootworkSkill());
-        skills.Add(new FlecheSkill());
+        skills.Add(new SeedSpitting());
+        skills.Add(new AerialBombardment());
     }
     private void Update()
     {
         CreateBehaviorTree().Evaluate();
     }
+    #endregion
     #region Skill
-    public class Attack: Skill
+    public class Attack : Skill
     {
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -44,9 +45,9 @@ public class SenorZorro : Summon
             animator.SetBool("Attack", true);
         }
     }
-    public class FootworkSkill : Skill
+    public class SeedSpitting : Skill
     {
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
         {
             Vector2 summonPosition = summon.transform.position;
             Vector2 targetPosition = target.transform.position;
@@ -82,9 +83,9 @@ public class SenorZorro : Summon
             }
         }
     }
-    public class FlecheSkill : Skill
+    public class AerialBombardment : Skill
     {
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
         {
             float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
 
@@ -142,51 +143,30 @@ public class SenorZorro : Summon
                     new CheckEnemyInScene(),
                     new Selector(new List<Node>
                     {
+                        //궁극기 게이지 찼으면, 궁극기
+                        new Sequence(new List<Node>
+                        {
+                            new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)], stats[((int)Enums.ESummonStats.UltGauge)]),
+                            new TaskUlt(this.transform, skills[((int)Enums.ESummonAction.Ult)])
+                        }),
                         //적이 멀리 있다면, 가까이 이동
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyOutOfAttackRange(this.transform, stats[((int)Enums.ESummonStats.AttackRange)]),
-                            //스킬이 있다면 스킬 사용, 아니면 이동
-                            new Selector(new List<Node>
-                            {
-                                new Sequence(new List<Node>
-                                {
-                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
-                                }),
-                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
-                            })
-
+                            new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
+                        }),
+                        //적이 너무 가까우면, 스킬
+                        new Sequence(new List<Node>
+                        {
+                            new CheckEnemyTooClose(this.transform,stats[((int)Enums.ESummonStats.PersonalDistance)]),
+                            new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
+                            new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
                         }),
                         //적이 공격 범위 안에 있다면, 공격
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(this.transform , this.stats[((int)Enums.ESummonStats.AttackRange)]),
-                            new Inverter(new CheckEnemyTooClose(this.transform,stats[((int)Enums.ESummonStats.PersonalDistance)])),
-                            new Selector(new List<Node>{
-                                new Sequence(new List<Node>
-                                {
-                                    new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)], stats[((int)Enums.ESummonStats.UltGauge)]),
-                                    new TaskUlt(this.transform, skills[((int)Enums.ESummonAction.Ult)])
-                                }),
-                                new TaskAttack(this.transform, skills[((int)Enums.ESummonAction.Attack)]),
-                            })
-                        }),
-                        //적이 너무 가까우면, 이동
-                        new Sequence(new List<Node>
-                        {
-                            new CheckEnemyTooClose(this.transform,stats[((int)Enums.ESummonStats.PersonalDistance)]),
-                            //스킬이 있다면 스킬 사용, 아니면 이동
-                            new Selector(new List<Node>
-                            {
-                                new Sequence(new List<Node>
-                                {
-                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
-                                }),
-                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
-                            })
-
+                            new TaskAttack(this.transform, skills[((int)Enums.ESummonAction.Attack)]),
                         })
                     })
                 }),

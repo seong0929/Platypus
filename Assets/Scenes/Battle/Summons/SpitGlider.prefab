@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8544673299357075896}
   - component: {fileID: 8544673299357075899}
   - component: {fileID: 8544673299357075898}
-  - component: {fileID: 142167761508634541}
+  - component: {fileID: -5209658663630326722}
   m_Layer: 0
-  m_Name: SenorZorro
+  m_Name: SpitGlider
   m_TagString: Summon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2091580714, guid: bb3844cea69c10e40917c4d4a68abce0, type: 3}
+  m_Sprite: {fileID: -1421605425, guid: a45587e19849a8840afc610c59d2e54a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 8544673299357075893}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8038d959b61b52643937d62f712dce66, type: 2}
+  m_Controller: {fileID: 9100000, guid: 39dd919185f08fe408946a091c3e54ad, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -172,7 +172,7 @@ PolygonCollider2D:
       - {x: 0.41, y: -0.089999996}
       - {x: 0.45, y: -0.049999997}
       - {x: 0.45, y: 0.099999994}
---- !u!114 &142167761508634541
+--- !u!114 &-5209658663630326722
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,10 +181,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8544673299357075893}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66a5f9b7fae9ccb49bc58d6350d6b88e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e8d49e08202e8c488b9da06fddc9bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SummonName: 
   Opponent: {fileID: 0}
   MyTeam: 0
-  _animator: {fileID: 8544673299357075896}
+  _animator: {fileID: 0}
