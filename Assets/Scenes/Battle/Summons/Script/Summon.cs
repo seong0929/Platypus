@@ -9,11 +9,11 @@ public abstract class Summon : MonoBehaviour
     public GameObject Opponent;
     public bool IsCC => _isCC;
     public Enums.ECC CurrentCC => _currentCC;
-    //ToDo: BattleManager에서 팀 판별 초기화
-    public bool MyTeam;
-    protected float[] stats;  //임시 스탯 사거리, 이동속도, 체력, 데미지, 방어력
+    public bool MyTeam;     //ToDo: BattleManager에서 팀 판별 초기화
+
+    protected float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 일반 공격, 1: 스킬, 2: 궁
-    protected List<Enums.ECC> cCs = new List<Enums.ECC>();
+    protected List<Enums.ECC> ccs = new List<Enums.ECC>();
 
     private bool _isAlive = true;
     private bool _isCC = false;
@@ -22,7 +22,7 @@ public abstract class Summon : MonoBehaviour
 
     private void Start()
     {
-        Enums.ECC[] cCs = new Enums.ECC[] { Enums.ECC.None };
+        Enums.ECC[] ccs = new Enums.ECC[] { Enums.ECC.None };
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -30,7 +30,7 @@ public abstract class Summon : MonoBehaviour
         {
             case "Summon":
                 //TODO: 투사체 혹은 공격의 데미지 가져오기
-                TakeDamage(collision.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.NormalDamage)]);
+                //TakeDamage(collision.);   // 누구의 스킬 데미지
                 break;
             default:
                 break;
@@ -43,8 +43,7 @@ public abstract class Summon : MonoBehaviour
     }
     protected abstract Node CreateBehaviorTree();
 
-    //피격 타격
-    #region
+    #region Attack
     public bool IsDead()
     {
         if(stats[((int)Enums.ESummonStats.Health)] <= 0)
@@ -70,8 +69,7 @@ public abstract class Summon : MonoBehaviour
         target.TakeDamage(damage);
     }
     #endregion
-    // CC
-    #region
+    #region CC
     public void ApplyCC(Enums.ECC ccType)
     {
         _isCC = true;
@@ -80,7 +78,7 @@ public abstract class Summon : MonoBehaviour
         {
             // ToDo: CC에 따른 동작 처리 및 지속 시간 설정
             float ccDuration = GetCCDuration(ccType);
-            // ccDuration을 사용하여 동작을 수행하거나 다른 처리를 추가하세요.
+            // ccDuration을 사용하여 동작을 수행하거나 다른 처리를 추가
         }
     }
     public float GetCCDuration(Enums.ECC ccType)
@@ -90,7 +88,7 @@ public abstract class Summon : MonoBehaviour
         {
             case Enums.ECC.Stun:
                 return 2f;
-            case Enums.ECC.Silence:
+            case Enums.ECC.KnockBack:
                 return 1f;
             default:
                 return 0f;
@@ -104,12 +102,11 @@ public abstract class Summon : MonoBehaviour
     }
     public void PerformCCAction(Enums.ECC ccType)
     {
-        // Perform CC action here
         switch (ccType)
         {
             case Enums.ECC.Stun:
                 break;
-            case Enums.ECC.Silence:
+            case Enums.ECC.KnockBack:
                 break;
             default:
                 break;
@@ -121,9 +118,15 @@ public abstract class Summon : MonoBehaviour
 public class Skill
 {
     public float skiilCounter = 0;
+    protected float[] stats;
 
     public virtual void Execute(GameObject summon, GameObject target, Animator animator)
     {
-        // Implement the basic behavior of the skill here
+        // 동작 구현
+    }
+    public float[] Stats
+    {
+        get { return stats; }
+        set { stats = value; }
     }
 }

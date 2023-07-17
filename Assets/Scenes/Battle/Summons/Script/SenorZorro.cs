@@ -4,8 +4,6 @@ using BehaviorTree;
 
 public class SenorZorro : Summon
 {
-    [SerializeField] Animator _animator;  //애니메이션
-
     public SenorZorro()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
@@ -17,7 +15,6 @@ public class SenorZorro : Summon
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         skills.Add(new Attack());
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
@@ -29,6 +26,12 @@ public class SenorZorro : Summon
     #region Skill
     public class Attack: Skill
     {
+        public Attack()
+        {
+            float[] skillStats = { 0.8f, 2f, 2f };   // 사거리, 쿨타임, 데미지
+            base.stats = skillStats;
+        }
+
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
             if (summon.transform.position.x < target.transform.position.x)
@@ -46,6 +49,11 @@ public class SenorZorro : Summon
     }
     public class FootworkSkill : Skill
     {
+        public FootworkSkill()
+        {
+            float[] skillStats = { 0.8f, 5f, 0f };   // 사거리, 쿨타임, 데미지
+            base.stats = skillStats;
+        }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
             Vector2 summonPosition = summon.transform.position;
@@ -84,6 +92,11 @@ public class SenorZorro : Summon
     }
     public class FlecheSkill : Skill
     {
+        public FlecheSkill()
+        {
+            float[] skillStats = { 20f, 20f, 10f };   // 사거리, 쿨타임, 데미지
+            base.stats = skillStats;
+        }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
             float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
@@ -122,19 +135,19 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
-                    new TaskRespawn(this.transform)
+                    new TaskRespawn(this.gameObject)
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
-                    new Inverter(new CheckIfAlive(IsDead())),
-                    new TaskDie(this.transform),
+                    new Inverter(new CheckIfAlive(this.gameObject)),
+                    new TaskDie(this.gameObject),
                 }),
                 // CC 여부 확인
                 new Sequence(new List<Node>
                 {
-                    new CheckCC(this.transform),
-                    new TaskCC(this.GetComponent<Summon>()),
+                    new CheckCC(this.gameObject),
+                    new TaskCC(this.gameObject),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -145,48 +158,46 @@ public class SenorZorro : Summon
                         //적이 멀리 있다면, 가까이 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyOutOfAttackRange(this.transform, stats[((int)Enums.ESummonStats.AttackRange)]),
+                            new CheckEnemyOutOfAttackRange(this.gameObject),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
+                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)]),
+                                    new TaskSkill(this.gameObject, skills[((int)Enums.ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
+                                new TaskMoveToEnemy(this.gameObject)
                             })
-
                         }),
                         //적이 공격 범위 안에 있다면, 공격
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyInAttackRange(this.transform , this.stats[((int)Enums.ESummonStats.AttackRange)]),
-                            new Inverter(new CheckEnemyTooClose(this.transform,stats[((int)Enums.ESummonStats.PersonalDistance)])),
+                            new CheckEnemyInAttackRange(this.gameObject),
+                            new Inverter(new CheckEnemyTooClose(this.gameObject,stats[((int)Enums.ESummonStats.PersonalDistance)])),
                             new Selector(new List<Node>{
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)], stats[((int)Enums.ESummonStats.UltGauge)]),
-                                    new TaskUlt(this.transform, skills[((int)Enums.ESummonAction.Ult)])
+                                    new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)]),
+                                    new TaskUlt(this.gameObject, skills[((int)Enums.ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(this.transform, skills[((int)Enums.ESummonAction.Attack)]),
+                                new TaskAttack(this.gameObject, skills[((int)Enums.ESummonAction.Attack)]),
                             })
                         }),
                         //적이 너무 가까우면, 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyTooClose(this.transform,stats[((int)Enums.ESummonStats.PersonalDistance)]),
+                            new CheckEnemyTooClose(this.gameObject,stats[((int)Enums.ESummonStats.PersonalDistance)]),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)], stats[((int)Enums.ESummonStats.CoolTime)]),
-                                    new TaskSkill(this.transform, skills[((int)Enums.ESummonAction.Skill)])
+                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)]),
+                                    new TaskSkill(this.gameObject, skills[((int)Enums.ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy(this.transform, stats[((int)Enums.ESummonStats.MoveSpeed)])
+                                new TaskMoveToEnemy(this.gameObject)
                             })
-
                         })
                     })
                 }),
@@ -194,7 +205,7 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
-                    new TaskIdle(this.transform)
+                    new TaskIdle(this.gameObject)
                 })
             })
         });
