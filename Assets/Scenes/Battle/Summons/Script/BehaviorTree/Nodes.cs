@@ -423,11 +423,11 @@ namespace BehaviorTree
     {
         private Transform _transform;
         float _personalDistance;
-
-        public CheckEnemyTooClose(GameObject obj, float personalDistance)
+        // ToDo: 수정 필요(일반 공격 사거리보다 클 시 이동만 함)
+        public CheckEnemyTooClose(GameObject obj)
         {
             _transform = obj.transform;
-            _personalDistance = personalDistance;
+            _personalDistance = obj.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.PersonalDistance)];
         }
         public override ENodeState Evaluate()
         {

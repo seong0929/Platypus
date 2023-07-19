@@ -4,10 +4,11 @@ using BehaviorTree;
 
 public class SenorZorro : Summon
 {
+    #region Settings
     public SenorZorro()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 0.8f, 1f, 150f, 8f, 2f, 0.3f, 5f, 15f };
+        float[] summonStats = { 0.7f, 1f, 150f, 5f, 0.5f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -21,30 +22,29 @@ public class SenorZorro : Summon
     }
     private void Update()
     {
+        UpdateSkillCooldowns(Time.deltaTime);
         CreateBehaviorTree().Evaluate();
     }
+    #endregion
     #region Skill
     public class Attack: Skill
     {
         public Attack()
         {
-            float[] skillStats = { 0.8f, 2f, 2f };   // 사거리, 쿨타임, 데미지
+            float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
         }
-
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.transform.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.transform.GetComponent<SpriteRenderer>().flipX = false;
-            }
+            FlipSprite(summon, target);
+
             animator.SetBool("Idle", false);
             animator.SetBool("Move", false);
-            animator.SetBool("Attack", true);
+            if (!IsCooldown())
+            {
+                animator.SetTrigger("Attack");
+                StartCooldown();
+            }
         }
     }
     public class FootworkSkill : Skill
@@ -70,23 +70,21 @@ public class SenorZorro : Summon
                 moveDirection = Vector2.left;
             }
 
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            animator.SetTrigger("Skill");
+            FlipSprite(summon, target);
 
-            if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
+            if (!IsCooldown())
             {
-                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
-            }
-            else
-            {
-                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+                animator.SetTrigger("Skill");
+                // ToDo: 개선 필요(실제로 뒤로 움직이지 않음)
+                if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
+                {
+                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+                }
+                else
+                {
+                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+                }
+                StartCooldown();
             }
         }
     }
@@ -100,31 +98,35 @@ public class SenorZorro : Summon
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
             float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
-
-            animator.SetTrigger("UltIn");
-
-            Vector3 direction = (target.transform.position - summon.transform.position).normalized;
-            float distance = Vector3.Distance(summon.transform.position, target.transform.position);
-            float teleportDistance = distance - appearDistance;
-
-            Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
-            summon.transform.position = teleportPosition;
-
-            animator.SetTrigger("UltOut");
-
-            Vector3 appearPosition = target.transform.position + direction * appearDistance;
-            summon.transform.position = appearPosition;
-            if (summon.transform.position.x < target.transform.position.x)
+            if (!IsCooldown())
             {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
+                animator.SetTrigger("UltIn");
+
+                Vector3 direction = (target.transform.position - summon.transform.position).normalized;
+                float distance = Vector3.Distance(summon.transform.position, target.transform.position);
+                float teleportDistance = distance - appearDistance;
+
+                Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
+                summon.transform.position = teleportPosition;
+
+                animator.SetTrigger("UltOut");
+
+                Vector3 appearPosition = target.transform.position + direction * appearDistance;
+                summon.transform.position = appearPosition;
+                FlipSprite(summon, target);
+                StartCooldown();
             }
         }
     }
+    private void UpdateSkillCooldowns(float deltaTime)
+    {
+        foreach (Skill skill in skills)
+        {
+            skill.UpdateCooldown(deltaTime);
+        }
+    }
     #endregion
+    #region BehaviorTree
     protected override Node CreateBehaviorTree()
     {
         Node root = new Selector(new List<Node>
@@ -174,7 +176,7 @@ public class SenorZorro : Summon
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(this.gameObject),
-                            new Inverter(new CheckEnemyTooClose(this.gameObject,stats[((int)Enums.ESummonStats.PersonalDistance)])),
+                            new Inverter(new CheckEnemyTooClose(this.gameObject)),
                             new Selector(new List<Node>{
                                 new Sequence(new List<Node>
                                 {
@@ -187,7 +189,7 @@ public class SenorZorro : Summon
                         //적이 너무 가까우면, 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyTooClose(this.gameObject,stats[((int)Enums.ESummonStats.PersonalDistance)]),
+                            new CheckEnemyTooClose(this.gameObject),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
@@ -211,4 +213,5 @@ public class SenorZorro : Summon
         });
         return root;
     }
+    #endregion
 }

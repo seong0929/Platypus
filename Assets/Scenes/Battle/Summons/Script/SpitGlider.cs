@@ -4,11 +4,13 @@ using BehaviorTree;
 
 public class SpitGlider : Summon
 {
+    public GameObject Projectile;
+
     #region Settings
     public SpitGlider()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 5f, 0.5f, 80f, 8f, 2f, 0.3f, 5f, 15f };
+        float[] summonStats = { 5f, 0.5f, 80f, 1f, 0.8f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -22,12 +24,15 @@ public class SpitGlider : Summon
     }
     private void Update()
     {
+        UpdateSkillCooldowns(Time.deltaTime);
         CreateBehaviorTree().Evaluate();
     }
     #endregion
     #region Skill
     public class Attack : Skill
     {
+        private GameObject _projectile;
+
         public Attack()
         {
             float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
@@ -35,18 +40,43 @@ public class SpitGlider : Summon
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.transform.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.transform.GetComponent<SpriteRenderer>().flipX = false;
-            }
+            _projectile = summon.GetComponent<SpitGlider>().Projectile;
+
+            FlipSprite(summon, target);
+
             animator.SetBool("Idle", false);
             animator.SetBool("Move", false);
-            animator.SetBool("Attack", true);
-            //ToDo: 발사체 구현
+            if (!IsCooldown())
+            {
+                animator.SetTrigger("Attack");
+
+                // 가장 가까운 적을 찾기
+                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
+                GameObject nearestEnemy = null;
+                float nearestDistance = float.MaxValue;
+                foreach (GameObject enemy in enemies)
+                {
+                    if (enemy.GetComponent<Summon>().MyTeam == false && enemy != summon)
+                    {
+                        float distance = Vector2.Distance(summon.transform.position, enemy.transform.position);
+                        if (distance < nearestDistance)
+                        {
+                            nearestEnemy = enemy;
+                            nearestDistance = distance;
+                        }
+                    }
+                }
+                // 발사
+                if (nearestEnemy != null)
+                {
+                    Vector3 projectilePosition = summon.transform.position;
+                    GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.identity, summon.transform);
+                    Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
+                    projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
+                }
+
+                StartCooldown();
+            }
         }
     }
     public class SeedSpitting : Skill
@@ -58,37 +88,12 @@ public class SpitGlider : Summon
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
         {
-            Vector2 summonPosition = summon.transform.position;
-            Vector2 targetPosition = target.transform.position;
-            float distance = Vector2.Distance(summonPosition, targetPosition);
+            FlipSprite(summon, target);
 
-            Vector2 moveDirection;
-            if (summonPosition.x < targetPosition.x)
+            if (!IsCooldown())
             {
-                moveDirection = Vector2.right;
-            }
-            else
-            {
-                moveDirection = Vector2.left;
-            }
-
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            animator.SetTrigger("Skill");
-
-            if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
-            {
-                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
-            }
-            else
-            {
-                summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+                animator.SetTrigger("Skill");
+                StartCooldown();
             }
         }
     }
@@ -101,32 +106,24 @@ public class SpitGlider : Summon
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
         {
-            float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
+            FlipSprite(summon, target);
 
-            animator.SetTrigger("UltIn");
-
-            Vector3 direction = (target.transform.position - summon.transform.position).normalized;
-            float distance = Vector3.Distance(summon.transform.position, target.transform.position);
-            float teleportDistance = distance - appearDistance;
-
-            Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
-            summon.transform.position = teleportPosition;
-
-            animator.SetTrigger("UltOut");
-
-            Vector3 appearPosition = target.transform.position + direction * appearDistance;
-            summon.transform.position = appearPosition;
-            if (summon.transform.position.x < target.transform.position.x)
+            if (!IsCooldown())
             {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
+                animator.SetTrigger("Ult1");
+                StartCooldown();
             }
         }
     }
+    private void UpdateSkillCooldowns(float deltaTime)
+    {
+        foreach (Skill skill in skills)
+        {
+            skill.UpdateCooldown(deltaTime);
+        }
+    }
     #endregion
+    #region BehaviorTree
     protected override Node CreateBehaviorTree()
     {
         Node root = new Selector(new List<Node>
@@ -172,7 +169,7 @@ public class SpitGlider : Summon
                         //적이 너무 가까우면, 스킬
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyTooClose(this.gameObject,stats[((int)Enums.ESummonStats.PersonalDistance)]),
+                            new CheckEnemyTooClose(this.gameObject),
                             new CheckSkill(skills[((int)Enums.ESummonAction.Skill)]),
                             new TaskSkill(this.gameObject, skills[((int)Enums.ESummonAction.Skill)])
                         }),
@@ -194,4 +191,5 @@ public class SpitGlider : Summon
         });
         return root;
     }
+    #endregion
 }

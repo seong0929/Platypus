@@ -20,6 +20,12 @@ public abstract class Summon : MonoBehaviour
     private Enums.ECC _currentCC;
     private float _deadTime;
 
+    #region settings
+    public float[] Stats
+    {
+        get { return stats; }
+        set { stats = value; }
+    }
     private void Start()
     {
         Enums.ECC[] ccs = new Enums.ECC[] { Enums.ECC.None };
@@ -36,13 +42,8 @@ public abstract class Summon : MonoBehaviour
                 break;
         }
     }
-    public float[] Stats
-    {
-        get { return stats; }
-        set { stats = value; }
-    }
     protected abstract Node CreateBehaviorTree();
-
+    #endregion
     #region Attack
     public bool IsDead()
     {
@@ -119,6 +120,7 @@ public class Skill
 {
     public float skiilCounter = 0;
     protected float[] stats;
+    protected float skillCooldown = 0f;
 
     public virtual void Execute(GameObject summon, GameObject target, Animator animator)
     {
@@ -128,5 +130,37 @@ public class Skill
     {
         get { return stats; }
         set { stats = value; }
+    }
+    #region ÄðÅ¸ÀÓ
+    public bool IsCooldown()
+    {
+        return skillCooldown > 0f;
+    }
+    public void StartCooldown()
+    {
+        skillCooldown = stats[(int)Enums.ESkillStats.CoolTime];
+    }
+    public void UpdateCooldown(float deltaTime)
+    {
+        if (stats[((int)Enums.ESkillStats.CoolTime)] > 0f)
+        {
+            skillCooldown -= deltaTime;
+            if (skillCooldown <= 0f)
+            {
+                skillCooldown = 0f;
+            }
+        }
+    }
+    #endregion
+    public void FlipSprite(GameObject summon, GameObject target)
+    {
+        if (summon.transform.position.x < target.transform.position.x)
+        {
+            summon.GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else
+        {
+            summon.GetComponent<SpriteRenderer>().flipX = false;
+        }
     }
 }
