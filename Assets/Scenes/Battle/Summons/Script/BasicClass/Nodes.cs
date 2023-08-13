@@ -1,4 +1,5 @@
 using UnityEngine;
+using Skills;
 
 namespace BehaviorTree
 {
@@ -75,7 +76,7 @@ namespace BehaviorTree
     public class TaskDie : Node
     {
         private Animator _animator;
-        private float _waitTime = Constants.Respawn_TIME;
+        private float _waitTime = Constants.RESPAWN_TIME;
         private float _timer;
 
         public TaskDie(GameObject obj)
