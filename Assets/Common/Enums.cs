@@ -51,4 +51,9 @@ public static class Enums
         Stun,
         KnockBack
     }
+    public enum ELanguage
+    {
+        KR,
+        EN
+    }
 }
