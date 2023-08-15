@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace Skills
 {
@@ -60,9 +61,10 @@ namespace Skills
 
         public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
-            switch (summon.GetComponent<Summon>().CurrentCC)
+            switch (target.GetComponent<Summon>().CurrentCC)
             {
                 case Enums.ECC.Stun:
+                    Stun(target, stats[((int)Enums.ECCStats.Time)]);
                     break;
                 case Enums.ECC.KnockBack:
                     KnockBack(summon, target, stats[((int)Enums.ECCStats.Power)]);
@@ -86,15 +88,29 @@ namespace Skills
         #region CC기 종류
         private void KnockBack(GameObject summon, GameObject target, float power) 
         {
-            summon.GetComponent<Summon>().CurrentCC = Enums.ECC.KnockBack;
+            target.GetComponent<Summon>().CurrentCC = Enums.ECC.KnockBack;
 
             Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
             Vector2 dirVec = target.transform.position - summon.transform.position;
             rb.AddForce(dirVec.normalized * power, ForceMode2D.Impulse);
         }
-        private void Stun(GameObject summon, GameObject target, float timer)
+        private void Stun(GameObject target, float duration)
         {
+            target.GetComponent<Summon>().CurrentCC = Enums.ECC.Stun;
 
+            Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+            target.GetComponent<MonoBehaviour>().StartCoroutine(ReleaseStun(target, duration));
+        }
+        private IEnumerator ReleaseStun(GameObject target, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+
+            // Stun 상태를 해제하고 움직일 수 있도록 변경
+            target.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+
+            target.GetComponent<Summon>().CurrentCC = Enums.ECC.None;
         }
         #endregion
     }
