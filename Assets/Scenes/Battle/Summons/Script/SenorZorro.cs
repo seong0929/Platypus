@@ -30,10 +30,16 @@ public class SenorZorro : Summon
     #region Skill
     public class Attack: Skill
     {
+        private CC cc = new CC();
+
         public Attack()
         {
             float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
+
+            HasCc = Enums.ECC.None;
+            float[] ccStats = { 0f, 0f };
+            cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -50,10 +56,16 @@ public class SenorZorro : Summon
     }
     public class FootworkSkill : Skill
     {
+        private CC cc = new CC();
+
         public FootworkSkill()
         {
             float[] skillStats = { 0.8f, 5f, 0f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
+
+            HasCc = Enums.ECC.None;
+            float[] ccStats = { 0f, 0f };
+            cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -91,10 +103,16 @@ public class SenorZorro : Summon
     }
     public class FlecheSkill : Skill
     {
+        private CC cc = new CC();
+
         public FlecheSkill()
         {
             float[] skillStats = { 20f, 20f, 10f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
+
+            HasCc = Enums.ECC.None;
+            float[] ccStats = { 0f, 0f };
+            cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {

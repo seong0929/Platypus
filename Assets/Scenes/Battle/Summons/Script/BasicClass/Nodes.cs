@@ -115,7 +115,6 @@ namespace BehaviorTree
     // CC기 걸렸는 지 확인
     public class CheckCC : Node
     {
-        private Enums.ECC _currentCC;
         private Transform _transform;
 
         public CheckCC(GameObject obj)
@@ -124,14 +123,12 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            if (_transform.GetComponent<Summon>().IsCC)
+            if (_transform.GetComponent<Summon>().HasCC())
             {
-                _currentCC = _transform.GetComponent<Summon>().CurrentCC;
                 return ENodeState.Success;
             }
             else
             {
-                _currentCC = Enums.ECC.None;
                 return ENodeState.Failure;
             }
         }
@@ -141,7 +138,7 @@ namespace BehaviorTree
     {
         private Summon _summon;
         private float _ccTimer;
-
+        private CC cc = new CC();
         public TaskCC(GameObject obj)
         {
             _summon = obj.GetComponent<Summon>();
@@ -149,16 +146,15 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            if (_summon.IsCC && (_summon.CurrentCC != Enums.ECC.None))
+            if (_summon.HasCC())
             {
-                if (_ccTimer >= _summon.GetCCDuration(_summon.CurrentCC))
+                if (_ccTimer >= _summon.CurrrentCCStats[((int)Enums.ECCStats.Time)])
                 {
-                    _summon.RemoveCC();
+                    cc.FinishedCC(_summon.gameObject);
                     return ENodeState.Success;
                 }
                 else
                 {
-                    _summon.PerformCCAction(_summon.CurrentCC);
                     _ccTimer += Time.deltaTime;
                     return ENodeState.Running;
                 }
@@ -333,18 +329,16 @@ namespace BehaviorTree
     public class CheckSkill : Node
     {
         private Skill _skill;
-        private float _coolTime;
 
         public CheckSkill(Skill skill)
         {
             _skill = skill;
-            _coolTime = skill.Stats[((int)Enums.ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
-            if (BattleManager.instance.GameTime - (_skill.skiilCounter * _coolTime) >= _coolTime)
+            if (_skill.IsCooldown())
             {
-                _skill.skiilCounter += 1;
+                _skill.SkiilCounter += 1;
                 return ENodeState.Success;
             }
             else
@@ -378,18 +372,16 @@ namespace BehaviorTree
     {
         //ToDo: 게이지 형식으로 변환
         private Skill _skill;
-        private float _coolTime;
 
         public CheckUltGage(Skill skill)
         {
             _skill = skill;
-            _coolTime = skill.Stats[((int)Enums.ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
-            if (BattleManager.instance.GameTime - (_skill.skiilCounter * _coolTime) >= _coolTime)
+            if (_skill.IsCooldown())
             {
-                _skill.skiilCounter += 1;
+                _skill.SkiilCounter += 1;
                 return ENodeState.Success;
             } else
             {

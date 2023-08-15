@@ -5,7 +5,8 @@ namespace Skills
     // 스킬 큰 틀
     public class Skill
     {
-        public float skiilCounter = 0;
+        public float SkiilCounter = 0;
+        public Enums.ECC HasCc;
         protected float[] stats;
         protected float skillCooldown = 0f;
 
@@ -54,16 +55,47 @@ namespace Skills
     // CC 기 큰틀
     public class CC
     {
-        private WaitForFixedUpdate _wait;
-        private int _knockBackPower = 0;
+        #region CC 세팅
+        private float[] stats;
 
-        private void Awake()
+        public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
-            _wait = new WaitForFixedUpdate();
+            switch (summon.GetComponent<Summon>().CurrentCC)
+            {
+                case Enums.ECC.Stun:
+                    break;
+                case Enums.ECC.KnockBack:
+                    KnockBack(summon, target, stats[((int)Enums.ECCStats.Power)]);
+                    break;
+                case Enums.ECC.None:
+                default:
+                    FinishedCC(summon);
+                    break;
+            }
         }
-        public virtual void Execute(GameObject summon, GameObject target)
+        public void FinishedCC(GameObject summon)
         {
-            // 동작 구현
+            summon.GetComponent<Summon>().CurrentCC = Enums.ECC.None;
         }
+        public float[] Stats
+        {
+            get { return stats; }
+            set { stats = value; }
+        }
+        #endregion
+        #region CC기 종류
+        private void KnockBack(GameObject summon, GameObject target, float power) 
+        {
+            summon.GetComponent<Summon>().CurrentCC = Enums.ECC.KnockBack;
+
+            Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
+            Vector2 dirVec = target.transform.position - summon.transform.position;
+            rb.AddForce(dirVec.normalized * power, ForceMode2D.Impulse);
+        }
+        private void Stun(GameObject summon, GameObject target, float timer)
+        {
+
+        }
+        #endregion
     }
 }

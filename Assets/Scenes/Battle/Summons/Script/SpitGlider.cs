@@ -33,11 +33,16 @@ public class SpitGlider : Summon
     public class Attack : Skill
     {
         private GameObject _projectile;
+        private CC cc = new CC();
 
         public Attack()
         {
             float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
+
+            HasCc = Enums.ECC.None;
+            float[] ccStats = { 0f, 0f };
+            cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -82,10 +87,16 @@ public class SpitGlider : Summon
     }
     public class SeedSpitting : Skill
     {
+        private CC cc = new CC();
+
         public SeedSpitting()
         {
             float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
+
+            HasCc = Enums.ECC.KnockBack;
+            float[] ccStats = { 0.1f, 5f };
+            cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
         {
@@ -94,16 +105,24 @@ public class SpitGlider : Summon
             if (!IsCooldown())
             {
                 animator.SetTrigger("Skill");
+                cc.ApplyCC(summon, target, cc.Stats);
+                target.GetComponent<Summon>().CurrrentCCStats = cc.Stats;
                 StartCooldown();
             }
         }
     }
     public class AerialBombardment : Skill
     {
+        private CC cc = new CC();
+
         public AerialBombardment()
         {
             float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
+            
+            HasCc = Enums.ECC.None;
+            float[] ccStats = { 0f, 0f };
+            cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
         {

@@ -51,6 +51,11 @@ public static class Enums
         Stun,
         KnockBack
     }
+    public enum ECCStats
+    {
+        Time,
+        Power
+    }
     public enum ELanguage
     {
         KR,
