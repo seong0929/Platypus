@@ -57,7 +57,7 @@ public static class Enums
         TeamA,
         TeamB
     }
-    public enum EStage
+    public enum EElement
     {
         Sepia,
         Emerald,

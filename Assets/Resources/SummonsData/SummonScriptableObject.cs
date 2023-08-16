@@ -8,5 +8,13 @@ public class SummonScriptableObject : ScriptableObject
     public float MovementSpeed;
     public float Health;
     public float NormalDamage;
-    public float Defence;
+    public float Defense;
+
+    [Header("Sprites")]
+    public Sprite DefaultSprite;
+
+    [Header("Types")]
+    public Enums.EElement ElementType;
+
+    // sprite
 }

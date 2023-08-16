@@ -6,7 +6,7 @@ using static Enums;
 
 public class SummonCard : MonoBehaviour
 {
-    public Enums.EStage StageType;
+    public Enums.EElement ElementType;
 
     [Header("GameObject")]
     [SerializeField] GameObject Panel;
@@ -21,6 +21,7 @@ public class SummonCard : MonoBehaviour
     public Sprite SepiaButton;
     public Sprite AquaButton;
     public Sprite EmerladButton;
+    public Sprite SummonSprite;
     [SerializeField] Sprite Banned;
     [SerializeField] Sprite Picked;
 
@@ -73,19 +74,19 @@ public class SummonCard : MonoBehaviour
         BannerImage = Banner.GetComponent<Image>();
     }
 
-    private void ChangeSprite()
+    public void ChangeSprite()
     {
-        switch(StageType)
+        switch(ElementType)
         {
-            case Enums.EStage.Emerald:
+            case Enums.EElement.Emerald:
                 PanelImage.sprite = EmerladPanel;
                 ButtonImage.sprite = EmerladButton;
                 break;
-            case Enums.EStage.Aqua:
+            case Enums.EElement.Aqua:
                 PanelImage.sprite = AquaPanel;
                 ButtonImage.sprite = AquaButton;
                 break;
-            case Enums.EStage.Sepia:
+            case Enums.EElement.Sepia:
                 PanelImage.sprite = SepiaPanel;
                 ButtonImage.sprite = SepiaButton;
                 break;
@@ -95,6 +96,14 @@ public class SummonCard : MonoBehaviour
                 break;
         }
 
-        
+        if(SummonSprite != null)
+        {
+            SummonImage.sprite = SummonSprite;
+        }
+    }
+
+    private void SelectButtonClicked()
+    {
+//        MatchManager.RecieveBanPickSummon.Invoke();
     }
 }

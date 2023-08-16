@@ -7,7 +7,7 @@ using System.Linq;
 public class MatchManager
 {
     public int PlayerNum;
-    public Enums.EStage Stage;
+    public Enums.EElement Stage;
     public Group GroupA;
     public Group GroupB;
 

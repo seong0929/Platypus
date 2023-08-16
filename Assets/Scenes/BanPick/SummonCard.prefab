@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96317bc02f8dc7e409cf2755da1adaf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StageType: 0
+  ElementType: 0
   Panel: {fileID: 4354550883524562954}
   Button: {fileID: 4354550884440804055}
   Summon: {fileID: 4354550885011735420}
@@ -457,7 +457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1861973737099540991
 RectTransform:
   m_ObjectHideFlags: 0
