@@ -7,13 +7,17 @@ public class BanPickUI : MonoBehaviour
     private GameManager gameManager;
     private MatchManager matchManager;
 
+    public List<Enums.ESummon> PickableSummons;
     private List<Player> TeamA;
     private List<Player> TeamB;
+
 
     [SerializeField]
     GameObject TeamPanelA;
     [SerializeField]
     GameObject TeamPanelB;
+    [SerializeField]
+    GameObject SummonCardsPanelObject;
 
     // Start is called before the first frame update
     void Awake()
@@ -22,12 +26,14 @@ public class BanPickUI : MonoBehaviour
         matchManager = gameManager.MatchManager;
         TeamA = matchManager.GroupA.SelectedPlayers;
         TeamB = matchManager.GroupB.SelectedPlayers;
+        PickableSummons = matchManager.PickableSummons;
     }
 
     void Start()
     {
         InitializeTeamPanel(TeamPanelA, TeamA, true);
         InitializeTeamPanel(TeamPanelB, TeamB, false);
+        InitializeSummonCardsPanel();
 
         List<Enums.ESummon> sumons = new List<Enums.ESummon>();
         sumons.Add(Enums.ESummon.SenorZorro);
@@ -57,6 +63,13 @@ public class BanPickUI : MonoBehaviour
         panel.SetLVs(lvList);
 
         panel.CreateCards(teamMembers.Count);
+    }
+    private void InitializeSummonCardsPanel()
+    {
+        SummonCardsPanel summonCardsPanel = SummonCardsPanelObject.GetComponent<SummonCardsPanel>();
+        summonCardsPanel.SetPickableSummons(PickableSummons);
+
+        summonCardsPanel.CreateCards();
     }
     private void setSummons(List<Enums.ESummon> teamASummons, List<Enums.ESummon> teamBSummons)
     {
