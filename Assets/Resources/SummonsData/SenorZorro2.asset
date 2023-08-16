@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6d68037a5ab87243b660c63c530240d, type: 3}
-  m_Name: SenorZorro
+  m_Name: SenorZorro2
   m_EditorClassIdentifier: 
   AttackRange: 0
   MovementSpeed: 0
@@ -18,4 +18,4 @@ MonoBehaviour:
   NormalDamage: 0
   Defense: 0
   DefaultSprite: {fileID: 21300000, guid: c5bf5684853b9aa4c83388f45fbcc982, type: 2}
-  ElementType: 2
+  ElementType: 0

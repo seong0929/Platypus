@@ -2,7 +2,17 @@ public static class Enums
 {
     public enum ESummon
     {
-        SenorZorro
+        SenorZorro,
+        SenorZorro1,
+        SenorZorro2,
+        SenorZorro3,
+        SenorZorro4,
+        SenorZorro5,
+        SenorZorro6,
+        SenorZorro7,
+        SenorZorro8,
+        SenorZorro9,
+        SenorZorro10
     }
     public enum ESummonStats
     {
