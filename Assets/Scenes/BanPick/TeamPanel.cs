@@ -17,16 +17,6 @@ public class TeamPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*
-        // Get Stats of Players + team
-        for (int i = 0; i < CardNum; i++)
-        {
-            atkList.Add(i);
-            dfsList.Add(i+10);
-            lvList.Add(i+100);
-        }
-        bA = true;
-         */
 
         destroyChildObjects();
         // Create Cards

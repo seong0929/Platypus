@@ -42,5 +42,15 @@ public static class Enums
     {
         Mad
     }
-    
+    public enum ETeam
+    {
+        TeamA,
+        TeamB
+    }
+    public enum EStage
+    {
+        Sepia,
+        Emerald,
+        Aqua
+    }
 }
