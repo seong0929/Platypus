@@ -38,14 +38,12 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
-        // initialing UserState
-        User = new UserState();
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
 
-
-
+        // initialing UserState
+        User = new UserState();
         User.Coach = CoachManager.CreateCoach("User", 1);
         User.Team = TeamManager.CreateTeam("User's Team");
 
@@ -78,7 +76,8 @@ public class GameManager : MonoBehaviour
         Opponent = TeamManager.Teams[2];
         // ---- END: FOR THE TEST --- //
 
-        MatchManager = new MatchManager(2, User.Team, Opponent);
+        MatchManager = new MatchManager();
+        MatchManager.InitializeMatch(2, Enums.EStage.Aqua, User.Team, Opponent);
 
         // ---- START: FOR THE TEST --- //
         List<Player> opponentSelected = new List<Player>();
