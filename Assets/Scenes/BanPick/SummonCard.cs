@@ -12,6 +12,7 @@ public class SummonCard : MonoBehaviour
     [SerializeField] GameObject Panel;
     [SerializeField] GameObject Button;
     [SerializeField] GameObject Summon;
+    [SerializeField] GameObject Banner;
 
     [Header("Sprite")]
     public Sprite SepiaPanel;
@@ -20,10 +21,16 @@ public class SummonCard : MonoBehaviour
     public Sprite SepiaButton;
     public Sprite AquaButton;
     public Sprite EmerladButton;
+    [SerializeField] Sprite Banned;
+    [SerializeField] Sprite Picked;
+
+    [SerializeField] Color teamASelectedColor;
+    [SerializeField] Color teamBSelectedColor;
 
     private Image PanelImage;
     private Image ButtonImage;
     private Image SummonImage;
+    private Image BannerImage;
 
     void Awake()
     {
@@ -32,11 +39,38 @@ public class SummonCard : MonoBehaviour
         ChangeSprite();
     }
 
+    public void CardSelected(Enums.ETeam eTeam)
+    {
+        Button.GetComponent<Button>().interactable = false;
+        Banner.SetActive(true);
+
+        BannerImage.sprite = Picked;
+
+        Color bannerColor;
+        if(eTeam == Enums.ETeam.TeamA)
+        {
+            bannerColor = teamASelectedColor;
+        }
+        else
+        {
+            bannerColor = teamBSelectedColor;
+        }
+        BannerImage.color = bannerColor;
+    }
+    public void CardBanned()
+    {
+        Button.GetComponent<Button>().interactable = false;
+        Banner.SetActive(true);
+
+        BannerImage.sprite = Banned;
+    }
+
     private void fetchComponents()
     {
         PanelImage = Panel.GetComponent<Image>();
         ButtonImage = Button.GetComponent<Image>();
         SummonImage = Summon.GetComponent<Image>();
+        BannerImage = Banner.GetComponent<Image>();
     }
 
     private void ChangeSprite()
