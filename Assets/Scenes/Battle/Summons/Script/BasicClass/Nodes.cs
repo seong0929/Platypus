@@ -329,14 +329,15 @@ namespace BehaviorTree
     public class CheckSkill : Node
     {
         private Skill _skill;
-
+        private float _coolTime;
         public CheckSkill(Skill skill)
         {
             _skill = skill;
+            _coolTime = skill.Stats[((int)Enums.ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
-            if (_skill.IsCooldown())
+            if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
             {
                 _skill.SkiilCounter += 1;
                 return ENodeState.Success;

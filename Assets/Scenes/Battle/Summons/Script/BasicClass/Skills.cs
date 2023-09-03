@@ -91,8 +91,8 @@ namespace Skills
             target.GetComponent<Summon>().CurrentCC = Enums.ECC.KnockBack;
 
             Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
-            Vector2 dirVec = target.transform.position - summon.transform.position;
-            rb.AddForce(dirVec.normalized * power, ForceMode2D.Impulse);
+            Vector2 dirVec = (target.transform.position - summon.transform.position).normalized;
+            rb.AddForce(dirVec * power, ForceMode2D.Impulse);
         }
         private void Stun(GameObject target, float duration)
         {

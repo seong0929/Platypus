@@ -95,7 +95,7 @@ public class SpitGlider : Summon
             base.stats = skillStats;
 
             HasCc = Enums.ECC.KnockBack;
-            float[] ccStats = { 0.1f, 5f };
+            float[] ccStats = { 0.1f, 20f };
             cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
@@ -131,7 +131,13 @@ public class SpitGlider : Summon
             if (!IsCooldown())
             {
                 animator.SetTrigger("Ult1");
+                summon.tag = "NonTarget";
+                animator.SetTrigger("Ult2");
+                // 이동
+                // 투사체가 위에서 아래로 발사
                 StartCooldown();
+                animator.SetTrigger("Ult3");
+                summon.tag = "Summon";
             }
         }
     }
@@ -142,6 +148,9 @@ public class SpitGlider : Summon
             skill.UpdateCooldown(deltaTime);
         }
     }
+    #endregion
+    #region 투사체
+
     #endregion
     #region BehaviorTree
     protected override Node CreateBehaviorTree()
