@@ -35,19 +35,16 @@ namespace BehaviorTree
     public class TaskRespawn : Node
     {
         private Animator _animator;
-        private GameObject _summon;
 
         public TaskRespawn(GameObject obj)
         {
             _animator = obj.GetComponent<Animator>();
-            _summon = obj;
         }
         public override ENodeState Evaluate()
         {
             //ToDo: 리스폰 위치에 순간이동, 게임 메니저에서 리스폰 지점 찾기
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
             SetData("State", ESummonState.Running);
-            _summon.tag = "Summon";
             return ENodeState.Running;
         }
     }
@@ -82,7 +79,6 @@ namespace BehaviorTree
         private Animator _animator;
         private float _waitTime = Constants.RESPAWN_TIME;
         private float _timer;
-        private GameObject _summon;
 
         public TaskDie(GameObject obj)
         {
@@ -112,7 +108,6 @@ namespace BehaviorTree
                     break;
                 }
             }
-            _summon.tag = "NonTarget";
             return ENodeState.Running;
         }
     }
