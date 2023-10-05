@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 using Skills;
+using static Enums;
 
 public class SenorZorro : Summon
 {
@@ -37,7 +38,7 @@ public class SenorZorro : Summon
             float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
-            HasCc = Enums.ECC.None;
+            HasCc = ECC.None;
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
@@ -47,10 +48,10 @@ public class SenorZorro : Summon
 
             animator.SetBool("Idle", false);
             animator.SetBool("Move", false);
-            if (!IsCooldown())
+            if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Attack");
-                StartCooldown();
+                StartSkillCooldown();
             }
         }
     }
@@ -63,7 +64,7 @@ public class SenorZorro : Summon
             float[] skillStats = { 0.8f, 5f, 0f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
-            HasCc = Enums.ECC.None;
+            HasCc = ECC.None;
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
@@ -85,19 +86,19 @@ public class SenorZorro : Summon
 
             FlipSprite(summon, target);
 
-            if (!IsCooldown())
+            if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Skill");
                 // ToDo: 개선 필요(실제로 뒤로 움직이지 않음)
-                if (distance > summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)])
+                if (distance > summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)])
                 {
-                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * Time.deltaTime);
                 }
                 else
                 {
-                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)] * Time.deltaTime);
+                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * Time.deltaTime);
                 }
-                StartCooldown();
+                StartSkillCooldown();
             }
         }
     }
@@ -110,14 +111,14 @@ public class SenorZorro : Summon
             float[] skillStats = { 20f, 20f, 10f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
-            HasCc = Enums.ECC.None;
+            HasCc = ECC.None;
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
-            float appearDistance = summon.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
-            if (!IsCooldown())
+            float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
+            if (!IsSkillCooldown())
             {
                 animator.SetTrigger("UltIn");
 
@@ -133,7 +134,7 @@ public class SenorZorro : Summon
                 Vector3 appearPosition = target.transform.position + direction * appearDistance;
                 summon.transform.position = appearPosition;
                 FlipSprite(summon, target);
-                StartCooldown();
+                StartSkillCooldown();
             }
         }
     }
@@ -141,7 +142,7 @@ public class SenorZorro : Summon
     {
         foreach (Skill skill in skills)
         {
-            skill.UpdateCooldown(deltaTime);
+            skill.UpdateSkillCooldown(deltaTime);
         }
     }
     #endregion
@@ -185,8 +186,8 @@ public class SenorZorro : Summon
                             {
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)]),
-                                    new TaskSkill(this.gameObject, skills[((int)Enums.ESummonAction.Skill)])
+                                    new CheckSkill(skills[((int)ESummonAction.Skill)]),
+                                    new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
                                 }),
                                 new TaskMoveToEnemy(this.gameObject)
                             })
@@ -199,10 +200,10 @@ public class SenorZorro : Summon
                             new Selector(new List<Node>{
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckUltGage(skills[((int)Enums.ESummonAction.Ult)]),
-                                    new TaskUlt(this.gameObject, skills[((int)Enums.ESummonAction.Ult)])
+                                    new CheckUltGage(skills[((int)ESummonAction.Ult)]),
+                                    new TaskUlt(this.gameObject, skills[((int)ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(this.gameObject, skills[((int)Enums.ESummonAction.Attack)]),
+                                new TaskAttack(this.gameObject, skills[((int)ESummonAction.Attack)]),
                             })
                         }),
                         //적이 너무 가까우면, 이동
@@ -214,8 +215,8 @@ public class SenorZorro : Summon
                             {
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[((int)Enums.ESummonAction.Skill)]),
-                                    new TaskSkill(this.gameObject, skills[((int)Enums.ESummonAction.Skill)])
+                                    new CheckSkill(skills[((int)ESummonAction.Skill)]),
+                                    new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
                                 }),
                                 new TaskMoveToEnemy(this.gameObject)
                             })

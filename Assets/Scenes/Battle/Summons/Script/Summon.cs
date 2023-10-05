@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorTree;
 using Skills;
+using static Enums;
 
 //공통적이되 함수 내용이 달라지는 클래스
 public abstract class Summon : MonoBehaviour
 {
     public string SummonName;
     public GameObject Opponent;
-    public Enums.ECC CurrentCC;
-    public float[] CurrrentCCStats;
+    public ECC CurrentCC;
+    public float[] CurrentCCStats;
     public bool MyTeam;     //ToDo: BattleManager에서 팀 판별 초기화
 
     protected float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
@@ -41,7 +42,7 @@ public abstract class Summon : MonoBehaviour
     #region Attack
     public bool IsDead()
     {
-        if(stats[((int)Enums.ESummonStats.Health)] <= 0)
+        if(stats[((int)ESummonStats.Health)] <= 0)
         {
             _isAlive = false;
             return _isAlive;
@@ -51,9 +52,9 @@ public abstract class Summon : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        float actualDamage = Mathf.Max(damage - stats[((int)Enums.ESummonStats.Defence)], 0);
-        stats[((int)Enums.ESummonStats.Health)] -= actualDamage;
-        if (stats[((int)Enums.ESummonStats.Health)] <= 0) 
+        float actualDamage = Mathf.Max(damage - stats[((int)ESummonStats.Defence)], 0);
+        stats[((int)ESummonStats.Health)] -= actualDamage;
+        if (stats[((int)ESummonStats.Health)] <= 0) 
         {
             _deadTime = BattleManager.instance.GameTime;
             _isAlive = false;
@@ -68,7 +69,7 @@ public abstract class Summon : MonoBehaviour
     // CC 걸려있는 지 여부 판단
     public bool HasCC()
     {
-        if (CurrentCC == Enums.ECC.None) return false;
+        if (CurrentCC == ECC.None) return false;
         else return true;
     }
     #endregion

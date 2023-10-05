@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using static Enums;
 
 namespace Skills
 {
@@ -7,7 +8,7 @@ namespace Skills
     public class Skill
     {
         public float SkiilCounter = 0;
-        public Enums.ECC HasCc;
+        public ECC HasCc;
         protected float[] stats;
         protected float skillCooldown = 0f;
 
@@ -21,17 +22,17 @@ namespace Skills
             set { stats = value; }
         }
         #region 쿨타임
-        public bool IsCooldown()
+        public bool IsSkillCooldown()
         {
             return skillCooldown > 0f;
         }
-        public void StartCooldown()
+        public void StartSkillCooldown()
         {
-            skillCooldown = stats[(int)Enums.ESkillStats.CoolTime];
+            skillCooldown = stats[(int)ESkillStats.CoolTime];
         }
-        public void UpdateCooldown(float deltaTime)
+        public void UpdateSkillCooldown(float deltaTime)
         {
-            if (stats[((int)Enums.ESkillStats.CoolTime)] > 0f)
+            if (stats[((int)ESkillStats.CoolTime)] > 0f)
             {
                 skillCooldown -= deltaTime;
                 if (skillCooldown <= 0f)
@@ -58,18 +59,19 @@ namespace Skills
     {
         #region CC 세팅
         private float[] stats;
+        protected float ccCooldown;
 
         public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
             switch (target.GetComponent<Summon>().CurrentCC)
             {
-                case Enums.ECC.Stun:
-                    Stun(target, stats[((int)Enums.ECCStats.Time)]);
+                case ECC.Stun:
+                    Stun(target, stats[((int)ECCStats.Time)]);
                     break;
-                case Enums.ECC.KnockBack:
-                    KnockBack(summon, target, stats[((int)Enums.ECCStats.Power)]);
+                case ECC.KnockBack:
+                    KnockBack(summon, target, stats[((int)ECCStats.Power)]);
                     break;
-                case Enums.ECC.None:
+                case ECC.None:
                 default:
                     FinishedCC(summon);
                     break;
@@ -77,7 +79,7 @@ namespace Skills
         }
         public void FinishedCC(GameObject summon)
         {
-            summon.GetComponent<Summon>().CurrentCC = Enums.ECC.None;
+            summon.GetComponent<Summon>().CurrentCC = ECC.None;
         }
         public float[] Stats
         {
@@ -85,10 +87,24 @@ namespace Skills
             set { stats = value; }
         }
         #endregion
+        #region 쿨타임
+        public bool IsCcCooldown(float time)
+        {
+            return ccCooldown >= time;
+        }
+        public void ResetCcCooldown()
+        {
+            ccCooldown = 0;
+        }
+        public void UpdateCcCooldown(float deltaTime)
+        {
+            ccCooldown += deltaTime;
+        }
+        #endregion
         #region CC기 종류
         private void KnockBack(GameObject summon, GameObject target, float power) 
         {
-            target.GetComponent<Summon>().CurrentCC = Enums.ECC.KnockBack;
+            target.GetComponent<Summon>().CurrentCC = ECC.KnockBack;
 
             Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
             Vector2 dirVec = (target.transform.position - summon.transform.position).normalized;
@@ -96,7 +112,7 @@ namespace Skills
         }
         private void Stun(GameObject target, float duration)
         {
-            target.GetComponent<Summon>().CurrentCC = Enums.ECC.Stun;
+            target.GetComponent<Summon>().CurrentCC = ECC.Stun;
 
             Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
             rb.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -110,7 +126,7 @@ namespace Skills
             // Stun 상태를 해제하고 움직일 수 있도록 변경
             target.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
 
-            target.GetComponent<Summon>().CurrentCC = Enums.ECC.None;
+            target.GetComponent<Summon>().CurrentCC = ECC.None;
         }
         #endregion
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Skills;
+using static Enums;
 
 namespace BehaviorTree
 {
@@ -137,25 +138,25 @@ namespace BehaviorTree
     public class TaskCC : Node
     {
         private Summon _summon;
-        private float _ccTimer;
         private CC cc = new CC();
+
         public TaskCC(GameObject obj)
         {
             _summon = obj.GetComponent<Summon>();
-            _ccTimer = 0f;
         }
         public override ENodeState Evaluate()
         {
             if (_summon.HasCC())
             {
-                if (_ccTimer >= _summon.CurrrentCCStats[((int)Enums.ECCStats.Time)])
+                if (!cc.IsCcCooldown(_summon.CurrentCCStats[((int)ECCStats.Time)]))
                 {
                     cc.FinishedCC(_summon.gameObject);
+                    cc.ResetCcCooldown();
                     return ENodeState.Success;
                 }
                 else
                 {
-                    _ccTimer += Time.deltaTime;
+                    cc.UpdateCcCooldown(Time.deltaTime);
                     return ENodeState.Running;
                 }
             }
@@ -228,6 +229,7 @@ namespace BehaviorTree
         private Animator _animator;
         private Transform _transform;
         private SpriteRenderer _spriteRenderer;
+        private Rigidbody2D _rb;
         private float _moveSpeed;
 
         public TaskMoveToEnemy(GameObject obj)
@@ -235,7 +237,8 @@ namespace BehaviorTree
             _transform = obj.transform;
             _animator = obj.GetComponent<Animator>();
             _spriteRenderer = obj.GetComponent<SpriteRenderer>();
-            _moveSpeed = obj.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.MoveSpeed)];
+            _moveSpeed = obj.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)];
+            _rb = obj.GetComponent<Rigidbody2D>();
         }
         public override ENodeState Evaluate()
         {
@@ -257,6 +260,7 @@ namespace BehaviorTree
             _animator.SetBool("Move", true);
             Vector3 direction = (target.transform.position - _transform.position).normalized;
             _transform.position += direction * _moveSpeed * Time.deltaTime;
+            _rb.velocity = Vector2.zero;
             return ENodeState.Running;
         }
     }
@@ -269,7 +273,7 @@ namespace BehaviorTree
         public CheckEnemyInAttackRange(GameObject obj)
         {
             _transform = obj.transform;
-            _attackRange = obj.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
+            _attackRange = obj.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
         }
         public override ENodeState Evaluate()
         {
@@ -333,7 +337,7 @@ namespace BehaviorTree
         public CheckSkill(Skill skill)
         {
             _skill = skill;
-            _coolTime = skill.Stats[((int)Enums.ESkillStats.CoolTime)];
+            _coolTime = skill.Stats[((int)ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
@@ -373,15 +377,17 @@ namespace BehaviorTree
     {
         //ToDo: 게이지 형식으로 변환
         private Skill _skill;
-
+        private float _coolTime;
         public CheckUltGage(Skill skill)
         {
             _skill = skill;
+            _coolTime = skill.Stats[((int)ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
-            if (_skill.IsCooldown())
+            if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
             {
+                Debug.Log("궁");
                 _skill.SkiilCounter += 1;
                 return ENodeState.Success;
             } else
@@ -421,7 +427,7 @@ namespace BehaviorTree
         public CheckEnemyTooClose(GameObject obj)
         {
             _transform = obj.transform;
-            _personalDistance = obj.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.PersonalDistance)];
+            _personalDistance = obj.GetComponent<Summon>().Stats[((int)ESummonStats.PersonalDistance)];
         }
         public override ENodeState Evaluate()
         {

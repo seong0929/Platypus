@@ -12,7 +12,7 @@ public class Projectile : MonoBehaviour
         _renderer.sprite = Seeds[1];
         _curSprite = _renderer.sprite;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Summon")) // Summon과 충돌 감지
         {
