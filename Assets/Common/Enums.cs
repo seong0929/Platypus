@@ -2,24 +2,28 @@ public static class Enums
 {
     public enum ESummon
     {
-        SenorZorro
+        SenorZorro,
+        SpitGlider
     }
     public enum ESummonStats
     {
         AttackRange,    //사거리
         MoveSpeed,    //이동속도
         Health,         //체력
-        NormalDamage,   //일반 공격 데미지
         Defence,         //방어력
         PersonalDistance,    //너무 가까운 거리 판별
-        CoolTime,    //스킬 쿨 타임
-        UltGauge   //궁극기 게이지
     }
     public enum ESummonAction
     {
         Attack,
         Skill,
         Ult
+    }
+    public enum ESkillStats
+    {
+        AttackRange,
+        CoolTime,
+        Damage
     }
     public enum ELeague
     {
@@ -45,6 +49,16 @@ public static class Enums
     {
         None,
         Stun,
-        Silence
+        KnockBack
+    }
+    public enum ECCStats
+    {
+        Time,
+        Power
+    }
+    public enum ELanguage
+    {
+        KR,
+        EN
     }
 }
