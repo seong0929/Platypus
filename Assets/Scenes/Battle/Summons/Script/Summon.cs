@@ -25,18 +25,6 @@ public abstract class Summon : MonoBehaviour
         get { return stats; }
         set { stats = value; }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        switch (collision.name)
-        {
-            case "Summon":
-                //TODO: 투사체 혹은 공격의 데미지 가져오기
-                //TakeDamage(collision.);   // 누구의 스킬 데미지
-                break;
-            default:
-                break;
-        }
-    }
     protected abstract Node CreateBehaviorTree();
     #endregion
     #region Attack
@@ -50,6 +38,7 @@ public abstract class Summon : MonoBehaviour
         _isAlive = true;
         return _isAlive;
     }
+    // 데미지 받은 함수
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)ESummonStats.Defence)], 0);
@@ -60,8 +49,10 @@ public abstract class Summon : MonoBehaviour
             _isAlive = false;
         }
     }
+    // 데미 주는 함수
     public void GiveDamage(Summon target, float damage)
     {
+        // 근거리는 스킬에, 원거리는 원거리 무기에 추가
         target.TakeDamage(damage);
     }
     #endregion

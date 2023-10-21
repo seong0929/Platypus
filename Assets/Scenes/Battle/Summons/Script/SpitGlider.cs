@@ -7,6 +7,7 @@ using static Enums;
 public class SpitGlider : Summon
 {
     public GameObject Projectile;
+    private Projectile projectileScript;
 
     #region Settings
     public SpitGlider()
@@ -35,10 +36,10 @@ public class SpitGlider : Summon
     {
         private GameObject _projectile;
         private CC cc = new CC();
+        private float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
 
         public Attack()
         {
-            float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
             HasCc = ECC.None;
@@ -48,6 +49,7 @@ public class SpitGlider : Summon
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
             _projectile = summon.GetComponent<SpitGlider>().Projectile;
+            _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
 
             FlipSprite(summon, target);
 
@@ -89,17 +91,17 @@ public class SpitGlider : Summon
     public class SeedSpitting : Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
 
         public SeedSpitting()
         {
-            float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
             HasCc = ECC.KnockBack;
             float[] ccStats = { 1f, 30f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)   //ToDo: 내용 변경
+        public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
             FlipSprite(summon, target);
 
@@ -110,6 +112,8 @@ public class SpitGlider : Summon
                 target.GetComponent<Summon>().CurrentCC = HasCc;
                 cc.ApplyCC(summon, target, cc.Stats);
                 StartSkillCooldown();
+
+                summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
             }
         }
     }
@@ -117,10 +121,10 @@ public class SpitGlider : Summon
     {
         private CC cc = new CC();
         private GameObject _projectile;
+        private float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
 
         public AerialBombardment()
         {
-            float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
             
             HasCc = ECC.None;
@@ -131,7 +135,8 @@ public class SpitGlider : Summon
         {
             FlipSprite(summon, target);
             _projectile = summon.GetComponent<SpitGlider>().Projectile;
-            
+            _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
+
             if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Ult1");

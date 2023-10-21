@@ -32,10 +32,10 @@ public class SenorZorro : Summon
     public class Attack: Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
 
         public Attack()
         {
-            float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
             HasCc = ECC.None;
@@ -53,15 +53,17 @@ public class SenorZorro : Summon
                 animator.SetTrigger("Attack");
                 StartSkillCooldown();
             }
+
+            summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
         }
     }
     public class FootworkSkill : Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 0.8f, 5f, 0f };   // 사거리, 쿨타임, 데미지
 
         public FootworkSkill()
         {
-            float[] skillStats = { 0.8f, 5f, 0f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
             HasCc = ECC.None;
@@ -100,15 +102,17 @@ public class SenorZorro : Summon
                 }
                 StartSkillCooldown();
             }
+
+            summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
         }
     }
     public class FlecheSkill : Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 20f, 20f, 10f };   // 사거리, 쿨타임, 데미지
 
         public FlecheSkill()
         {
-            float[] skillStats = { 20f, 20f, 10f };   // 사거리, 쿨타임, 데미지
             base.stats = skillStats;
 
             HasCc = ECC.None;
@@ -135,6 +139,8 @@ public class SenorZorro : Summon
                 summon.transform.position = appearPosition;
                 FlipSprite(summon, target);
                 StartSkillCooldown();
+
+                summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
             }
         }
     }
