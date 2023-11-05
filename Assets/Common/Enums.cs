@@ -63,4 +63,19 @@ public static class Enums
         Emerald,
         Aqua
     }
+    public enum EBanPickState
+    {
+        SelectPlayer,
+        SelectStage,
+        Ban,
+        Pick,
+        SetPair,
+        SelectStrategy
+    }
+    public enum ESchedule
+    {
+        Scout,
+        Break,
+        Match
+    }
 }
