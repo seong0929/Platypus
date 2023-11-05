@@ -76,8 +76,9 @@ public class GameManager : MonoBehaviour
         Opponent = TeamManager.Teams[2];
         // ---- END: FOR THE TEST --- //
 
+
         MatchManager = new MatchManager();
-        MatchManager.InitializeMatch(2, Enums.EElement.Aqua, User.Team, Opponent);
+        MatchManager.InitializeMatch(2, User.Team, Opponent);
 
         // ---- START: FOR THE TEST --- //
         List<Player> opponentSelected = new List<Player>();
