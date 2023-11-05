@@ -16,5 +16,6 @@ public class SummonScriptableObject : ScriptableObject
     [Header("Types")]
     public Enums.EElement ElementType;
 
-    // sprite
+    [Header("Price")]
+    public int CrystalNum;
 }
