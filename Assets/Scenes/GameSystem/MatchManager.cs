@@ -11,6 +11,85 @@ public class MatchManager
     public Group GroupA;
     public Group GroupB;
 
+    #region BanPickOrders
+    private static readonly List<MatchStatePair> TwoPlayerMatchOrder = new List<MatchStatePair>
+    {
+        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
+        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.SelectStage, Turn = Enums.ETeam.TeamB },
+        // Ban
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
+        // Pick
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        // SetPair
+        new MatchStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamB },
+        // SetStrategy
+        new MatchStatePair { State = Enums.EBanPickState.SelectStrategy, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.SelectStrategy, Turn = Enums.ETeam.TeamB }
+    };
+
+    private static readonly List<MatchStatePair> ThreePlayerMatchOrder = new List<MatchStatePair>
+    {
+        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
+        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.SelectStage, Turn = Enums.ETeam.TeamB },
+        //Ban
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
+        //Pick
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        // SetPair
+        new MatchStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamB },
+        // SetStrategy
+        new MatchStatePair { State = Enums.EBanPickState.SelectStrategy, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.SelectStrategy, Turn = Enums.ETeam.TeamB }
+
+    };
+
+    private static readonly List<MatchStatePair> FourPlayerMatchOrder = new List<MatchStatePair>
+    {
+        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
+        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.SelectStage, Turn = Enums.ETeam.TeamB },
+        //Ban
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
+        //Pick
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        //Ban
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
+        //Pick
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeam.TeamB },
+        // SetPair
+        new MatchStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamB },
+        // SetStrategy
+        new MatchStatePair { State = Enums.EBanPickState.SelectStrategy, Turn = Enums.ETeam.TeamA },
+        new MatchStatePair { State = Enums.EBanPickState.SelectStrategy, Turn = Enums.ETeam.TeamB }
+
+    };
+
+    #endregion
     public List<Enums.ESummon> PickableSummons;
     private List<Enums.ESummon> _unselectableSummons;
 
@@ -100,4 +179,9 @@ public class Group
         PlayerSummonPair = new Dictionary<Player, Enums.ESummon>();
     }
 
+}
+public struct MatchStatePair
+{
+    public Enums.EBanPickState State { get; set; }
+    public Enums.ETeam Turn { get; set; }
 }
