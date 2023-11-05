@@ -19,3 +19,4 @@ MonoBehaviour:
   Defense: 0
   DefaultSprite: {fileID: 21300000, guid: c5bf5684853b9aa4c83388f45fbcc982, type: 2}
   ElementType: 2
+  CrystalNum: 5
