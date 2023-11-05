@@ -7,10 +7,10 @@ using static Enums;
 public class SummonCard : MonoBehaviour
 {
     public Enums.EElement ElementType;
-
+    public Enums.ESummon ESummon;
     [Header("GameObject")]
     [SerializeField] GameObject Panel;
-    [SerializeField] GameObject Button;
+    [SerializeField] GameObject ButtonObject;
     [SerializeField] GameObject Summon;
     [SerializeField] GameObject Banner;
 
@@ -33,16 +33,20 @@ public class SummonCard : MonoBehaviour
     private Image SummonImage;
     private Image BannerImage;
 
+    private Button _selectButton;
+
     void Awake()
     {
         //Set Panels Images
         fetchComponents();
         ChangeSprite();
+
+        _selectButton.onClick.AddListener(() => SelectButtonClicked());
     }
 
     public void CardSelected(Enums.ETeam eTeam)
     {
-        Button.GetComponent<Button>().interactable = false;
+        _selectButton.interactable = false;
         Banner.SetActive(true);
 
         BannerImage.sprite = Picked;
@@ -60,7 +64,7 @@ public class SummonCard : MonoBehaviour
     }
     public void CardBanned()
     {
-        Button.GetComponent<Button>().interactable = false;
+        _selectButton.interactable = false;
         Banner.SetActive(true);
 
         BannerImage.sprite = Banned;
@@ -69,9 +73,11 @@ public class SummonCard : MonoBehaviour
     private void fetchComponents()
     {
         PanelImage = Panel.GetComponent<Image>();
-        ButtonImage = Button.GetComponent<Image>();
+        ButtonImage = ButtonObject.GetComponent<Image>();
         SummonImage = Summon.GetComponent<Image>();
         BannerImage = Banner.GetComponent<Image>();
+
+        _selectButton = ButtonObject.GetComponent<Button>();
     }
 
     public void ChangeSprite()
@@ -104,6 +110,6 @@ public class SummonCard : MonoBehaviour
 
     private void SelectButtonClicked()
     {
-//        MatchManager.RecieveBanPickSummon.Invoke();
+        MatchManager.RecieveBanPickSummon.Invoke(ESummon);
     }
 }

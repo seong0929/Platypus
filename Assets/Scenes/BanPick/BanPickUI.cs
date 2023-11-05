@@ -11,13 +11,12 @@ public class BanPickUI : MonoBehaviour
     private List<Player> TeamA;
     private List<Player> TeamB;
 
+    private Scroll _scroll;
 
-    [SerializeField]
-    GameObject TeamPanelA;
-    [SerializeField]
-    GameObject TeamPanelB;
-    [SerializeField]
-    GameObject SummonCardsPanelObject;
+    [SerializeField] GameObject TeamPanelA;
+    [SerializeField] GameObject TeamPanelB;
+    [SerializeField] GameObject SummonCardsPanelObject;
+    [SerializeField] GameObject ScrollObject;
 
     // Start is called before the first frame update
     void Awake()
@@ -34,14 +33,39 @@ public class BanPickUI : MonoBehaviour
         InitializeTeamPanel(TeamPanelA, TeamA, true);
         InitializeTeamPanel(TeamPanelB, TeamB, false);
         InitializeSummonCardsPanel();
+        InitializeScroll();
 
         List<Enums.ESummon> sumons = new List<Enums.ESummon>();
         sumons.Add(Enums.ESummon.SenorZorro);
         sumons.Add(Enums.ESummon.SenorZorro);
 
-        setSummons(sumons, sumons);
-    }
+        SetSummons(sumons, sumons);
 
+        //matchManager.SetBanPickStateAndTurn(Enums.ETeam.TeamA, Enums.EBanPickState.Ban);
+    }
+    private void SetTurn(Enums.ETeam eturn, Enums.EBanPickState eBanPickState)
+    {
+        if(eturn == Enums.ETeam.TeamA)
+        {
+            _scroll.TurnBlueScroll();
+        }
+        else
+        {
+            _scroll.TurnBlueScroll();
+        }
+
+        string scrollText = "None";
+        if(eBanPickState == Enums.EBanPickState.Ban)
+        {
+            scrollText = "Ban a Summon.";
+        }
+        else if(eBanPickState == Enums.EBanPickState.Pick)
+        {
+            scrollText = "Select a Summon.";
+        }
+
+        _scroll.SetText(scrollText);
+    }
     private void InitializeTeamPanel(GameObject panelGameObject, List<Player> teamMembers, bool isTeamA)
     {
         TeamPanel panel = panelGameObject.GetComponent<TeamPanel>();
@@ -71,9 +95,13 @@ public class BanPickUI : MonoBehaviour
 
         summonCardsPanel.CreateCards();
     }
-    private void setSummons(List<Enums.ESummon> teamASummons, List<Enums.ESummon> teamBSummons)
+    private void SetSummons(List<Enums.ESummon> teamASummons, List<Enums.ESummon> teamBSummons)
     {
         matchManager.GroupA.SelectedSummon = teamASummons;
         matchManager.GroupB.SelectedSummon = teamBSummons;
+    }
+    private void InitializeScroll()
+    {
+        _scroll = ScrollObject.GetComponent<Scroll>();
     }
 }
