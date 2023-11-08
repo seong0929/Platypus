@@ -2,6 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * GameManager
+ * 
+ * This class is the main controller of the game.
+ * It is responsible for managing the game state and
+ * the game flow.
+ * 
+ * It is a singleton class, meaning that there can only
+ * be one instance of this class in the game.
+ * 
+ * It is also a MonoBehaviour, meaning that it can be
+ * attached to a GameObject in the game.
+ * 
+ * This class is responsible for:
+ * 1. Managing the game state
+ * 2. Managing the game flow
+ * 3. Managing the game data
+ * 
+ * This class is not responsible for:
+ * 1. Managing the UI
+ * 2. Managing the user input
+ * 3. Managing the game logic
+ * 
+ * This class is a part of the Game System domain.
+ */
+
 public class GameManager : MonoBehaviour
 {
     // User's State, Team and Coach
@@ -31,26 +57,35 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            NewGame();
         }
         else
         {
             Destroy(gameObject);
+            return;
         }
-    }
 
-    public void NewGame()
+        InitializeManagers();
+        InitializeUserState();
+
+        NewGame();
+    }
+    private void InitializeManagers()
     {
         // initialing Managers
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
+
         // Set GameManager to other Managers
         TeamManager.GameManager = this;
         //CoachManager.GameManager = this;
         //PlayerManager.GameManager = this;
 
+    }
+
+    // PATCH : This function is temporary. Should be done by other system.
+    private void InitializeUserState()
+    {
         // initialing UserState
         UserState = new UserState();
         UserState.Coach = CoachManager.CreateCoach("User", 1);
@@ -58,7 +93,10 @@ public class GameManager : MonoBehaviour
 
         userTeam = UserState.Team;
         userCoach = UserState.Coach;
-
+    }
+    
+    public void NewGame()
+    {
         //Build 3 other teams
         for (int i = 0; i<3; i++)
         {
