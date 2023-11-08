@@ -6,6 +6,7 @@ public class TeamManager //: MonoBehaviour
 {
     public List<Team> Teams;
     public Team FAs;
+    public GameManager GameManager;
 
     public TeamManager()
     {
@@ -13,7 +14,11 @@ public class TeamManager //: MonoBehaviour
         FAs = new Team("FA");
         Teams.Add(FAs);
     }
-
+    
+    private void Awake()
+    {
+        
+    }
 
     public string GenerateRandomName(string[] nameList)
     {
@@ -51,5 +56,33 @@ public class TeamManager //: MonoBehaviour
     public void AddTeam(Team team)
     {
         Teams.Add(team);
+    }
+
+    //Create Filled Team
+    public Team CreateFilledTeam()
+    {
+
+        Team team = CreateTeam();
+
+        // Get CoachManager from GameManager and assign a coach to the team
+        CoachManager coachManager = GameManager.CoachManager;
+        if(coachManager == null) // If the coachManager is not initialized return null
+        {
+            Debug.LogError("CoachManager is not initialized!");
+            return null;
+        }
+        team.Coach = coachManager.CreateCoach("Unknown", 1);
+
+        // Get PlayerManager from GameManager and assign 3 players to the team
+        PlayerManager playerManager = GameManager.PlayerManager;
+        if (playerManager == null) // If the playerManager is not initialized return null
+        {
+            Debug.LogError("PlayerManager is not initialized!");
+            return null;
+        }
+        List<Player> players = playerManager.CreatePlayers(3, 1, 2);
+        team.ScoutPlayers(players);
+
+        return team;
     }
 }

@@ -28,7 +28,7 @@ public class SelectPlayer : MonoBehaviour
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
-        Team team = gameManager.User.Team;
+        Team team = gameManager.GetUserTeam();
 
         roster = team.Roster;
         selected = new List<Player>();

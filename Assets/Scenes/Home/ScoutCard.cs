@@ -22,6 +22,10 @@ public class ScoutCard : MonoBehaviour
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        if(gameManager == null)
+        {
+            Debug.Log("gameManager is null");
+        }
         thePlayer = gameManager.TeamManager.FAs.Players[nth];
 
         if (gameManager != null)
@@ -42,13 +46,24 @@ public class ScoutCard : MonoBehaviour
 
     public void Scout()
     {
-
-        gameManager.User.Team.ScoutPlayer(thePlayer);
+        if (gameManager == null)
+        {
+            Debug.Log("gameManager is null");
+        }
+        if (thePlayer == null) 
+        {
+        Debug.Log("thePlayer is null");
+        }
+        if (gameManager.GetUserTeam() == null)
+        {
+            Debug.Log("gameManager.GetUserTeam() is null");
+        }
+        gameManager.GetUserTeam().ScoutPlayer(thePlayer);
         Debug.Log("Scout"+thePlayer.Name);
 
         /////////////// NEED FIX LATER /////////////
-        gameManager.User.Team.AddPlayerToRoster(thePlayer);
-        Debug.Log("Roster player num: " + gameManager.User.Team.Roster.Count);
+        gameManager.GetUserTeam().AddPlayerToRoster(thePlayer);
+        Debug.Log("Roster player num: " + gameManager.GetUserTeam().Roster.Count);
     }
 
 }

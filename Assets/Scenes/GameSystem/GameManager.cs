@@ -4,21 +4,25 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public UserState User;
+    // User's State, Team and Coach
+    public UserState UserState;
+    private Team userTeam;
+    private Coach userCoach;
+
+    // Managers of Team, Coach, Player
     public TeamManager TeamManager;
-    private CoachManager CoachManager;
-    private PlayerManager PlayerManager;
+    public CoachManager CoachManager;
+    public PlayerManager PlayerManager;
+
+    // Managers of Match and Schedular
     public MatchManager MatchManager;
+    public Schedular Schedular;
 
     public Group GroupA;
     public Group GroupB;
 
-    //    private MatchManager MatchManager;
-
     // Singleton instance
     public static GameManager Instance { get; private set; }
-
-    // Other GameManager variables and methods...
 
     private void Awake()
     {
@@ -38,36 +42,34 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
+        // initialing Managers
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
+        // Set GameManager to other Managers
+        TeamManager.GameManager = this;
+        //CoachManager.GameManager = this;
+        //PlayerManager.GameManager = this;
 
         // initialing UserState
-        User = new UserState();
-        User.Coach = CoachManager.CreateCoach("User", 1);
-        User.Team = TeamManager.CreateTeam("User's Team");
+        UserState = new UserState();
+        UserState.Coach = CoachManager.CreateCoach("User", 1);
+        UserState.Team = TeamManager.CreateTeam("User's Team");
 
+        userTeam = UserState.Team;
+        userCoach = UserState.Coach;
+
+        //Build 3 other teams
         for (int i = 0; i<3; i++)
         {
-            BuildFilledTeam();
+            TeamManager.CreateFilledTeam();
         }
 
+        //Build 10 FA players
         PlayerManager.CreatePlayers(10, 1, TeamManager.FAs);
     }
 
-
-    //    private void BuildFilledTeam()
-    private Team BuildFilledTeam()
-    {
-        Team team = TeamManager.CreateTeam();
-        team.Coach = CoachManager.CreateCoach("Unknown", 1); // might cause Confusion
-
-        List<Player> players = PlayerManager.CreatePlayers(3,1,2);
-        team.ScoutPlayers(players);
-
-        return team;
-    }
-
+    //Build a Match (Temporary patches)
     public void MakeMatch()
     {
         // get from schedule or something
@@ -78,7 +80,7 @@ public class GameManager : MonoBehaviour
 
 
         MatchManager = new MatchManager();
-        MatchManager.InitializeMatch(2, User.Team, Opponent);
+        MatchManager.InitializeMatch(2, userTeam, Opponent);
 
         // ---- START: FOR THE TEST --- //
         List<Player> opponentSelected = new List<Player>();
@@ -86,5 +88,10 @@ public class GameManager : MonoBehaviour
         opponentSelected.Add(Opponent.Players[1]);
         MatchManager.GroupB.SelectedPlayers = opponentSelected;
         // ---- END: FOR THE TEST --- //
+    }
+
+    public Team GetUserTeam()
+    {
+        return userTeam;
     }
 }
