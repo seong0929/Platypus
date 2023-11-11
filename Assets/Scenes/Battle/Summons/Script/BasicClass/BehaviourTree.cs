@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BehaviorTree
 {
-    // ºñÇì¹öÆ®¸®
+    // ë¹„í—¤ë²„íŠ¸ë¦¬
     public abstract class Tree : MonoBehaviour
     {
         private Node _root = null;
@@ -15,32 +15,32 @@ namespace BehaviorTree
         private void Update()
         {
             if (_root != null)
-                _root.Evaluate();   // Æò°¡
+                _root.Evaluate();   // í‰ê°€
         }
         protected abstract Node SetupTree();
     }
-    // ³ëµå »óÅÂ
+    // ë…¸ë“œ ìƒíƒœ
     public enum ENodeState
     {
         Running,
         Success,
         Failure
     }
-    // ¼ÒÈ¯¼ö ³ëµå »óÅÂ
+    // ì†Œí™˜ìˆ˜ ë…¸ë“œ ìƒíƒœ
     public enum ESummonState
     {
-        Running,    // »ì¾ÆÀÖÀ½
-        Dead,   // Á×À½
-        Respawn // ¸®½ºÆù Áß
+        Running,    // ì‚´ì•„ìˆìŒ
+        Dead,   // ì£½ìŒ
+        Respawn // ë¦¬ìŠ¤í° ì¤‘
     }
-    // ³ëµå Å¬·¡½º
+    // ë…¸ë“œ í´ë˜ìŠ¤
     public class Node
     {
-        public Node Parent; // ºÎ¸ğ ³ëµå
-        protected ENodeState state; // Çö »óÅÂ
-        protected List<Node> children = new List<Node>();   // ÀÚ½Ä ³ëµå
-        private Dictionary<string, object> _dataContext = new Dictionary<string, object>(); // ÀúÀåÇÑ °ª
-        #region »ı¼ºÀÚ
+        public Node Parent; // ë¶€ëª¨ ë…¸ë“œ
+        protected ENodeState state; // í˜„ ìƒíƒœ
+        protected List<Node> children = new List<Node>();   // ìì‹ ë…¸ë“œ
+        private Dictionary<string, object> _dataContext = new Dictionary<string, object>(); // ì €ì¥í•œ ê°’
+        #region ìƒì„±ì
         public Node()
         {
             Parent = null;
@@ -55,10 +55,10 @@ namespace BehaviorTree
             node.Parent = this;
             children.Add(node);
         }
-        public virtual ENodeState Evaluate() => ENodeState.Failure; // Æò°¡ °¡»ó ÇÔ¼ö
+        public virtual ENodeState Evaluate() => ENodeState.Failure; // í‰ê°€ ê°€ìƒ í•¨ìˆ˜
         #endregion
-        public void SetData(string key, object value) { _dataContext[key] = value; }    // µ¥ÀÌÅÍ ÀúÀå
-        // µ¥ÀÌÅÍ °¡Á®¿À±â
+        public void SetData(string key, object value) { _dataContext[key] = value; }    // ë°ì´í„° ì €ì¥
+        // ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
         public object GetData(string key)
         {
             object value = null;
@@ -75,7 +75,7 @@ namespace BehaviorTree
             }
             return null;
         }
-        // µ¥ÀÌÅÍ Áö¿ì±â
+        // ë°ì´í„° ì§€ìš°ê¸°
         public bool ClearData(string key)
         {
             if (_dataContext.ContainsKey(key))
@@ -94,12 +94,12 @@ namespace BehaviorTree
             return false;
         }
     }
-    // ½ÃÄö½º ³ëµå
+    // ì‹œí€€ìŠ¤ ë…¸ë“œ
     public class Sequence : Node
     {
         public Sequence() : base() { }
         public Sequence(List<Node> children) : base(children) { }
-        // == and ÇÏ³ª¶óµµ ½ÇÆĞ ½Ã ½ÇÆĞ
+        // == and í•˜ë‚˜ë¼ë„ ì‹¤íŒ¨ ì‹œ ì‹¤íŒ¨
         public override ENodeState Evaluate()
         {
             bool anyChildIsRunning = false;
@@ -125,12 +125,12 @@ namespace BehaviorTree
             return state;
         }
     }
-    // ¼¿·ºÅÍ ³ëµå
+    // ì…€ë ‰í„° ë…¸ë“œ
     public class Selector : Node
     {
         public Selector() : base() { }
         public Selector(List<Node> children) : base(children) { }
-        // == or ¸ğµç ÀÚ½ÄÀÌ ½ÇÆĞÇØ¾ß ½ÇÆĞ
+        // == or ëª¨ë“  ìì‹ì´ ì‹¤íŒ¨í•´ì•¼ ì‹¤íŒ¨
         public override ENodeState Evaluate()
         {
             foreach (Node node in children)
@@ -153,7 +153,7 @@ namespace BehaviorTree
             return state;
         }
     }
-    // ÆĞ·² ³ëµå
+    // íŒ¨ëŸ´ ë…¸ë“œ
     public class ParallelNode : Node
     {
         private int _successChildrenNum;
@@ -201,7 +201,7 @@ namespace BehaviorTree
             return state;
         }
     }
-    // ÀÎ¹öÅÍ ³ëµå
+    // ì¸ë²„í„° ë…¸ë“œ
     public class Inverter : Node
     {
         protected Node child;
@@ -211,7 +211,7 @@ namespace BehaviorTree
             this.child = child;
             this.child.Parent = this;
         }
-        // ÀÚ½ÄÀÇ °á°úÀÇ ¹İ´ë·Î ¹İÈ¯
+        // ìì‹ì˜ ê²°ê³¼ì˜ ë°˜ëŒ€ë¡œ ë°˜í™˜
         public override ENodeState Evaluate()
         {
             switch (child.Evaluate())

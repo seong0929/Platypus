@@ -13,11 +13,11 @@ public class Projectile : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Summon")) // Summon°ú Ãæµ¹ °¨Áö
+        if (collision.gameObject.CompareTag("Summon")) // Summonê³¼ ì¶©ëŒ ê°ì§€
         {
             var summon = collision.gameObject.GetComponent<Summon>();
 
-            if ((summon != null) && (collision.gameObject != this.transform.parent.gameObject)) // ÀÚ½ÅÀ» Á¦¿ÜÇÑ summon°ú ¸¸³ª¸é ÆÄ±«
+            if ((summon != null) && (collision.gameObject != this.transform.parent.gameObject)) // ìì‹ ì„ ì œì™¸í•œ summonê³¼ ë§Œë‚˜ë©´ íŒŒê´´
             {
                 summon.TakeDamage(damageAmount);
                 Destroy(gameObject);

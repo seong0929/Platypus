@@ -11,10 +11,10 @@ public class SpitGlider : Summon
     #region Settings
     public SpitGlider()
     {
-        //ToDo: GameManager¸¦ ÅëÇØ ÇÈ µÈ Ä³¸´ÅÍ ½ºÅÈ °¡Á®¿À±â
+        //ToDo: GameManagerë¥¼ í†µí•´ í”½ ëœ ìºë¦¿í„° ìŠ¤íƒ¯ ê°€ì ¸ì˜¤ê¸°
         float[] summonStats = { 5f, 0.5f, 1000f, 1f, 0.8f };
 
-        //Summon Å¬·¡½ºÀÇ »ı¼ºÀÚ¸¦ È£ÃâÇÏ¸é¼­ ÃÊ±âÈ­µÈ °ªÀ» Àü´Ş
+        //Summon í´ë˜ìŠ¤ì˜ ìƒì„±ìë¥¼ í˜¸ì¶œí•˜ë©´ì„œ ì´ˆê¸°í™”ëœ ê°’ì„ ì „ë‹¬
         base.stats = summonStats;
     }
 
@@ -35,7 +35,7 @@ public class SpitGlider : Summon
     {
         private GameObject _projectile;
         private CC cc = new CC();
-        private float[] skillStats = { 5f, 1f, 2f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] skillStats = { 5f, 1f, 2f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public Attack()
         {
@@ -58,7 +58,7 @@ public class SpitGlider : Summon
             {
                 animator.SetTrigger("Attack");
 
-                // °¡Àå °¡±î¿î ÀûÀ» Ã£±â
+                // ê°€ì¥ ê°€ê¹Œìš´ ì ì„ ì°¾ê¸°
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
                 GameObject nearestEnemy = null;
                 float nearestDistance = float.MaxValue;
@@ -74,13 +74,13 @@ public class SpitGlider : Summon
                         }
                     }
                 }
-                // ¹ß»ç
+                // ë°œì‚¬
                 if (nearestEnemy != null)
                 {
                     Vector3 projectilePosition = summon.transform.position;
                     GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.identity, summon.transform);
                     Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
-                    projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // ÇÊ¿ä¿¡ µû¶ó ¼Óµµ Á¶Á¤
+                    projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // í•„ìš”ì— ë”°ë¼ ì†ë„ ì¡°ì •
                 }
 
                 StartSkillCooldown();
@@ -90,7 +90,7 @@ public class SpitGlider : Summon
     public class SeedSpitting : Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 10f, 5f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] skillStats = { 0.8f, 10f, 5f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public SeedSpitting()
         {
@@ -123,7 +123,7 @@ public class SpitGlider : Summon
     {
         private CC cc = new CC();
         private GameObject _projectile;
-        private float[] skillStats = { 10f, 25f, 1f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] skillStats = { 10f, 25f, 1f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public AerialBombardment()
         {
@@ -150,10 +150,10 @@ public class SpitGlider : Summon
                 animator.SetTrigger("Ult2");
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0f)
                 {
-                    // ÀÌµ¿
+                    // ì´ë™
                     summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 0.5f;
 
-                    // °¡Àå °¡±î¿î ÀûÀ» Ã£±â
+                    // ê°€ì¥ ê°€ê¹Œìš´ ì ì„ ì°¾ê¸°
                     GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
                     GameObject nearestEnemy = null;
                     float nearestDistance = float.MaxValue;
@@ -169,13 +169,13 @@ public class SpitGlider : Summon
                             }
                         }
                     }
-                    // ¹ß»ç
+                    // ë°œì‚¬
                     if (nearestEnemy != null)
                     {
                         Vector3 projectilePosition = nearestEnemy.transform.position + new Vector3(0, 10, 0);
                         GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.Euler(new Vector3(0f, 0f, 90f)), summon.transform);
                         Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
-                        projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // ÇÊ¿ä¿¡ µû¶ó ¼Óµµ Á¶Á¤
+                        projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // í•„ìš”ì— ë”°ë¼ ì†ë„ ì¡°ì •
                     }
                 }
                 StartSkillCooldown();
@@ -202,52 +202,52 @@ public class SpitGlider : Summon
     {
         Node root = new Selector(new List<Node>
         {
-            //Çàµ¿ °áÁ¤
+            //í–‰ë™ ê²°ì •
             new Selector(new List<Node>{
-                // ¸®½ºÆù
+                // ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
                     new TaskRespawn(this.gameObject)
                 }),
-                // Ä³¸¯ÅÍ »ıÁ¸ ¿©ºÎ È®ÀÎ ÈÄ, ¸®½ºÆù
+                // ìºë¦­í„° ìƒì¡´ ì—¬ë¶€ í™•ì¸ í›„, ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckIfAlive(this.gameObject)),
                     new TaskDie(this.gameObject),
                 }),
-                // CC ¿©ºÎ È®ÀÎ
+                // CC ì—¬ë¶€ í™•ì¸
                 new Sequence(new List<Node>
                 {
                     new CheckCC(this.gameObject),
                     new TaskCC(this.gameObject),
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ÀÖ´Ù¸é, Çàµ¿
+                //ì ì´ ì”¬ ì•ˆì— ìˆë‹¤ë©´, í–‰ë™
                 new Sequence(new List<Node>
                 {
                     new CheckEnemyInScene(),
                     new Selector(new List<Node>
                     {
-                        //±Ã±Ø±â °ÔÀÌÁö Ã¡À¸¸é, ±Ã±Ø±â
+                        //ê¶ê·¹ê¸° ê²Œì´ì§€ ì°¼ìœ¼ë©´, ê¶ê·¹ê¸°
                         new Sequence(new List<Node>
                         {
                             new CheckUltGage(skills[((int)ESummonAction.Ult)]),
                             new TaskUlt(this.gameObject, skills[((int)ESummonAction.Ult)])
                         }),
-                        //ÀûÀÌ ¸Ö¸® ÀÖ´Ù¸é, °¡±îÀÌ ÀÌµ¿
+                        //ì ì´ ë©€ë¦¬ ìˆë‹¤ë©´, ê°€ê¹Œì´ ì´ë™
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyOutOfAttackRange(this.gameObject),
                             new TaskMoveToEnemy(this.gameObject)
                         }),
-                        //ÀûÀÌ ³Ê¹« °¡±î¿ì¸é, ½ºÅ³
+                        //ì ì´ ë„ˆë¬´ ê°€ê¹Œìš°ë©´, ìŠ¤í‚¬
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyTooClose(this.gameObject),
                             new CheckSkill(skills[((int)ESummonAction.Skill)]),
                             new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
                         }),
-                        //ÀûÀÌ °ø°İ ¹üÀ§ ¾È¿¡ ÀÖ´Ù¸é, °ø°İ
+                        //ì ì´ ê³µê²© ë²”ìœ„ ì•ˆì— ìˆë‹¤ë©´, ê³µê²©
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(this.gameObject),
@@ -255,7 +255,7 @@ public class SpitGlider : Summon
                         })
                     })
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ¾ø´Ù¸é, Idle
+                //ì ì´ ì”¬ ì•ˆì— ì—†ë‹¤ë©´, Idle
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),

@@ -9,10 +9,10 @@ public class SenorZorro : Summon
     #region Settings
     public SenorZorro()
     {
-        //ToDo: GameManager¸¦ ÅëÇØ ÇÈ µÈ Ä³¸´ÅÍ ½ºÅÈ °¡Á®¿À±â
+        //ToDo: GameManagerë¥¼ í†µí•´ í”½ ëœ ìºë¦¿í„° ìŠ¤íƒ¯ ê°€ì ¸ì˜¤ê¸°
         float[] summonStats = { 0.7f, 1f, 1500f, 5f, 0.5f };
 
-        //Summon Å¬·¡½ºÀÇ »ı¼ºÀÚ¸¦ È£ÃâÇÏ¸é¼­ ÃÊ±âÈ­µÈ °ªÀ» Àü´Ş
+        //Summon í´ë˜ìŠ¤ì˜ ìƒì„±ìë¥¼ í˜¸ì¶œí•˜ë©´ì„œ ì´ˆê¸°í™”ëœ ê°’ì„ ì „ë‹¬
         base.stats = summonStats;
     }
 
@@ -32,7 +32,7 @@ public class SenorZorro : Summon
     public class Attack: Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 2f, 2f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] skillStats = { 0.8f, 2f, 2f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public Attack()
         {
@@ -64,7 +64,7 @@ public class SenorZorro : Summon
     public class FootworkSkill : Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 7f, 0f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] skillStats = { 0.8f, 7f, 0f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public FootworkSkill()
         {
@@ -121,7 +121,7 @@ public class SenorZorro : Summon
     public class FlecheSkill : Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 20f, 19f, 10f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] skillStats = { 20f, 19f, 10f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public FlecheSkill()
         {
@@ -173,37 +173,37 @@ public class SenorZorro : Summon
     {
         Node root = new Selector(new List<Node>
         {
-            //Çàµ¿ °áÁ¤
+            //í–‰ë™ ê²°ì •
             new Selector(new List<Node>{
-                // ¸®½ºÆù
+                // ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
                     new TaskRespawn(this.gameObject)
                 }),
-                // Ä³¸¯ÅÍ »ıÁ¸ ¿©ºÎ È®ÀÎ ÈÄ, ¸®½ºÆù
+                // ìºë¦­í„° ìƒì¡´ ì—¬ë¶€ í™•ì¸ í›„, ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckIfAlive(this.gameObject)),
                     new TaskDie(this.gameObject),
                 }),
-                // CC ¿©ºÎ È®ÀÎ
+                // CC ì—¬ë¶€ í™•ì¸
                 new Sequence(new List<Node>
                 {
                     new CheckCC(this.gameObject),
                     new TaskCC(this.gameObject),
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ÀÖ´Ù¸é, Çàµ¿
+                //ì ì´ ì”¬ ì•ˆì— ìˆë‹¤ë©´, í–‰ë™
                 new Sequence(new List<Node>
                 {
                     new CheckEnemyInScene(),
                     new Selector(new List<Node>
                     {
-                        //ÀûÀÌ ¸Ö¸® ÀÖ´Ù¸é, °¡±îÀÌ ÀÌµ¿
+                        //ì ì´ ë©€ë¦¬ ìˆë‹¤ë©´, ê°€ê¹Œì´ ì´ë™
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyOutOfAttackRange(this.gameObject),
-                            //½ºÅ³ÀÌ ÀÖ´Ù¸é ½ºÅ³ »ç¿ë, ¾Æ´Ï¸é ÀÌµ¿
+                            //ìŠ¤í‚¬ì´ ìˆë‹¤ë©´ ìŠ¤í‚¬ ì‚¬ìš©, ì•„ë‹ˆë©´ ì´ë™
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node>
@@ -214,7 +214,7 @@ public class SenorZorro : Summon
                                 new TaskMoveToEnemy(this.gameObject)
                             })
                         }),
-                        //ÀûÀÌ °ø°İ ¹üÀ§ ¾È¿¡ ÀÖ´Ù¸é, °ø°İ
+                        //ì ì´ ê³µê²© ë²”ìœ„ ì•ˆì— ìˆë‹¤ë©´, ê³µê²©
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(this.gameObject),
@@ -228,11 +228,11 @@ public class SenorZorro : Summon
                                 new TaskAttack(this.gameObject, skills[((int)ESummonAction.Attack)]),
                             })
                         }),
-                        //ÀûÀÌ ³Ê¹« °¡±î¿ì¸é, ÀÌµ¿
+                        //ì ì´ ë„ˆë¬´ ê°€ê¹Œìš°ë©´, ì´ë™
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyTooClose(this.gameObject),
-                            //½ºÅ³ÀÌ ÀÖ´Ù¸é ½ºÅ³ »ç¿ë, ¾Æ´Ï¸é ÀÌµ¿
+                            //ìŠ¤í‚¬ì´ ìˆë‹¤ë©´ ìŠ¤í‚¬ ì‚¬ìš©, ì•„ë‹ˆë©´ ì´ë™
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node>
@@ -245,7 +245,7 @@ public class SenorZorro : Summon
                         })
                     })
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ¾ø´Ù¸é, Idle
+                //ì ì´ ì”¬ ì•ˆì— ì—†ë‹¤ë©´, Idle
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
