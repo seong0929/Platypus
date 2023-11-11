@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
+        MatchManager = new MatchManager();        
 
         // Set GameManager to other Managers
         TeamManager.GameManager = this;
@@ -116,8 +117,6 @@ public class GameManager : MonoBehaviour
         Opponent = TeamManager.Teams[2];
         // ---- END: FOR THE TEST --- //
 
-
-        MatchManager = new MatchManager();
         MatchManager.InitializeMatch(2, userTeam, Opponent);
 
         // ---- START: FOR THE TEST --- //

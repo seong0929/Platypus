@@ -5,20 +5,20 @@ using System;
 using UnityEngine.Events;
 using System.Linq;
 
-public struct Match
-{
-    public int PlayerNum;
-    public int CrystalLimitNum;
-    public int WinPoint;
-    public Enums.EElement Stage;
-    public Group GroupA;
-    public Group GroupB;
-    public Enums.ETeam Winner;
-}
+//public struct Match
+//{
+//    public int PlayerNum;
+//    public int CrystalMAXNum;
+//    public int WinPoint;
+//    public Enums.EElement Stage;
+//    public Group GroupA;
+//    public Group GroupB;
+//    public Enums.ETeam Winner;
+//}
 public struct MatchPlan
 {
     public int PlayerNum;
-    public int CrystalLimitNum;
+    public int CrystalMAXNum;
     public int WinPoint;
     public Team TeamA;
     public Team TeamB;

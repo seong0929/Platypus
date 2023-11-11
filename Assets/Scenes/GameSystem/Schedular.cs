@@ -11,7 +11,7 @@ public class Schedular
         Date targetDate = new Date() { Year = 2023, Month = 8, Day = 18 };
         Schedule schedule0 = new Schedule(Enums.ESchedule.Break);
         MatchPlan matchPlan = new MatchPlan()
-        { PlayerNum = 2, CrystalLimitNum = 15, WinPoint = 2, TeamA = teamA, TeamB = teamB};
+        { PlayerNum = 2, CrystalMAXNum = 15, WinPoint = 2, TeamA = teamA, TeamB = teamB};
         Schedule schedule1 = new Schedule(Enums.ESchedule.Match, matchPlan);
 
         Schedules[targetDate] = new List<Schedule> { schedule0, schedule1 };
