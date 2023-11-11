@@ -61,16 +61,21 @@ public static class Enums
     {
         Sepia,
         Emerald,
-        Aqua
+        Aqua,
+        None
     }
     public enum EBanPickState
     {
+        // Started Yet,
+        None,
         SelectPlayer,
         SelectStage,
         Ban,
         Pick,
         SetPair,
-        SelectStrategy
+        SelectStrategy,
+        Battle,
+        End
     }
     public enum ESchedule
     {
