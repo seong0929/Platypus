@@ -212,7 +212,7 @@ namespace BehaviorTree
         public CheckEnemyOutOfAttackRange(GameObject obj)
         {
             _transform = obj.transform;
-            _attackRange = obj.GetComponent<Summon>().Stats[((int)Enums.ESummonStats.AttackRange)];
+            _attackRange = obj.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
         }
         public override ENodeState Evaluate()
         {
@@ -393,7 +393,6 @@ namespace BehaviorTree
         {
             if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
             {
-                Debug.Log("궁");
                 _skill.SkiilCounter += 1;
                 return ENodeState.Success;
             } else

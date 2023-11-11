@@ -7,13 +7,12 @@ using static Enums;
 public class SpitGlider : Summon
 {
     public GameObject Projectile;
-    private Projectile projectileScript;
 
     #region Settings
     public SpitGlider()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 5f, 0.5f, 80f, 1f, 0.8f };
+        float[] summonStats = { 5f, 0.5f, 1000f, 1f, 0.8f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -108,12 +107,15 @@ public class SpitGlider : Summon
             if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Skill");
-                target.GetComponent<Summon>().CurrentCCStats = cc.Stats;
-                target.GetComponent<Summon>().CurrentCC = HasCc;
-                cc.ApplyCC(summon, target, cc.Stats);
-                StartSkillCooldown();
+                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+                {
+                    target.GetComponent<Summon>().CurrentCCStats = cc.Stats;
+                    target.GetComponent<Summon>().CurrentCC = HasCc;
+                    cc.ApplyCC(summon, target, cc.Stats);
+                    StartSkillCooldown();
 
-                summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                }
             }
         }
     }
@@ -140,42 +142,50 @@ public class SpitGlider : Summon
             if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Ult1");
-                summon.tag = "NonTarget";
+                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+                {
+                    summon.tag = "NonTarget";
+                }
 
                 animator.SetTrigger("Ult2");
-
-                // 이동
-                summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 0.5f;
-
-                // 가장 가까운 적을 찾기
-                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
-                GameObject nearestEnemy = null;
-                float nearestDistance = float.MaxValue;
-                foreach (GameObject enemy in enemies)
+                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0f)
                 {
-                    if (enemy.GetComponent<Summon>().MyTeam == false && enemy != summon)
+                    // 이동
+                    summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 0.5f;
+
+                    // 가장 가까운 적을 찾기
+                    GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
+                    GameObject nearestEnemy = null;
+                    float nearestDistance = float.MaxValue;
+                    foreach (GameObject enemy in enemies)
                     {
-                        float distance = Vector2.Distance(summon.transform.position, enemy.transform.position);
-                        if (distance < nearestDistance)
+                        if (enemy.GetComponent<Summon>().MyTeam == false && enemy != summon)
                         {
-                            nearestEnemy = enemy;
-                            nearestDistance = distance;
+                            float distance = Vector2.Distance(summon.transform.position, enemy.transform.position);
+                            if (distance < nearestDistance)
+                            {
+                                nearestEnemy = enemy;
+                                nearestDistance = distance;
+                            }
                         }
                     }
+                    // 발사
+                    if (nearestEnemy != null)
+                    {
+                        Vector3 projectilePosition = nearestEnemy.transform.position + new Vector3(0, 10, 0);
+                        GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.Euler(new Vector3(0f, 0f, 90f)), summon.transform);
+                        Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
+                        projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
+                    }
                 }
-                // 발사
-                if (nearestEnemy != null)
-                {
-                    Vector3 projectilePosition = nearestEnemy.transform.position + new Vector3(0, 10, 0);
-                    GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.Euler(new Vector3(0f, 0f, 90f)), summon.transform);
-                    Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
-                    projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
-                }
-
                 StartSkillCooldown();
+
                 animator.SetTrigger("Ult3");
-                summon.tag = "Summon";
-                summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 2f;
+                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+                {
+                    summon.tag = "Summon";
+                    summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 2f;
+                }
             }
         }
     }

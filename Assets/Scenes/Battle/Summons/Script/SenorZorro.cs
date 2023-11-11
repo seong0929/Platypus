@@ -10,7 +10,7 @@ public class SenorZorro : Summon
     public SenorZorro()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 0.7f, 1f, 150f, 5f, 0.5f };
+        float[] summonStats = { 0.7f, 1f, 1500f, 5f, 0.5f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -32,7 +32,7 @@ public class SenorZorro : Summon
     public class Attack: Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
+        private float[] skillStats = { 0.8f, 2f, 2f };   // 사거리, 쿨타임, 데미지
 
         public Attack()
         {
@@ -48,19 +48,23 @@ public class SenorZorro : Summon
 
             animator.SetBool("Idle", false);
             animator.SetBool("Move", false);
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
             if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Attack");
+                if (stateInfo.IsName("Attack") && stateInfo.normalizedTime >= 0.9f)
+                {
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                }
                 StartSkillCooldown();
             }
-
-            summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
         }
     }
     public class FootworkSkill : Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 5f, 0f };   // 사거리, 쿨타임, 데미지
+        private float[] skillStats = { 0.8f, 7f, 0f };   // 사거리, 쿨타임, 데미지
 
         public FootworkSkill()
         {
@@ -72,6 +76,7 @@ public class SenorZorro : Summon
         }
         public override void Execute(GameObject summon, GameObject target, Animator animator)
         {
+            Rigidbody2D rb = summon.GetComponent<Rigidbody2D>();
             Vector2 summonPosition = summon.transform.position;
             Vector2 targetPosition = target.transform.position;
             float distance = Vector2.Distance(summonPosition, targetPosition);
@@ -91,15 +96,22 @@ public class SenorZorro : Summon
             if (!IsSkillCooldown())
             {
                 animator.SetTrigger("Skill");
-                // ToDo: 개선 필요(실제로 뒤로 움직이지 않음)
-                if (distance > summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)])
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                Debug.Log(stateInfo.IsName("Skill"));
+                if (stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.25f)
                 {
-                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * Time.deltaTime);
+                    Debug.Log(stateInfo.IsName("Skill"));
+
+                    if (distance > summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)])
+                    {
+                        rb.AddForce(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * 2, ForceMode2D.Impulse);
+                    }
+                    else
+                    {
+                        rb.AddForce(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * 2, ForceMode2D.Impulse);
+                    }
                 }
-                else
-                {
-                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * Time.deltaTime);
-                }
+
                 StartSkillCooldown();
             }
 
@@ -109,7 +121,7 @@ public class SenorZorro : Summon
     public class FlecheSkill : Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 20f, 20f, 10f };   // 사거리, 쿨타임, 데미지
+        private float[] skillStats = { 20f, 19f, 10f };   // 사거리, 쿨타임, 데미지
 
         public FlecheSkill()
         {
@@ -124,23 +136,27 @@ public class SenorZorro : Summon
             float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
             if (!IsSkillCooldown())
             {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 animator.SetTrigger("UltIn");
 
-                Vector3 direction = (target.transform.position - summon.transform.position).normalized;
-                float distance = Vector3.Distance(summon.transform.position, target.transform.position);
-                float teleportDistance = distance - appearDistance;
+                if (stateInfo.normalizedTime >= 0.01f)
+                {
+                    Vector3 direction = (target.transform.position - summon.transform.position).normalized;
+                    float distance = Vector3.Distance(summon.transform.position, target.transform.position);
+                    float teleportDistance = distance - appearDistance;
 
-                Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
-                summon.transform.position = teleportPosition;
+                    Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
+                    summon.transform.position = teleportPosition;
 
+                    Vector3 appearPosition = target.transform.position + direction * appearDistance;
+                    summon.transform.position = appearPosition;
+                    FlipSprite(summon, target);
+
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                }
                 animator.SetTrigger("UltOut");
 
-                Vector3 appearPosition = target.transform.position + direction * appearDistance;
-                summon.transform.position = appearPosition;
-                FlipSprite(summon, target);
                 StartSkillCooldown();
-
-                summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
             }
         }
     }
