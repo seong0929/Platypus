@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Enums;
 
 namespace BehaviorTree
 {
@@ -18,20 +19,6 @@ namespace BehaviorTree
                 _root.Evaluate();   // 평가
         }
         protected abstract Node SetupTree();
-    }
-    // 노드 상태
-    public enum ENodeState
-    {
-        Running,
-        Success,
-        Failure
-    }
-    // 소환수 노드 상태
-    public enum ESummonState
-    {
-        Running,    // 살아있음
-        Dead,   // 죽음
-        Respawn // 리스폰 중
     }
     // 노드 클래스
     public class Node

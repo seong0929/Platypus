@@ -208,19 +208,19 @@ public class SpitGlider : Summon
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
-                    new TaskRespawn(this.gameObject)
+                    new TaskRespawn()
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
-                    new Inverter(new CheckIfAlive(this.gameObject)),
-                    new TaskDie(this.gameObject),
+                    new Inverter(new CheckIfAlive()),
+                    new TaskDie(),
                 }),
                 // CC 여부 확인
                 new Sequence(new List<Node>
                 {
-                    new CheckCC(this.gameObject),
-                    new TaskCC(this.gameObject),
+                    new CheckCC(),
+                    new TaskCC(),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -232,26 +232,26 @@ public class SpitGlider : Summon
                         new Sequence(new List<Node>
                         {
                             new CheckUltGage(skills[((int)ESummonAction.Ult)]),
-                            new TaskUlt(this.gameObject, skills[((int)ESummonAction.Ult)])
+                            new TaskUlt(skills[((int)ESummonAction.Ult)])
                         }),
                         //적이 멀리 있다면, 가까이 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyOutOfAttackRange(this.gameObject),
-                            new TaskMoveToEnemy(this.gameObject)
+                            new CheckEnemyOutOfAttackRange(),
+                            new TaskMoveToEnemy()
                         }),
                         //적이 너무 가까우면, 스킬
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyTooClose(this.gameObject),
+                            new CheckEnemyTooClose(),
                             new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                            new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
+                            new TaskSkill(skills[((int)ESummonAction.Skill)])
                         }),
                         //적이 공격 범위 안에 있다면, 공격
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyInAttackRange(this.gameObject),
-                            new TaskAttack(this.gameObject, skills[((int)ESummonAction.Attack)]),
+                            new CheckEnemyInAttackRange(),
+                            new TaskAttack(skills[((int)ESummonAction.Attack)]),
                         })
                     })
                 }),
@@ -259,7 +259,7 @@ public class SpitGlider : Summon
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
-                    new TaskIdle(this.gameObject)
+                    new TaskIdle()
                 })
             })
         });

@@ -179,19 +179,19 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
-                    new TaskRespawn(this.gameObject)
+                    new TaskRespawn()
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
-                    new Inverter(new CheckIfAlive(this.gameObject)),
-                    new TaskDie(this.gameObject),
+                    new Inverter(new CheckIfAlive()),
+                    new TaskDie(),
                 }),
                 // CC 여부 확인
                 new Sequence(new List<Node>
                 {
-                    new CheckCC(this.gameObject),
-                    new TaskCC(this.gameObject),
+                    new CheckCC(),
+                    new TaskCC(),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -202,45 +202,45 @@ public class SenorZorro : Summon
                         //적이 멀리 있다면, 가까이 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyOutOfAttackRange(this.gameObject),
+                            new CheckEnemyOutOfAttackRange(),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node>
                                 {
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                                    new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
+                                    new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy(this.gameObject)
+                                new TaskMoveToEnemy()
                             })
                         }),
                         //적이 공격 범위 안에 있다면, 공격
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyInAttackRange(this.gameObject),
-                            new Inverter(new CheckEnemyTooClose(this.gameObject)),
+                            new CheckEnemyInAttackRange(),
+                            new Inverter(new CheckEnemyTooClose()),
                             new Selector(new List<Node>{
                                 new Sequence(new List<Node>
                                 {
                                     new CheckUltGage(skills[((int)ESummonAction.Ult)]),
-                                    new TaskUlt(this.gameObject, skills[((int)ESummonAction.Ult)])
+                                    new TaskUlt(skills[((int)ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(this.gameObject, skills[((int)ESummonAction.Attack)]),
+                                new TaskAttack(skills[((int)ESummonAction.Attack)]),
                             })
                         }),
                         //적이 너무 가까우면, 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyTooClose(this.gameObject),
+                            new CheckEnemyTooClose(),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node>
                                 {
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                                    new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
+                                    new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy(this.gameObject)
+                                new TaskMoveToEnemy()
                             })
                         })
                     })
@@ -249,7 +249,7 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
-                    new TaskIdle(this.gameObject)
+                    new TaskIdle()
                 })
             })
         });
