@@ -5,6 +5,7 @@ using System;
 using UnityEngine.Events;
 using System.Linq;
 
+
 //public struct Match
 //{
 //    public int PlayerNum;
@@ -25,6 +26,7 @@ public struct MatchPlan
 }
 public class MatchManager
 {
+    
     private Match _match;
 
     public int PlayerNum;

@@ -66,21 +66,26 @@ public static class Enums
     }
     public enum EBanPickState
     {
-        // Started Yet,
-        None,
-        SelectPlayer,
         SelectStage,
         Ban,
         Pick,
         SetPair,
         SelectStrategy,
-        Battle,
-        End
+        Done
     }
     public enum ESchedule
     {
         Scout,
         Break,
         Match
+    }
+    public enum EMatchState
+    {
+        NotStarted,
+        SelectPlayer,
+        BanPick,
+        Battle,
+        Intermition,
+        End,
     }
 }

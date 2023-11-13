@@ -9,12 +9,13 @@ public class Competition
 // public CompetitionTyped Tournament(size), Laegue+PlayOff, 
 // Duration
 
-    private List<Match> _results;
+    private List<Match> _matches;
+    private List<Team> _teams;
     private List<Team> _rank;
     private List<MatchPlan> _schedule;
 
     public bool IsQualified(){ return true; }
     private void GivePrize(){ return; }
-    private void CreateSchedule(){ return; }
+    private void CreateMatches(){ return; }
 // privat void DropTeam(){}
 }
