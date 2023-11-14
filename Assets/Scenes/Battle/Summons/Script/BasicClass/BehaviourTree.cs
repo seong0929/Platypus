@@ -154,58 +154,77 @@ namespace BehaviorTree
     // 시퀀스 노드
     public class Sequence : Node
     {
+        private int lastRunningNodeIndex = -1;
         public Sequence() : base() { }
         public Sequence(List<Node> children) : base(children) { }
         // == and 하나라도 실패 시 실패
         public override ENodeState Evaluate()
         {
-            bool anyChildIsRunning = false;
+            // Start from the beginning or the last running node
+            int startIndex = lastRunningNodeIndex >= 0 ? lastRunningNodeIndex : 0;
 
-            foreach (Node node in children)
+            for (int i = startIndex; i < children.Count; i++)
             {
-                switch (node.Evaluate())
+                ENodeState childState = children[i].Evaluate();
+
+                switch (childState)
                 {
                     case ENodeState.Failure:
+                        lastRunningNodeIndex = -1; // Reset
                         state = ENodeState.Failure;
                         return state;
-                    case ENodeState.Success:
-                        continue;
                     case ENodeState.Running:
-                        anyChildIsRunning = true;
-                        continue;
-                    default:
-                        state = ENodeState.Success;
+                        lastRunningNodeIndex = i; // Remember the running node
+                        state = ENodeState.Running;
                         return state;
+                    case ENodeState.Success:
+                       lastRunningNodeIndex = -1;
+                        // Continue to next child
+                        continue;
                 }
             }
-            state = anyChildIsRunning ? ENodeState.Running : ENodeState.Success;
+
+            // All nodes succeeded
+            lastRunningNodeIndex = -1; // Reset
+            state = ENodeState.Success;
             return state;
+
         }
     }
     // 셀렉터 노드
     public class Selector : Node
     {
+        private int lastRunningNodeIndex = -1;
         public Selector() : base() { }
         public Selector(List<Node> children) : base(children) { }
         // == or 모든 자식이 실패해야 실패
         public override ENodeState Evaluate()
         {
-            foreach (Node node in children)
+            int startIndex = lastRunningNodeIndex >= 0 ? lastRunningNodeIndex : 0;
+
+            for (int i = startIndex; i < children.Count; i++)
             {
-                switch (node.Evaluate())
+                ENodeState childState = children[i].Evaluate();
+
+                switch (childState)
                 {
-                    case ENodeState.Failure:
-                        continue;
                     case ENodeState.Success:
+                        lastRunningNodeIndex = -1; // Reset
                         state = ENodeState.Success;
                         return state;
                     case ENodeState.Running:
+                        lastRunningNodeIndex = i; // Remember the running node
                         state = ENodeState.Running;
                         return state;
-                    default:
+                    case ENodeState.Failure:
+                        lastRunningNodeIndex = -1;
+                        // Continue to next child
                         continue;
                 }
             }
+
+            // All nodes failed
+            lastRunningNodeIndex = -1; // Reset
             state = ENodeState.Failure;
             return state;
         }
