@@ -49,7 +49,7 @@ public abstract class Summon : MonoBehaviour
             _isAlive = false;
         }
     }
-    // 데미 주는 함수
+    // 데미지 주는 함수
     public void GiveDamage(Summon target, float damage)
     {
         // 근거리는 스킬에, 원거리는 원거리 무기에 추가
