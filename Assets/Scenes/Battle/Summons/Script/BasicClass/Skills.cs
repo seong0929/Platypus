@@ -12,9 +12,9 @@ namespace Skills
         protected float[] stats;
         protected float skillCooldown = 0f;
 
-        public virtual void Execute(GameObject summon, GameObject target, Animator animator)
+        public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            // 동작 구현
+        return false;            // 동작 구현
         }
         public float[] Stats
         {

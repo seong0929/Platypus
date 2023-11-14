@@ -33,6 +33,7 @@ namespace BehaviorTree
         }
     }
     // 리스폰 하기
+    // - CRITICAL EVENT
     public class TaskRespawn : Node
     {
         private Animator _animator;
@@ -53,7 +54,8 @@ namespace BehaviorTree
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
             SetData("State", ESummonState.Default);
             _summon.tag = "Summon";
-            return ENodeState.Running;
+            return ENodeState.Success;
+//            return ENodeState.Running;
         }
     }
     #endregion
@@ -99,6 +101,7 @@ namespace BehaviorTree
             if (_timer + _waitTime > BattleManager.instance.GameTime)
             {
                 SetData("State", ESummonState.Respawn);
+                return ENodeState.Success;
             }
 
             _summon.tag = "NonTarget";
@@ -140,6 +143,12 @@ namespace BehaviorTree
         {
             GameObject self = (GameObject)GetData("Self");
             _summon = self.GetComponent<Summon>();
+
+            // 죽었을 시, interrupt
+            if(_summon.IsDead())
+            {
+                return ENodeState.Failure;
+            }
 
             // CC 걸림
             if (_summon.HasCC())
@@ -236,6 +245,7 @@ namespace BehaviorTree
         public TaskMoveToEnemy() { }
         public override ENodeState Evaluate()
         {
+            Debug.Log("Move Evaluate");
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
@@ -268,7 +278,7 @@ namespace BehaviorTree
             _transform.position += direction * _moveSpeed * Time.deltaTime;
             _rb.velocity = Vector2.zero;
 
-            return ENodeState.Running;
+            return ENodeState.Success;
         }
     }
     // 사거리 이내에 있는 지 확인
@@ -305,6 +315,7 @@ namespace BehaviorTree
         public TaskIdle() { }
         public override ENodeState Evaluate()
         {
+            Debug.Log("Idle Evaluate");
             GameObject self = (GameObject)GetData("Self");
             _animator = self.GetComponent<Animator>();
 
@@ -313,7 +324,7 @@ namespace BehaviorTree
             _animator.SetBool("Attack", false);
             SetData("State", ESummonState.Default);
 
-            return ENodeState.Running;
+            return ENodeState.Success;
         }
     }
     #endregion
@@ -331,14 +342,26 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
+            Debug.Log("Attack Evaluate");
+
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
-
+            
+            
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Attack);
-            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
-            return ENodeState.Running;
+            
+            bool isDoing = _skill.Execute(_transform.gameObject, target.gameObject, _animator);
+            if (isDoing)
+            {
+                return ENodeState.Running;
+            }
+            else
+            {
+                return ENodeState.Success;
+            }
+
         }
     }
     // 스킬 사용 가능 여부 확인
@@ -378,14 +401,29 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
+            Debug.Log("Skill Evaluate");
+
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
 
+            // Critical Event시, interrupt
+            if(self.GetComponent<Summon>().CheckCriticalEvent())
+            {
+                return ENodeState.Failure;
+            }
+
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Skill);
-            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
-            return ENodeState.Running;
+            bool isDoing = _skill.Execute(_transform.gameObject, target.gameObject, _animator);
+            if(isDoing)
+            {
+                return ENodeState.Running;
+            }
+            else
+            {
+                return ENodeState.Success;
+            }
         }
     }
     // 궁극기 사용 가능 여부 확인
@@ -427,14 +465,29 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
+            Debug.Log("궁극기 Evaluate");
             GameObject self = (GameObject)GetData("Self");
+
+            // Critical Event시, interrupt
+            if (self.GetComponent<Summon>().CheckCriticalEvent())
+            {
+                return ENodeState.Failure;
+            }
+
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
 
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Ult);
-            _skill.Execute(_transform.gameObject, target.gameObject, _animator);
-            return ENodeState.Running;
+            bool isDoing = _skill.Execute(_transform.gameObject, target.gameObject, _animator);
+            if(isDoing)
+            {
+                return ENodeState.Running;
+            }
+            else
+            {
+                return ENodeState.Success;
+            }
         }
     }
     #endregion
