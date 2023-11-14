@@ -14,11 +14,12 @@ namespace BehaviorTree
         public CheckRespawn(GameObject gameObject)
         {
             _gameObject = gameObject;
-            SetData("Self", _gameObject);
         }
         public override ENodeState Evaluate()
         {
+//            SetData("Self", _gameObject);
             object s = GetData("State");
+            Debug.Log("!State: " + s);
             if (s == null)
             {
                 SetData("State", ESummonState.Default);
@@ -26,7 +27,7 @@ namespace BehaviorTree
                 return ENodeState.Failure;
             }
             if (GetData("State").Equals(ESummonState.Respawn))
-            {                
+            {                   
                 return ENodeState.Success;
             }
             return ENodeState.Failure;
@@ -40,15 +41,15 @@ namespace BehaviorTree
 
         public TaskRespawn()
         {
+        }
+        public override ENodeState Evaluate()
+        {
             GameObject self = (GameObject)GetData("Self");
             if(self == null) {
                Debug.Log("self is null");
             }
             _animator = self.GetComponent<Animator>();
             _summon = self;
-        }
-        public override ENodeState Evaluate()
-        {
             //ToDo: 리스폰 위치에 순간이동, 게임 메니저에서 리스폰 지점 찾기
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
             SetData("State", ESummonState.Default);
@@ -65,11 +66,11 @@ namespace BehaviorTree
 
         public CheckIfAlive()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _isAlive = !self.GetComponent<Summon>().IsDead();
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _isAlive = !self.GetComponent<Summon>().IsDead();
             if (_isAlive == true)
             {
                 SetData("State", ESummonState.Default);
@@ -92,12 +93,12 @@ namespace BehaviorTree
 
         public TaskDie()
         {
-            _summon = (GameObject)GetData("Self");
-            _animator = _summon.GetComponent<Animator>();
-            _timer = _summon.GetComponent<Summon>()._deadTime;
         }
         public override ENodeState Evaluate()
         {
+            _summon = (GameObject)GetData("Self");
+            _animator = _summon.GetComponent<Animator>();
+            _timer = _summon.GetComponent<Summon>()._deadTime;
             _animator.SetTrigger("Dead");
             if (_timer + _waitTime > BattleManager.instance.GameTime)
             {
@@ -117,11 +118,11 @@ namespace BehaviorTree
 
         public CheckCC()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
             if (_transform.GetComponent<Summon>().HasCC())
             {
                 SetData("State", ESummonState.CC);
@@ -141,11 +142,11 @@ namespace BehaviorTree
 
         public TaskCC()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _summon = self.GetComponent<Summon>();
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _summon = self.GetComponent<Summon>();
             // CC 걸림
             if (_summon.HasCC())
             {
@@ -211,12 +212,12 @@ namespace BehaviorTree
 
         public CheckEnemyOutOfAttackRange()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _attackRange = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _attackRange = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
             object t = GetData("target");
             if (t == null)
             {
@@ -241,15 +242,15 @@ namespace BehaviorTree
 
         public TaskMoveToEnemy()
         {
+        }
+        public override ENodeState Evaluate()
+        {
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
             _spriteRenderer = self.GetComponent<SpriteRenderer>();
             _moveSpeed = self.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)];
             _rb = self.GetComponent<Rigidbody2D>();
-        }
-        public override ENodeState Evaluate()
-        {
             Transform target = (Transform)GetData("target");
             // ToDo: 여러 상대방 중 어떤 상대방?
             // 상대방 바라보기
@@ -284,12 +285,12 @@ namespace BehaviorTree
 
         public CheckEnemyInAttackRange()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _attackRange = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _attackRange = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
             object t = GetData("target");
             if (t == null)
             {
@@ -310,11 +311,11 @@ namespace BehaviorTree
 
         public TaskIdle()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _animator = self.GetComponent<Animator>();
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _animator = self.GetComponent<Animator>();
             _animator.SetBool("Idle", true);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", false);
@@ -334,13 +335,13 @@ namespace BehaviorTree
 
         public TaskAttack(Skill skill)
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
             _skill = skill;
-            _animator = self.GetComponent<Animator>();
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _animator = self.GetComponent<Animator>();
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Attack);
             _skill.Execute(_transform.gameObject, target.gameObject, _animator);
@@ -380,13 +381,13 @@ namespace BehaviorTree
 
         public TaskSkill(Skill skill)
         {
-            GameObject self = (GameObject)GetData("Self");
             _skill = skill;
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _animator = self.GetComponent<Animator>();
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Skill);
             _skill.Execute(_transform.gameObject, target.gameObject, _animator);
@@ -428,13 +429,13 @@ namespace BehaviorTree
 
         public TaskUlt(Skill skill)
         {
-            GameObject self = (GameObject)GetData("Self");
             _skill = skill;
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _animator = self.GetComponent<Animator>();
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Ult);
             _skill.Execute(_transform.gameObject, target.gameObject, _animator);
@@ -452,12 +453,12 @@ namespace BehaviorTree
         // ToDo: 수정 필요(일반 공격 사거리보다 클 시 이동만 함)
         public CheckEnemyTooClose()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _personalDistance = self.GetComponent<Summon>().Stats[((int)ESummonStats.PersonalDistance)];
         }
         public override ENodeState Evaluate()
         {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _personalDistance = self.GetComponent<Summon>().Stats[((int)ESummonStats.PersonalDistance)];
             object t = GetData("target");
             if (t == null)
             {

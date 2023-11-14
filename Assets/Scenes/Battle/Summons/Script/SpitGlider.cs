@@ -23,11 +23,12 @@ public class SpitGlider : Summon
         skills.Add(new Attack());
         skills.Add(new SeedSpitting());
         skills.Add(new AerialBombardment());
+        CreateBehaviorTree();
     }
     private void Update()
     {
         UpdateSkillCooldowns(Time.deltaTime);
-        CreateBehaviorTree().Evaluate();
+        _rootNode.Evaluate();
     }
     #endregion
     #region Skill
@@ -198,9 +199,12 @@ public class SpitGlider : Summon
     }
     #endregion
     #region BehaviorTree
+
+    private Node _rootNode = null;
+
     protected override Node CreateBehaviorTree()
     {
-        Node root = new Selector(new List<Node>
+        _rootNode = new Selector(new List<Node>
         {
             //행동 결정
             new Selector(new List<Node>{
@@ -263,7 +267,7 @@ public class SpitGlider : Summon
                 })
             })
         });
-        return root;
+        return _rootNode;
     }
     #endregion
 }

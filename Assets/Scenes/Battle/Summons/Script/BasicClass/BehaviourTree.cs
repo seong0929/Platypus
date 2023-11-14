@@ -69,13 +69,6 @@ namespace BehaviorTree
                 {
                     rootNode.SetData(key, value);
                 }
-
-                //while(node.IsRoot == false)
-                //{
-                //    node = node.Parent;
-                //    Debug.Log("Set Data: Parent is not null");
-                //}
-                //node.SetData(key, value);
             }
                         
         }
@@ -84,48 +77,42 @@ namespace BehaviorTree
         {
             object value = null;
 
-            if(IsRoot)
+            if (IsRoot)
             {
                 Debug.Log("Get Data: Parent is null");
-                _dataContext.TryGetValue(key, out value);
+                if (_dataContext.TryGetValue(key, out value))
+                {
+                    Debug.Log("Get Data: " + value.ToString());
+                    return value;
+                }
+                else
+                {
+                    Debug.Log("Get Data: Key not found");
+                    return null; // Key not found in the dictionary
+                }
             }
             else
             {
                 Node rootNode = FindRootNode();
                 if (rootNode != null)
                 {
-                    rootNode.GetData(key);
+                    return rootNode.GetData(key);
+                }
+                else
+                {
+                    Debug.Log("Get Data: Root node not found");
+                    return null; // Root node not found
                 }
             }
-            Debug.Log("Get Data: " + value.ToString());
-            return value;
-            //Node node = this;
-            //if (IsRoot) // 루트 노드면 바로 가져오기
-            //{
-            //    Debug.Log("Get Data: Parent is null");
-            //    _dataContext.TryGetValue(key, out value);
-            //    Debug.Log("Get Data: " + value.ToString());
-            //    return value;
-            //}
-            //else // 루트노드가 아니라면 루트노드를 찾아 가져오기
-            //{
-            //    while (node.IsRoot == false)
-            //    {
-            //        node = node.Parent;
-            //        Debug.Log("Get Data: Parent is not null");
-            //    }
-            //    value = node.GetData(key);
-            //    Debug.Log("Get Data: " + value.ToString());
-            //    return value;
-            //}
-
         }
         // 데이터 지우기
         public bool ClearData(string key)
         {
-            Node parentNode = Parent;
-            if (Parent == null) // 부모가 없으면 바로 가져오기(루트 노드)
+            Debug.Log("Clear Data: " + key);
+
+            if(IsRoot)
             {
+                Debug.Log("Clear Data: Parent is null");
                 if (_dataContext.ContainsKey(key))
                 {
                     _dataContext.Remove(key);
@@ -136,15 +123,19 @@ namespace BehaviorTree
                     return false;
                 }
             }
-            else // 루트노드가 아니라면 루트노드를 찾아 가져오기
+            else
             {
-                while (parentNode != null)
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
                 {
-                    parentNode = parentNode.Parent;
+                    return rootNode.ClearData(key);
                 }
-                ClearData(key);
+                else
+                {
+                    Debug.Log("Clear Data: Root node not found");
+                    return false; // Root node not found
+                }
             }
-            return false;
         }
 
         // Helper method to find the root node
