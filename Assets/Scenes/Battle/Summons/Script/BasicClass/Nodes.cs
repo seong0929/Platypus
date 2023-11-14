@@ -14,18 +14,19 @@ namespace BehaviorTree
         public CheckRespawn(GameObject gameObject)
         {
             _gameObject = gameObject;
+            SetData("Self", _gameObject);
         }
         public override ENodeState Evaluate()
         {
             object s = GetData("State");
             if (s == null)
             {
-                Parent.Parent.SetData("State", ESummonState.Default);
-                Parent.Parent.SetData("Self", _gameObject);
+                SetData("State", ESummonState.Default);
+                SetData("Self", _gameObject);
                 return ENodeState.Failure;
             }
             if (GetData("State").Equals(ESummonState.Respawn))
-            {
+            {                
                 return ENodeState.Success;
             }
             return ENodeState.Failure;
@@ -40,6 +41,9 @@ namespace BehaviorTree
         public TaskRespawn()
         {
             GameObject self = (GameObject)GetData("Self");
+            if(self == null) {
+               Debug.Log("self is null");
+            }
             _animator = self.GetComponent<Animator>();
             _summon = self;
         }
@@ -68,12 +72,12 @@ namespace BehaviorTree
         {
             if (_isAlive == true)
             {
-                Parent.Parent.SetData("State", ESummonState.Default);
+                SetData("State", ESummonState.Default);
                 return ENodeState.Success;
             }
             else
             {
-                Parent.Parent.SetData("State", ESummonState.Dead);
+                SetData("State", ESummonState.Dead);
                 return ENodeState.Failure;
             }
         }
@@ -97,7 +101,7 @@ namespace BehaviorTree
             _animator.SetTrigger("Dead");
             if (_timer + _waitTime > BattleManager.instance.GameTime)
             {
-                Parent.Parent.SetData("State", ESummonState.Respawn);
+                SetData("State", ESummonState.Respawn);
             }
 
             _summon.tag = "NonTarget";
@@ -120,7 +124,7 @@ namespace BehaviorTree
         {
             if (_transform.GetComponent<Summon>().HasCC())
             {
-                Parent.Parent.SetData("State", ESummonState.CC);
+                SetData("State", ESummonState.CC);
                 return ENodeState.Success;
             }
             else
@@ -150,7 +154,7 @@ namespace BehaviorTree
                 {
                     cc.FinishedCC(_summon.gameObject);
                     cc.ResetCcCooldown();
-                    Parent.Parent.SetData("State", ESummonState.Default);
+                    SetData("State", ESummonState.Default);
                     return ENodeState.Success;
                 }
                 // CC 쿨타임 안 끝남
@@ -184,7 +188,7 @@ namespace BehaviorTree
                 if (summon != self) // && summon.GetComponent<Summon>().myTeam == false
                 {
                     //if(summon.GetComponent<Summon>().myTeam == false){
-                    Parent.Parent.SetData("target", summon.transform);
+                    SetData("target", summon.transform);
                     return ENodeState.Success;
                     //}
                     //else
@@ -263,7 +267,7 @@ namespace BehaviorTree
             // 애니메이션
             _animator.SetBool("Idle", false);
             _animator.SetBool("Move", true);
-            Parent.Parent.SetData("State", ESummonState.Move);
+            SetData("State", ESummonState.Move);
             // 이동
             Vector3 direction = (target.transform.position - _transform.position).normalized;
             _transform.position += direction * _moveSpeed * Time.deltaTime;
@@ -314,7 +318,7 @@ namespace BehaviorTree
             _animator.SetBool("Idle", true);
             _animator.SetBool("Move", false);
             _animator.SetBool("Attack", false);
-            Parent.Parent.SetData("State", ESummonState.Default);
+            SetData("State", ESummonState.Default);
 
             return ENodeState.Running;
         }
@@ -338,7 +342,7 @@ namespace BehaviorTree
         public override ENodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            Parent.Parent.SetData("State", ESummonState.Attack);
+            SetData("State", ESummonState.Attack);
             _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return ENodeState.Running;
         }
@@ -384,7 +388,7 @@ namespace BehaviorTree
         public override ENodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            Parent.Parent.SetData("State", ESummonState.Skill);
+            SetData("State", ESummonState.Skill);
             _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return ENodeState.Running;
         }
@@ -406,6 +410,8 @@ namespace BehaviorTree
             if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
             {
                 _skill.SkiilCounter += 1;
+
+                Debug.Log("궁극기 사용 가능");
                 return ENodeState.Success;
             } else
             {
@@ -430,7 +436,7 @@ namespace BehaviorTree
         public override ENodeState Evaluate()
         {
             Transform target = (Transform)GetData("target");
-            Parent.Parent.SetData("State", ESummonState.Ult);
+            SetData("State", ESummonState.Ult);
             _skill.Execute(_transform.gameObject, target.gameObject, _animator);
             return ENodeState.Running;
         }

@@ -21,11 +21,14 @@ public class SenorZorro : Summon
         skills.Add(new Attack());
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
+
+        CreateBehaviorTree();
     }
     private void Update()
     {
         UpdateSkillCooldowns(Time.deltaTime);
-        CreateBehaviorTree().Evaluate();
+        if(_rootNode != null)
+            _rootNode.Evaluate();
     }
     #endregion
     #region Skill
@@ -169,9 +172,11 @@ public class SenorZorro : Summon
     }
     #endregion
     #region BehaviorTree
+
+    private Node _rootNode = null;
     protected override Node CreateBehaviorTree()
     {
-        Node root = new Selector(new List<Node>
+        _rootNode = new Selector(new List<Node>
         {
             //행동 결정
             new Selector(new List<Node>{
@@ -253,7 +258,7 @@ public class SenorZorro : Summon
                 })
             })
         });
-        return root;
+        return _rootNode;
     }
     #endregion
 }

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static Enums;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace BehaviorTree
 {
     // 비헤버트리
-    public abstract class Tree : MonoBehaviour
+    public abstract class Tree //: MonoBehaviour
     {
         private Node _root = null;
 
@@ -24,62 +26,139 @@ namespace BehaviorTree
     public class Node
     {
         public Node Parent; // 부모 노드
+        public bool IsRoot => Parent == null; // 루트 노드인지 확인
+        
         protected ENodeState state; // 현 상태
         protected List<Node> children = new List<Node>();   // 자식 노드
         private Dictionary<string, object> _dataContext = new Dictionary<string, object>(); // 저장한 값
         #region 생성자
         public Node()
         {
+            Debug.Log("First Node constructor");
             Parent = null;
         }
         public Node(List<Node> children)
         {
+            Debug.Log("Second Node constructor");
             foreach (Node child in children)
                 AddChild(child);
         }
         private void AddChild(Node node)
         {
             node.Parent = this;
+            Debug.Log("Add Child: " + node.ToString());
             children.Add(node);
         }
         public virtual ENodeState Evaluate() => ENodeState.Failure; // 평가 가상 함수
         #endregion
-        public void SetData(string key, object value) { _dataContext[key] = value; }    // 데이터 저장
+        public void SetData(string key, object value) // 데이터 저장 
+        {
+            Debug.Log("Set Data: " + value.ToString());
+            Node node = this;
+
+            if (IsRoot) // 루트노드면 저장하기
+            {
+                Debug.Log("Set Data: Parent is null");
+                _dataContext[key] = value;
+                return;
+            }
+            else // 루트노드가 아니라면 루트노드를 찾아 저장하기
+            {
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
+                {
+                    rootNode.SetData(key, value);
+                }
+
+                //while(node.IsRoot == false)
+                //{
+                //    node = node.Parent;
+                //    Debug.Log("Set Data: Parent is not null");
+                //}
+                //node.SetData(key, value);
+            }
+                        
+        }
         // 데이터 가져오기
         public object GetData(string key)
         {
             object value = null;
-            if (_dataContext.TryGetValue(key, out value))
-                return value;
 
-            Node node = Parent;
-            while (node != null)
+            if(IsRoot)
             {
-                value = node.GetData(key);
-                if (value != null)
-                    return value;
-                node = node.Parent;
+                Debug.Log("Get Data: Parent is null");
+                _dataContext.TryGetValue(key, out value);
             }
-            return null;
+            else
+            {
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
+                {
+                    rootNode.GetData(key);
+                }
+            }
+            Debug.Log("Get Data: " + value.ToString());
+            return value;
+            //Node node = this;
+            //if (IsRoot) // 루트 노드면 바로 가져오기
+            //{
+            //    Debug.Log("Get Data: Parent is null");
+            //    _dataContext.TryGetValue(key, out value);
+            //    Debug.Log("Get Data: " + value.ToString());
+            //    return value;
+            //}
+            //else // 루트노드가 아니라면 루트노드를 찾아 가져오기
+            //{
+            //    while (node.IsRoot == false)
+            //    {
+            //        node = node.Parent;
+            //        Debug.Log("Get Data: Parent is not null");
+            //    }
+            //    value = node.GetData(key);
+            //    Debug.Log("Get Data: " + value.ToString());
+            //    return value;
+            //}
+
         }
         // 데이터 지우기
         public bool ClearData(string key)
         {
-            if (_dataContext.ContainsKey(key))
+            Node parentNode = Parent;
+            if (Parent == null) // 부모가 없으면 바로 가져오기(루트 노드)
             {
-                _dataContext.Remove(key);
-                return true;
-            }
-            Node node = Parent;
-            while (node != null)
-            {
-                bool cleared = node.ClearData(key);
-                if (cleared)
+                if (_dataContext.ContainsKey(key))
+                {
+                    _dataContext.Remove(key);
                     return true;
-                node = node.Parent;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else // 루트노드가 아니라면 루트노드를 찾아 가져오기
+            {
+                while (parentNode != null)
+                {
+                    parentNode = parentNode.Parent;
+                }
+                ClearData(key);
             }
             return false;
         }
+
+        // Helper method to find the root node
+        private Node FindRootNode()
+        {
+            Debug.Log("Find Root Node");
+            Node currentNode = this;
+            while (!currentNode.IsRoot)
+            {
+                currentNode = currentNode.Parent;
+            }
+            return currentNode;
+        }
+
     }
     // 시퀀스 노드
     public class Sequence : Node
