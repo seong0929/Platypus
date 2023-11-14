@@ -46,8 +46,9 @@ public class SpitGlider : Summon
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
+            return false;
             _projectile = summon.GetComponent<SpitGlider>().Projectile;
             _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
 
@@ -101,8 +102,8 @@ public class SpitGlider : Summon
             float[] ccStats = { 1f, 30f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
-        {
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        {return false;
             FlipSprite(summon, target);
 
             if (!IsSkillCooldown())
@@ -134,8 +135,8 @@ public class SpitGlider : Summon
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
-        {
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        {return false;
             FlipSprite(summon, target);
             _projectile = summon.GetComponent<SpitGlider>().Projectile;
             _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
