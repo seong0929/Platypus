@@ -34,31 +34,26 @@ namespace BehaviorTree
         #region 생성자
         public Node()
         {
-            Debug.Log("First Node constructor");
             Parent = null;
         }
         public Node(List<Node> children)
         {
-            Debug.Log("Second Node constructor");
             foreach (Node child in children)
                 AddChild(child);
         }
         private void AddChild(Node node)
         {
             node.Parent = this;
-            Debug.Log("Add Child: " + node.ToString());
             children.Add(node);
         }
         public virtual ENodeState Evaluate() => ENodeState.Failure; // 평가 가상 함수
         #endregion
         public void SetData(string key, object value) // 데이터 저장 
         {
-            Debug.Log("Set Data: " + value.ToString());
             Node node = this;
 
             if (IsRoot) // 루트노드면 저장하기
             {
-                Debug.Log("Set Data: Parent is null");
                 _dataContext[key] = value;
                 return;
             }
@@ -79,10 +74,8 @@ namespace BehaviorTree
 
             if (IsRoot)
             {
-                Debug.Log("Get Data: Parent is null");
                 if (_dataContext.TryGetValue(key, out value))
                 {
-                    Debug.Log("Get Data: " + value.ToString());
                     return value;
                 }
                 else
@@ -112,7 +105,6 @@ namespace BehaviorTree
 
             if(IsRoot)
             {
-                Debug.Log("Clear Data: Parent is null");
                 if (_dataContext.ContainsKey(key))
                 {
                     _dataContext.Remove(key);
