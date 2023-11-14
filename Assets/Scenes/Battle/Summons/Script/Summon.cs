@@ -64,4 +64,12 @@ public abstract class Summon : MonoBehaviour
         else return true;
     }
     #endregion
+
+    // CC 혹은 죽었는지 확인
+    // - 일반 task node를 interrupt하기 위해 사용
+    public bool CheckCriticalEvent()
+    {
+        if(HasCC() || IsDead()) return true;
+        return false;
+    }
 }
