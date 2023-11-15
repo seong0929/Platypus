@@ -10,8 +10,7 @@ public static class Enums
         AttackRange,    //사거리
         MoveSpeed,  //이동속도
         Health, //체력
-        Defence,    //방어력
-        PersonalDistance,   //너무 가까운 거리 판별
+        Defence    //방어력
     }
     public enum ESummonAction
     {

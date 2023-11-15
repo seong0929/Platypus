@@ -11,6 +11,7 @@ namespace Skills
         public ECC HasCc;
         protected float[] stats;
         protected float skillCooldown = 0f;
+        protected bool isStart = false;
 
         public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
