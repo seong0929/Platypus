@@ -230,19 +230,19 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
-                    new TaskRespawn()
+                    new DutyRespawn()
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckIfAlive()),
-                    new TaskDie(),
+                    new DutyDie(),
                 }),
                 // CC 여부 확인
                 new Sequence(new List<Node>
                 {
                     new CheckCC(),
-                    new TaskCC(),
+                    new DutyCC(),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -262,7 +262,7 @@ public class SenorZorro : Summon
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
                                     new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy() // 일반 이동
+                                new DoMoveToEnemy() // 일반 이동
                             })
                         }),
                         //적이 공격 범위 안에 있다면, 공격
@@ -291,7 +291,7 @@ public class SenorZorro : Summon
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
                                     new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy() // 일반 이동
+                                new DoMoveToEnemy() // 일반 이동
                             })
                         })
                     })
@@ -300,7 +300,7 @@ public class SenorZorro : Summon
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
-                    new TaskIdle()
+                    new DoIdle()
                 })
             })
         });

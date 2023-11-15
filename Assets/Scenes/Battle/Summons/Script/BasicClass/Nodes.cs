@@ -34,12 +34,12 @@ namespace BehaviorTree
     }
     // 리스폰 하기
     // - CRITICAL EVENT
-    public class TaskRespawn : Node
+    public class DutyRespawn : Node
     {
         private Animator _animator;
         private GameObject _summon;
 
-        public TaskRespawn() { }
+        public DutyRespawn() { }
         public override ENodeState Evaluate()
         {
             GameObject self = (GameObject)GetData("Self");
@@ -55,7 +55,6 @@ namespace BehaviorTree
             SetData("State", ESummonState.Default);
             _summon.tag = "Summon";
             return ENodeState.Success;
-//            return ENodeState.Running;
         }
     }
     #endregion
@@ -83,14 +82,14 @@ namespace BehaviorTree
         }
     }
     // 죽기
-    public class TaskDie : Node
+    public class DutyDie : Node
     {
         private Animator _animator;
         private float _waitTime = Constants.RESPAWN_TIME;
         private float _timer;   // ToDo: 초기화 방법 필요
         private GameObject _summon;
 
-        public TaskDie() { }
+        public DutyDie() { }
         public override ENodeState Evaluate()
         {
             _summon = (GameObject)GetData("Self");
@@ -133,12 +132,12 @@ namespace BehaviorTree
         }
     }
     // CC 기 행동
-    public class TaskCC : Node
+    public class DutyCC : Node
     {
         private Summon _summon;
         private CC cc = new CC();
 
-        public TaskCC() { }
+        public DutyCC() { }
         public override ENodeState Evaluate()
         {
             GameObject self = (GameObject)GetData("Self");
@@ -234,7 +233,7 @@ namespace BehaviorTree
         }
     }
     //적을 향해 움직이기
-    public class TaskMoveToEnemy : Node
+    public class DoMoveToEnemy : Node
     {
         private Animator _animator;
         private Transform _transform;
@@ -242,7 +241,7 @@ namespace BehaviorTree
         private Rigidbody2D _rb;
         private float _moveSpeed;
 
-        public TaskMoveToEnemy() { }
+        public DoMoveToEnemy() { }
         public override ENodeState Evaluate()
         {
             Debug.Log("Move Evaluate");
@@ -308,11 +307,11 @@ namespace BehaviorTree
         }
     }
     // Idle 상태
-    public class TaskIdle : Node
+    public class DoIdle : Node
     {
         private Animator _animator;
 
-        public TaskIdle() { }
+        public DoIdle() { }
         public override ENodeState Evaluate()
         {
             Debug.Log("Idle Evaluate");

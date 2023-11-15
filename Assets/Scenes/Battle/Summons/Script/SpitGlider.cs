@@ -213,19 +213,19 @@ public class SpitGlider : Summon
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
-                    new TaskRespawn()
+                    new DutyRespawn()
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckIfAlive()),
-                    new TaskDie(),
+                    new DutyDie(),
                 }),
                 // CC 여부 확인
                 new Sequence(new List<Node>
                 {
                     new CheckCC(),
-                    new TaskCC(),
+                    new DutyCC(),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -243,7 +243,7 @@ public class SpitGlider : Summon
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyOutOfAttackRange(),
-                            new TaskMoveToEnemy()
+                            new DoMoveToEnemy()
                         }),
                         //적이 너무 가까우면, 스킬
                         new Sequence(new List<Node>
@@ -264,7 +264,7 @@ public class SpitGlider : Summon
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
-                    new TaskIdle()
+                    new DoIdle()
                 })
             })
         });
