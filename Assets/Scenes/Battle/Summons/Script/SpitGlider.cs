@@ -12,7 +12,7 @@ public class SpitGlider : Summon
     public SpitGlider()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 5f, 0.5f, 1000f, 1f, 0.8f };
+        float[] summonStats = { 5f, 0.5f, 1000f, 1f};
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -37,6 +37,7 @@ public class SpitGlider : Summon
         private GameObject _projectile;
         private CC cc = new CC();
         private float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
+        private int count;
 
         public Attack()
         {
@@ -48,113 +49,27 @@ public class SpitGlider : Summon
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            return false;
-            _projectile = summon.GetComponent<SpitGlider>().Projectile;
-            _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
-
-            FlipSprite(summon, target);
-
-            animator.SetBool("Idle", false);
-            animator.SetBool("Move", false);
-            if (!IsSkillCooldown())
+            if (isStart == false)
             {
+                count = 0;
+                isStart = true;
+                FlipSprite(summon, target);
+
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
                 animator.SetTrigger("Attack");
 
-                // 가장 가까운 적을 찾기
-                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
-                GameObject nearestEnemy = null;
-                float nearestDistance = float.MaxValue;
-                foreach (GameObject enemy in enemies)
-                {
-                    if (enemy.GetComponent<Summon>().MyTeam == false && enemy != summon)
-                    {
-                        float distance = Vector2.Distance(summon.transform.position, enemy.transform.position);
-                        if (distance < nearestDistance)
-                        {
-                            nearestEnemy = enemy;
-                            nearestDistance = distance;
-                        }
-                    }
-                }
-                // 발사
-                if (nearestEnemy != null)
-                {
-                    Vector3 projectilePosition = summon.transform.position;
-                    GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.identity, summon.transform);
-                    Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
-                    projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
-                }
-
-                StartSkillCooldown();
+                return true;
             }
-        }
-    }
-    public class SeedSpitting : Skill
-    {
-        private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
-
-        public SeedSpitting()
-        {
-            base.stats = skillStats;
-
-            HasCc = ECC.KnockBack;
-            float[] ccStats = { 1f, 30f };
-            cc.Stats = ccStats;
-        }
-        public override bool Execute(GameObject summon, GameObject target, Animator animator)
-        {return false;
-            FlipSprite(summon, target);
-
-            if (!IsSkillCooldown())
+            else 
             {
-                animator.SetTrigger("Skill");
-                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+                _projectile = summon.GetComponent<SpitGlider>().Projectile;
+                _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
+                
+                if (stateInfo.IsName("Attack") && (stateInfo.normalizedTime >= 0.9f) && (0 <= count++))
                 {
-                    target.GetComponent<Summon>().CurrentCCStats = cc.Stats;
-                    target.GetComponent<Summon>().CurrentCC = HasCc;
-                    cc.ApplyCC(summon, target, cc.Stats);
-                    StartSkillCooldown();
-
-                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                }
-            }
-        }
-    }
-    public class AerialBombardment : Skill
-    {
-        private CC cc = new CC();
-        private GameObject _projectile;
-        private float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
-
-        public AerialBombardment()
-        {
-            base.stats = skillStats;
-            
-            HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
-        }
-        public override bool Execute(GameObject summon, GameObject target, Animator animator)
-        {return false;
-            FlipSprite(summon, target);
-            _projectile = summon.GetComponent<SpitGlider>().Projectile;
-            _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
-
-            if (!IsSkillCooldown())
-            {
-                animator.SetTrigger("Ult1");
-                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
-                {
-                    summon.tag = "NonTarget";
-                }
-
-                animator.SetTrigger("Ult2");
-                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0f)
-                {
-                    // 이동
-                    summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 0.5f;
-
                     // 가장 가까운 적을 찾기
                     GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
                     GameObject nearestEnemy = null;
@@ -174,20 +89,136 @@ public class SpitGlider : Summon
                     // 발사
                     if (nearestEnemy != null)
                     {
-                        Vector3 projectilePosition = nearestEnemy.transform.position + new Vector3(0, 10, 0);
-                        GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.Euler(new Vector3(0f, 0f, 90f)), summon.transform);
+                        Vector3 projectilePosition = summon.transform.position;
+                        GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.identity, summon.transform);
                         Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
                         projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
                     }
+                    isStart = false;
+                    Debug.Log("Attack return false");
+                    return false;
                 }
-                StartSkillCooldown();
+                return true;
+            }
+        }
+    }
+    public class SeedSpitting : Skill
+    {
+        private CC cc = new CC();
+        private float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
 
-                animator.SetTrigger("Ult3");
+        public SeedSpitting()
+        {
+            base.stats = skillStats;
+
+            HasCc = ECC.KnockBack;
+            float[] ccStats = { 1f, 30f };
+            cc.Stats = ccStats;
+        }
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        {
+            if (isStart == false)
+            {
+                animator.SetTrigger("Skill");
+                FlipSprite(summon, target);
+                return true;
+            }
+            else
+            {
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
                 {
-                    summon.tag = "Summon";
-                    summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 2f;
+                    target.GetComponent<Summon>().CurrentCCStats = cc.Stats;
+                    target.GetComponent<Summon>().CurrentCC = HasCc;
+                    cc.ApplyCC(summon, target, cc.Stats);
+
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                    Debug.Log("SeedSpitting return false");
+                    isStart = false;
+                    return false;
                 }
+                return true;
+            }
+        }
+    }
+    public class AerialBombardment : Skill
+    {
+        private CC cc = new CC();
+        private GameObject _projectile;
+        private float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
+
+        public AerialBombardment()
+        {
+            base.stats = skillStats;
+            
+            HasCc = ECC.None;
+            float[] ccStats = { 0f, 0f };
+            cc.Stats = ccStats;
+        }
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        {
+            if (isStart == false)
+            {
+                animator.SetTrigger("Ult1");
+                FlipSprite(summon, target);
+                isStart = true;
+                return true;
+            }
+            else
+            {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.IsName("Ult1") && stateInfo.normalizedTime >= 1f)
+                {
+                    _projectile = summon.GetComponent<SpitGlider>().Projectile;
+                    _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
+
+                    if (stateInfo.normalizedTime >= 1f)
+                    {
+                        summon.tag = "NonTarget";
+                    }
+
+                    animator.SetTrigger("Ult2");
+                    if (stateInfo.IsName("Ult2"))
+                    {
+                        // 이동
+                        summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 0.5f;
+
+                        // 가장 가까운 적을 찾기
+                        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
+                        GameObject nearestEnemy = null;
+                        float nearestDistance = float.MaxValue;
+                        foreach (GameObject enemy in enemies)
+                        {
+                            if (enemy.GetComponent<Summon>().MyTeam == false && enemy != summon)
+                            {
+                                float distance = Vector2.Distance(summon.transform.position, enemy.transform.position);
+                                if (distance < nearestDistance)
+                                {
+                                    nearestEnemy = enemy;
+                                    nearestDistance = distance;
+                                }
+                            }
+                        }
+                        // 발사
+                        if (nearestEnemy != null)
+                        {
+                            Vector3 projectilePosition = nearestEnemy.transform.position + new Vector3(0, 10, 0);
+                            GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.Euler(new Vector3(0f, 0f, 90f)), summon.transform);
+                            Vector3 direction = (nearestEnemy.transform.position - projectilePosition).normalized;
+                            projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
+                        }
+                    }
+
+                    animator.SetTrigger("Ult3");
+                    if (stateInfo.IsName("Ult3") && stateInfo.normalizedTime >= 1f)
+                    {
+                        summon.tag = "Summon";
+                        summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 2f;
+                        isStart = false;
+                    }
+                    Debug.Log("AerialBombardment return false");
+                    return false;
+                }
+                return true;
             }
         }
     }
