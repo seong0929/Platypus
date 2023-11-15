@@ -14,7 +14,7 @@ namespace Skills
 
         public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-        return false;            // 동작 구현
+            return false;            // 동작 구현
         }
         public float[] Stats
         {

@@ -133,7 +133,6 @@ namespace BehaviorTree
         // Helper method to find the root node
         private Node FindRootNode()
         {
-            Debug.Log("Find Root Node");
             Node currentNode = this;
             while (!currentNode.IsRoot)
             {

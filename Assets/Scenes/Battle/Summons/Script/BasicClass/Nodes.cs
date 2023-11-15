@@ -18,7 +18,6 @@ namespace BehaviorTree
         public override ENodeState Evaluate()
         {
             object s = GetData("State");
-            Debug.Log("!State: " + s);
             if (s == null)
             {
                 SetData("State", ESummonState.Default);
@@ -33,7 +32,6 @@ namespace BehaviorTree
         }
     }
     // 리스폰 하기
-    // - CRITICAL EVENT
     public class DutyRespawn : Node
     {
         private Animator _animator;
@@ -244,7 +242,6 @@ namespace BehaviorTree
         public DoMoveToEnemy() { }
         public override ENodeState Evaluate()
         {
-            Debug.Log("Move Evaluate");
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
@@ -341,12 +338,9 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            Debug.Log("Attack Evaluate");
-
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
-            
             
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Attack);
@@ -400,13 +394,11 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            Debug.Log("Skill Evaluate");
-
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
 
-            // Critical Event시, interrupt
+            // Duty Event시, interrupt
             if(self.GetComponent<Summon>().CheckCriticalEvent())
             {
                 return ENodeState.Failure;
@@ -442,8 +434,6 @@ namespace BehaviorTree
             if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
             {
                 _skill.SkiilCounter += 1;
-
-                Debug.Log("궁극기 사용 가능");
                 return ENodeState.Success;
             } else
             {
@@ -464,7 +454,6 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            Debug.Log("궁극기 Evaluate");
             GameObject self = (GameObject)GetData("Self");
 
             // Critical Event시, interrupt
@@ -495,15 +484,14 @@ namespace BehaviorTree
     public class CheckEnemyTooClose : Node
     {
         private Transform _transform;
-        float _personalDistance;
+        private float _personalDistance;
 
-        // ToDo: 수정 필요(일반 공격 사거리보다 클 시 이동만 함)
         public CheckEnemyTooClose() { }
         public override ENodeState Evaluate()
         {
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
-            _personalDistance = self.GetComponent<Summon>().Stats[((int)ESummonStats.PersonalDistance)];
+            _personalDistance = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
 
             object t = GetData("target");
             if (t == null)
@@ -512,7 +500,7 @@ namespace BehaviorTree
             }
 
             Transform target = (Transform)t;
-            if (Vector3.Distance(_transform.position, target.position) < _personalDistance)
+            if (Vector3.Distance(_transform.position, target.position) <= _personalDistance)
             {
                 return ENodeState.Success;
             }
