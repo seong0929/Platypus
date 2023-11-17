@@ -6,16 +6,6 @@ using UnityEngine.Events;
 using System.Linq;
 
 
-//public struct Match
-//{
-//    public int PlayerNum;
-//    public int CrystalMAXNum;
-//    public int WinPoint;
-//    public Enums.EElement Stage;
-//    public Group GroupA;
-//    public Group GroupB;
-//    public Enums.ETeam Winner;
-//}
 public struct MatchPlan
 {
     public int PlayerNum;
@@ -38,8 +28,8 @@ public class MatchManager
     #region BanPickOrders
     private static readonly List<MatchStatePair> TwoPlayerMatchOrder = new List<MatchStatePair>
     {
-        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
-        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA},
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
         new MatchStatePair { State = Enums.EBanPickState.SelectStage, Turn = Enums.ETeam.TeamB },
         // Ban
         new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
@@ -59,8 +49,8 @@ public class MatchManager
 
     private static readonly List<MatchStatePair> ThreePlayerMatchOrder = new List<MatchStatePair>
     {
-        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
-        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA},
+        new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamB },
         new MatchStatePair { State = Enums.EBanPickState.SelectStage, Turn = Enums.ETeam.TeamB },
         //Ban
         new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
@@ -85,8 +75,8 @@ public class MatchManager
 
     private static readonly List<MatchStatePair> FourPlayerMatchOrder = new List<MatchStatePair>
     {
-        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
-        new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
+        //new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamA},
+        //new MatchStatePair { State = Enums.EBanPickState.SelectPlayer, Turn = Enums.ETeam.TeamB },
         new MatchStatePair { State = Enums.EBanPickState.SelectStage, Turn = Enums.ETeam.TeamB },
         //Ban
         new MatchStatePair { State = Enums.EBanPickState.Ban, Turn = Enums.ETeam.TeamA },
@@ -198,29 +188,29 @@ public class MatchManager
 
     private void ToNextTurn()
     {
-        _matchStateIndex++;
-        SetMatchState(_matchStateList[_matchStateIndex]);
-        switch (_currentMatchState.State)
-        {
-            case Enums.EBanPickState.SelectPlayer:
-                InitiateSelectPlayer();
-                break;
-            case Enums.EBanPickState.SelectStage:
-                InitiateSelectStage();
-                break;
-            case Enums.EBanPickState.Ban:
-                InitiateBan();
-                break;
-            case Enums.EBanPickState.Pick:
-                InitiatePick();
-                break;
-            case Enums.EBanPickState.SetPair:
-                InitiaiteSetPair();
-                break;
-            case Enums.EBanPickState.SelectStrategy:
-                InitiateSelectStrategy();
-                break;
-        }
+        //_matchStateIndex++;
+        //SetMatchState(_matchStateList[_matchStateIndex]);
+        //switch (_currentMatchState.State)
+        //{
+        //    case Enums.EBanPickState.SelectPlayer:
+        //        InitiateSelectPlayer();
+        //        break;
+        //    case Enums.EBanPickState.SelectStage:
+        //        InitiateSelectStage();
+        //        break;
+        //    case Enums.EBanPickState.Ban:
+        //        InitiateBan();
+        //        break;
+        //    case Enums.EBanPickState.Pick:
+        //        InitiatePick();
+        //        break;
+        //    case Enums.EBanPickState.SetPair:
+        //        InitiaiteSetPair();
+        //        break;
+        //    case Enums.EBanPickState.SelectStrategy:
+        //        InitiateSelectStrategy();
+        //        break;
+        //}
     }
 
     private Group GetGroup(Enums.ETeam teamSide)

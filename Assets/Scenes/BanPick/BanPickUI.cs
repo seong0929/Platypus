@@ -5,7 +5,7 @@ using UnityEngine;
 public class BanPickUI : MonoBehaviour
 {
     private GameManager gameManager;
-    private MatchManager matchManager;
+//    private MatchManager matchManager;
 
     public List<Enums.ESummon> PickableSummons;
     private List<Player> TeamA;
@@ -18,14 +18,21 @@ public class BanPickUI : MonoBehaviour
     [SerializeField] GameObject SummonCardsPanelObject;
     [SerializeField] GameObject ScrollObject;
 
+    private Match match;
+
     // Start is called before the first frame update
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
-        matchManager = gameManager.MatchManager;
-        TeamA = matchManager.GroupA.SelectedPlayers;
-        TeamB = matchManager.GroupB.SelectedPlayers;
-        PickableSummons = matchManager.PickableSummons;
+        match = gameManager.Match;
+        TeamA = match.GroupA.SelectedPlayers;
+        TeamB = match.GroupB.SelectedPlayers;
+        PickableSummons = match.PickableSummons;
+
+        //matchManager = gameManager.MatchManager;
+        //TeamA = matchManager.GroupA.SelectedPlayers;
+        //TeamB = matchManager.GroupB.SelectedPlayers;
+        //PickableSummons = matchManager.PickableSummons;
     }
 
     void Start()
@@ -97,8 +104,11 @@ public class BanPickUI : MonoBehaviour
     }
     private void SetSummons(List<Enums.ESummon> teamASummons, List<Enums.ESummon> teamBSummons)
     {
-        matchManager.GroupA.SelectedSummon = teamASummons;
-        matchManager.GroupB.SelectedSummon = teamBSummons;
+        match.GroupA.SelectedSummon = teamASummons;
+        match.GroupB.SelectedSummon = teamBSummons;
+
+        //matchManager.GroupA.SelectedSummon = teamASummons;
+        //matchManager.GroupB.SelectedSummon = teamBSummons;
     }
     private void InitializeScroll()
     {

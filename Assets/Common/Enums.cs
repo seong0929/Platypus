@@ -88,4 +88,10 @@ public static class Enums
         Intermition,
         End,
     }
+    public enum ECompetitionType
+    {
+        FullLeague,
+        Tournament,
+        DoubleElimination,
+    }
 }

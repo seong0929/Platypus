@@ -33,7 +33,7 @@ public class SelectPlayer : MonoBehaviour
         roster = team.Roster;
         selected = new List<Player>();
 
-        SelectedNum = gameManager.MatchManager.PlayerNum;
+        SelectedNum = gameManager.Match.PlayerNum;
 
         SetSelectedCounterTxt();
         SetRosterCard();
@@ -133,8 +133,8 @@ public class SelectPlayer : MonoBehaviour
     {
         //gameManager.MatchManager.GroupA.SelectedPlayers = selected;
         gameManager.MakeMatch();
-        gameManager.MatchManager.GroupA.SelectedPlayers = selected;
-        List<Player> SelectedPlayers = gameManager.MatchManager.GroupA.SelectedPlayers;
+        gameManager.Match.GroupA.SelectedPlayers = selected;
+        List<Player> SelectedPlayers = gameManager.Match.GroupA.SelectedPlayers;
         Debug.Log("selected Players:" + SelectedPlayers[0].Name + ", " + SelectedPlayers[1].Name);
     }
 }

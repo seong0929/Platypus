@@ -5,53 +5,73 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Enums;
 
+// # Match:
+
 public class Match
 {
     public int PlayerNum;
     public int CrystalMAXNum;
     public int WinPoint;
-    public Team TeamA;
-    public Team TeamB;
+
+    public Group GroupA;
+    public Group GroupB;
 
     public EMatchState MatchState;
-    private Group GroupA;
-    private Group GroupB;
 
     public EElement? Stage;
     public ETeam? Winner;
     public ETeam? Loser;
 
+    public Date Date;
 
     private MatchStatePair _currentMatchState;
+    public List<Enums.ESummon> BannedSummon;
     private int _matchStateIndex = 0;
     public List<ESummon> PickableSummons;
-    private List<ESummon> _unselectableSummons;
+    public List<ESummon> AvaiableSummons;
 
 
-    public Match(int playerNum, int crystalMAXNum, int winPoint, Team teamA, Team teamB)// EElement stage = EElement.None , Group groupA, Group groupB)
+    public Match(int playerNum, int crystalMAXNum, int winPoint, Team teamA, Team teamB, Date date)// EElement stage = EElement.None , Group groupA, Group groupB)
     {
         PlayerNum = playerNum;
         CrystalMAXNum = crystalMAXNum;
         WinPoint = winPoint;
-        TeamA = teamA;
-        TeamB = teamB;
+
+        GroupA = new Group(teamA);
+        GroupB = new Group(teamB);
+
+        Date = date;
 
         MatchState = EMatchState.NotStarted;
         Winner = null;
         Loser = null;
     }
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    public void SetAvaiableSummons(List<ESummon> avaiableSummons)
     {
-        
+        AvaiableSummons = avaiableSummons;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetPickableSummons()
     {
-        
+        PickableSummons = new List<ESummon>();
+        foreach (ESummon summon in AvaiableSummons)
+        {
+            if (!BannedSummon.Contains(summon) && !GroupA.SelectedSummon.Contains(summon) && !GroupB.SelectedSummon.Contains(summon))
+            {
+                PickableSummons.Add(summon);
+            }
+        }
     }
+
+    public List<ESummon> GetPickableSummons()
+    {
+        return PickableSummons;
+    }
+
+    public void AddBannedSummon(ESummon summon)
+    {
+        BannedSummon.Add(summon);
+    }
+
 }
