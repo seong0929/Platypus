@@ -5,7 +5,6 @@ using UnityEngine;
 public class BanPickUI : MonoBehaviour
 {
     private GameManager gameManager;
-//    private MatchManager matchManager;
 
     public List<Enums.ESummon> PickableSummons;
     private List<Player> TeamA;
@@ -18,21 +17,16 @@ public class BanPickUI : MonoBehaviour
     [SerializeField] GameObject SummonCardsPanelObject;
     [SerializeField] GameObject ScrollObject;
 
-    private Match match;
+    private Round match;
 
     // Start is called before the first frame update
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
-        match = gameManager.Match;
+        match = gameManager.Round;
         TeamA = match.GroupA.SelectedPlayers;
         TeamB = match.GroupB.SelectedPlayers;
-        PickableSummons = match.PickableSummons;
-
-        //matchManager = gameManager.MatchManager;
-        //TeamA = matchManager.GroupA.SelectedPlayers;
-        //TeamB = matchManager.GroupB.SelectedPlayers;
-        //PickableSummons = matchManager.PickableSummons;
+        PickableSummons = match.AvaiableSummons;
     }
 
     void Start()
@@ -47,8 +41,6 @@ public class BanPickUI : MonoBehaviour
         sumons.Add(Enums.ESummon.SenorZorro);
 
         SetSummons(sumons, sumons);
-
-        //matchManager.SetBanPickStateAndTurn(Enums.ETeam.TeamA, Enums.EBanPickState.Ban);
     }
     private void SetTurn(Enums.ETeam eturn, Enums.EBanPickState eBanPickState)
     {
@@ -81,17 +73,20 @@ public class BanPickUI : MonoBehaviour
         List<int> atkList = new List<int>();
         List<int> dfsList = new List<int>();
         List<int> lvList = new List<int>();
+        List<string> nameList = new List<string>();
 
         foreach (Player member in teamMembers)
         {
             atkList.Add(member.Attack);
             dfsList.Add(member.Defense);
             lvList.Add(member.Level);
+            nameList.Add(member.Name);
         }
 
         panel.SetATKs(atkList);
         panel.SetDFSs(dfsList);
         panel.SetLVs(lvList);
+        panel.SetPlayerNames(nameList);
 
         panel.CreateCards(teamMembers.Count);
     }
@@ -106,9 +101,6 @@ public class BanPickUI : MonoBehaviour
     {
         match.GroupA.SelectedSummon = teamASummons;
         match.GroupB.SelectedSummon = teamBSummons;
-
-        //matchManager.GroupA.SelectedSummon = teamASummons;
-        //matchManager.GroupB.SelectedSummon = teamBSummons;
     }
     private void InitializeScroll()
     {

@@ -79,15 +79,6 @@ public static class Enums
         Break,
         Match
     }
-    public enum EMatchState
-    {
-        NotStarted,
-        SelectPlayer,
-        BanPick,
-        Battle,
-        Intermition,
-        End,
-    }
     public enum ECompetitionType
     {
         FullLeague,

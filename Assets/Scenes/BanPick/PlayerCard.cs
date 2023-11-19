@@ -11,6 +11,8 @@ public class PlayerCard : MonoBehaviour
     public int DFSnum;
     public int LVnum;
 
+    public string PlayerName;
+
     // GameObject
     [Header ("GameObject")]
     [SerializeField] GameObject CardPanel;
@@ -142,6 +144,11 @@ public class PlayerCard : MonoBehaviour
         LVnum = lv;
         LVNum.text = LVnum.ToString();
 
+    }
+
+    public void SetName(string name)
+    {
+        PlayerName = name;
     }
     public void SetProficient(List<ESummon> proficientList)
     {

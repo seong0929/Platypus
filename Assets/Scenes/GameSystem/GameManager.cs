@@ -40,8 +40,7 @@ public class GameManager : MonoBehaviour
     public CoachManager CoachManager;
     public PlayerManager PlayerManager;
 
-    // Managers of Match and Schedular
-//    public MatchManager MatchManager;
+    // Managers of Round and Schedular
     public Schedular Schedular;
 
     public Group GroupA;
@@ -50,7 +49,7 @@ public class GameManager : MonoBehaviour
     // Singleton instance
     public static GameManager Instance { get; private set; }
 
-    public Match Match;
+    public Round Round;
 
     private void Awake()
     {
@@ -77,7 +76,6 @@ public class GameManager : MonoBehaviour
         TeamManager = new TeamManager();
         CoachManager = new CoachManager();
         PlayerManager = new PlayerManager();
-//        MatchManager = new MatchManager();        
 
         // Set GameManager to other Managers
         TeamManager.GameManager = this;
@@ -110,8 +108,8 @@ public class GameManager : MonoBehaviour
         PlayerManager.CreatePlayers(10, 1, TeamManager.FAs);
     }
 
-    //Build a Match (Temporary patches)
-    public void MakeMatch()
+    //Build a Round (Temporary patches)
+    public void MakeRound()
     {
         // get from schedule or something
         // ---- START: FOR THE TEST --- //
@@ -119,17 +117,15 @@ public class GameManager : MonoBehaviour
         Opponent = TeamManager.Teams[2];
         // ---- END: FOR THE TEST --- //
         Date date = new Date() { Year = 2023, Month = 8, Day = 18 };
-        Match = new Match(2, 3, 2, userTeam, Opponent, date);
-        //MatchManager.InitializeMatch(2, userTeam, Opponent);
+        Round = new Round(2, 3, 2, userTeam, Opponent);
 
         // ---- START: FOR THE TEST --- //
         List<Player> opponentSelected = new List<Player>();
         opponentSelected.Add(Opponent.Players[0]);
         opponentSelected.Add(Opponent.Players[1]);
 
-        Match.GroupB.SelectedPlayers = opponentSelected;
+        Round.GroupB.SelectedPlayers = opponentSelected;
 
-//        MatchManager.GroupB.SelectedPlayers = opponentSelected;
         // ---- END: FOR THE TEST --- //
     }
 

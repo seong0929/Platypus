@@ -24,7 +24,7 @@ public class Schedular
 public class Schedule
 {
     public Enums.ESchedule ScheduleType;
-    public List<Match> Matches;
+    public List<Round> Matches;
     public MatchPlan MatchPlan;
     public Schedule(Enums.ESchedule scheduleType, MatchPlan matchPlan)
     {

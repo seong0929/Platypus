@@ -35,9 +35,8 @@ public class Competition
     public int CrystalMAXNum { get; set; }
     public int WinPoint { get; set; }
 
-// public CompetitionTyped Tournament(size), Laegue+PlayOff, 
-// Duration
-
+    // public CompetitionTyped Tournament(size), Laegue+PlayOff, 
+    // Duration
     private List<Match> _matches;
     private List<Team> _teams;
     private List<Team> _rank;
@@ -92,7 +91,7 @@ public class Competition
                 }
 
                 // Create a match between team i and team j with the current play date
-                Match match = new Match(PlayerNum, CrystalMAXNum, WinPoint, _teams[i], _teams[(i + j + 1) % _teams.Count], PlayDates[i]);
+                Match match = new Match(PlayerNum, CrystalMAXNum, WinPoint, _teams[i], _teams[(i + j + 1) % _teams.Count], PlayDates[i], _pickableSummon);
                 _matches.Add(match);
                 matchCounter++;
             }
@@ -106,7 +105,7 @@ public class Competition
                 }
 
                 // Create a match with the current play date
-                Match match = new Match(PlayerNum, CrystalMAXNum, WinPoint, _teams[i], _teams[(i + matchesPerDate + 1) % _teams.Count], PlayDates[i]);
+                Match match = new Match(PlayerNum, CrystalMAXNum, WinPoint, _teams[i], _teams[(i + matchesPerDate + 1) % _teams.Count], PlayDates[i], _pickableSummon);
                 _matches.Add(match);
                 matchCounter++;
                 remainingMatches--;

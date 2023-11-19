@@ -13,6 +13,7 @@ public class TeamPanel : MonoBehaviour
     private List<int> atkList = new List<int>();
     private List<int> dfsList = new List<int>();
     private List<int> lvList = new List<int>();
+    private List<string> nameList = new List<string>();
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +50,10 @@ public class TeamPanel : MonoBehaviour
             playerCard.SetTeam(bA);
         }
     }
+    public void SetPlayerNames(List<string> names)
+    {
+        nameList = names;
+    }
 
     private void destroyChildObjects()
     {
@@ -72,6 +77,7 @@ public class TeamPanel : MonoBehaviour
             playerCard.SetDFS(dfsList[i]);
             playerCard.SetLV(lvList[i]);
             playerCard.SetTeam(bA);
+            playerCard.SetName(nameList[i]);
 
             cards.Add(playerCard);
         }
