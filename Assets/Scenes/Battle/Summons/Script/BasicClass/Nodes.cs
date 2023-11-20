@@ -341,7 +341,15 @@ namespace BehaviorTree
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
-            
+
+            // Duty Event시, interrupt
+            if (self.GetComponent<Summon>().CheckCriticalEvent())
+            {
+                _skill.StartSkillCooldown();
+                return ENodeState.Failure;
+            }
+
+
             Transform target = (Transform)GetData("target");
             SetData("State", ESummonState.Attack);
             
@@ -352,6 +360,7 @@ namespace BehaviorTree
             }
             else
             {
+                _skill.StartSkillCooldown();
                 return ENodeState.Success;
             }
 
@@ -370,14 +379,14 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
+            if (_skill.IsSkillCooldown())
             {
-                _skill.SkiilCounter += 1;
-                return ENodeState.Success;
+                return ENodeState.Failure;
             }
             else
             {
-                return ENodeState.Failure;
+                _skill.SkiilCounter += 1;
+                return ENodeState.Success;
             }
         }
     }
@@ -401,6 +410,7 @@ namespace BehaviorTree
             // Duty Event시, interrupt
             if(self.GetComponent<Summon>().CheckCriticalEvent())
             {
+                _skill.StartSkillCooldown();
                 return ENodeState.Failure;
             }
 
@@ -413,6 +423,7 @@ namespace BehaviorTree
             }
             else
             {
+                _skill.StartSkillCooldown();
                 return ENodeState.Success;
             }
         }
@@ -431,13 +442,14 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            if (BattleManager.instance.GameTime - (_skill.SkiilCounter * _coolTime) >= _coolTime)
+            if (_skill.IsSkillCooldown())
+            {
+                return ENodeState.Failure;
+            }
+            else
             {
                 _skill.SkiilCounter += 1;
                 return ENodeState.Success;
-            } else
-            {
-                return ENodeState.Failure;
             }
         }
     }
@@ -459,6 +471,7 @@ namespace BehaviorTree
             // Critical Event시, interrupt
             if (self.GetComponent<Summon>().CheckCriticalEvent())
             {
+                _skill.StartSkillCooldown();
                 return ENodeState.Failure;
             }
 
@@ -474,6 +487,7 @@ namespace BehaviorTree
             }
             else
             {
+                _skill.StartSkillCooldown();
                 return ENodeState.Success;
             }
         }
