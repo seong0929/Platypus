@@ -292,6 +292,7 @@ public class SpitGlider : Summon
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(),
+                            new CheckSkill(skills[((int)ESummonAction.Attack)]),
                             new TaskAttack(skills[((int)ESummonAction.Attack)]),
                         })
                     })
