@@ -23,6 +23,11 @@ public class SpitGlider : Summon
         skills.Add(new Attack());
         skills.Add(new SeedSpitting());
         skills.Add(new AerialBombardment());
+        
+        foreach (Skill skill in skills)
+        {
+            skill.StartSkillCooldown();
+        }
         CreateBehaviorTree();
     }
     private void Update()

@@ -21,6 +21,12 @@ public class SenorZorro : Summon
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
 
+        foreach (Skill skill in skills)
+        {
+            skill.StartSkillCooldown();
+        }
+
+
         CreateBehaviorTree();
     }
     private void Update()
