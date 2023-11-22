@@ -8,9 +8,12 @@ public class SummonCard : MonoBehaviour
 {
     public Enums.EElement ElementType;
     public Enums.ESummon ESummon;
+    public int Price;
+
     [Header("GameObject")]
     [SerializeField] GameObject Panel;
     [SerializeField] GameObject ButtonObject;
+    [SerializeField] TextMeshProUGUI PriceText;
     [SerializeField] GameObject Summon;
     [SerializeField] GameObject Banner;
 
@@ -22,6 +25,7 @@ public class SummonCard : MonoBehaviour
     public Sprite AquaButton;
     public Sprite EmerladButton;
     public Sprite SummonSprite;
+    
     [SerializeField] Sprite Banned;
     [SerializeField] Sprite Picked;
 
@@ -106,6 +110,12 @@ public class SummonCard : MonoBehaviour
         {
             SummonImage.sprite = SummonSprite;
         }
+    }
+
+    public void SetPrice(int price)
+    {
+        Price = price;
+        PriceText.text = price.ToString();
     }
 
     private void SelectButtonClicked()

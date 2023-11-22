@@ -47,6 +47,8 @@ public class SummonCardsPanel : MonoBehaviour
             Sprite eSprite = summonScriptableObject.DefaultSprite;
             summonCard.ElementType = eElement;
             summonCard.SummonSprite = eSprite;
+            int Price= summonScriptableObject.CrystalNum;
+            summonCard.SetPrice(Price);
             summonCard.ChangeSprite();
         }
         else

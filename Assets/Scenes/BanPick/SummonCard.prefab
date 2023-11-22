@@ -96,6 +96,7 @@ MonoBehaviour:
   ESummon: 0
   Panel: {fileID: 4354550883524562954}
   ButtonObject: {fileID: 4354550884440804055}
+  PriceText: {fileID: 4354550885075626195}
   Summon: {fileID: 4354550885011735420}
   Banner: {fileID: 6986381897308531567}
   SepiaPanel: {fileID: 1233726161, guid: cbe3f21101e53e84b93b4145f9d29418, type: 3}
