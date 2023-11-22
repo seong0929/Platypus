@@ -553,7 +553,7 @@ namespace BehaviorTree
         {
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
-            _personalDistance = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
+            _personalDistance = (self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)]) * 0.5f;
 
             object t = GetData("target");
             if (t == null)
