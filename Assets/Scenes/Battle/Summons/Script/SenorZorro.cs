@@ -85,6 +85,8 @@ public class SenorZorro : Summon
     {
         private CC cc = new CC();
         private float[] skillStats = { 0.8f, 7f, 0f };   // 사거리, 쿨타임, 데미지
+        private bool isMoved = false;
+        private float movableDistance = 0f;
 
         public FootworkSkill()
         {
@@ -110,35 +112,45 @@ public class SenorZorro : Summon
             }
             else
             {
-                Vector2 summonPosition = summon.transform.position;
-                Vector2 targetPosition = target.transform.position;
-                float distance = Vector2.Distance(summonPosition, targetPosition);
-                float attackRagne = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
                 FlipSprite(summon, target);
-
-                if (stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.25f)
+                if(isMoved && stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.9f && isMoved)
                 {
+                    isMoved = false;
+                    isStart = false;
+                    return false;
+                }
+                if (stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.4f && isMoved == false)
+                {
+                    Vector2 summonPosition = summon.transform.position;
+                    Vector2 targetPosition = target.transform.position;
+                    float distance = Vector2.Distance(summonPosition, targetPosition);
+                    float attackRagne = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
+
                     // 멀리 있을 때
                     if (distance > attackRagne)
                     {
-                        summon.transform.position = (targetPosition - summonPosition) * attackRagne * 2;
-                    }
-                    // 멀어서 가까이 가지만 상대방과 겹칠 위험이 있는 경우
-                    else if ((distance - attackRagne) > 0)
-                    {
-                        summon.transform.position = (targetPosition - summonPosition) * (attackRagne - distance) * 2;
+                        // 멀지만, 최대 이동시 공격 범위 보다 가까워질 위험이 있는 경우
+                        if ((distance - movableDistance) < attackRagne)
+                        {
+                            summon.transform.position = (summonPosition- targetPosition).normalized * attackRagne + targetPosition;
+                        }
+
+                        // 멀리 있을 때
+                        summon.transform.position = summonPosition + (targetPosition - summonPosition).normalized * movableDistance;
                     }
                     // 가까이 있을 때
                     else
                     {
-                        summon.transform.position = (summonPosition - targetPosition) * attackRagne * 2;
+                        summon.transform.position = (summonPosition - targetPosition).normalized * attackRagne + targetPosition;
                     }
+                    
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    isStart = false;
-                    Debug.Log("FootworkSkill return false");
-                    return false;
+
+                    isMoved = true;
+
+                    return true;
                 }
                 return true;
             }
