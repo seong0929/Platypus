@@ -7,7 +7,7 @@ using static Enums;
 
 public class SummonCardsPanel : MonoBehaviour
 {
-    const string DEFAULT_PATH = "SummonsData/";
+    const string DEFAULT_PATH = Directories.SummonData;
 
     [SerializeField] GameObject SummonCardPrefab;
     [SerializeField] GameObject Panel;
