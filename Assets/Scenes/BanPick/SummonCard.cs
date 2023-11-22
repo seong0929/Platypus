@@ -120,6 +120,6 @@ public class SummonCard : MonoBehaviour
 
     private void SelectButtonClicked()
     {
-//        MatchManager.RecieveBanPickSummon.Invoke(ESummon);
+        BanPickRunner.RecieveBanPickSummon.Invoke(ESummon);
     }
 }

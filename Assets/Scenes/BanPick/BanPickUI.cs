@@ -5,6 +5,7 @@ using UnityEngine;
 public class BanPickUI : MonoBehaviour
 {
     private GameManager gameManager;
+    private BanPickRunner banPickRunner;
 
     public List<Enums.ESummon> PickableSummons;
     private List<Player> TeamA;
@@ -17,21 +18,20 @@ public class BanPickUI : MonoBehaviour
     [SerializeField] GameObject SummonCardsPanelObject;
     [SerializeField] GameObject ScrollObject;
 
-    private Round match;
+    private Round round;
 
-    private BanPickRunner banPickRunner;
 
     // Start is called before the first frame update
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
 
-        match = gameManager.Round;
-        TeamA = match.GroupA.SelectedPlayers;
-        TeamB = match.GroupB.SelectedPlayers;
-        PickableSummons = match.AvaiableSummons;
+        round = gameManager.Round;
+        TeamA = round.GroupA.SelectedPlayers;
+        TeamB = round.GroupB.SelectedPlayers;
+        PickableSummons = round.AvaiableSummons;
 
-        banPickRunner = new BanPickRunner(match.PlayerNum, match.AvaiableSummons);
+        banPickRunner = new BanPickRunner(round);
     }
 
     void Start()
@@ -104,8 +104,8 @@ public class BanPickUI : MonoBehaviour
     }
     private void SetSummons(List<Enums.ESummon> teamASummons, List<Enums.ESummon> teamBSummons)
     {
-        match.GroupA.SelectedSummon = teamASummons;
-        match.GroupB.SelectedSummon = teamBSummons;
+        round.GroupA.SelectedSummon = teamASummons;
+        round.GroupB.SelectedSummon = teamBSummons;
     }
     private void InitializeScroll()
     {

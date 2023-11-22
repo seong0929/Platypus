@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using static Enums;
 using static Constants;
 /*
@@ -34,6 +35,9 @@ public class BanPickRunner
 
     public Dictionary<ESummon, int> SummonPriceDict;
 
+    public static UnityEvent<ESummon> RecieveBanPickSummon = new UnityEvent<ESummon>();
+
+    //RecieveBanPickSummon
     public BanPickRunner(int playerNum, List<ESummon> avaiableSummons)
     {
         PlayerNum = playerNum;
@@ -68,6 +72,8 @@ public class BanPickRunner
         UpdatePickableSummons();
 
         RoundStateIndex = 0;
+
+        initializeEvents();
     }
 
     private void SetRoundStates()
@@ -209,6 +215,7 @@ public class BanPickRunner
                 if(value.GetType() == typeof(ESummon))
                 {
                     AddBannedSummon(CurrentRoundState.Turn, (ESummon)value);
+                    NextRoundState();
                 }
                 else
                 {
@@ -220,6 +227,7 @@ public class BanPickRunner
                 if (value.GetType() == typeof(ESummon))
                 {
                     AddPickedSummon(CurrentRoundState.Turn, (ESummon)value);
+                    NextRoundState();
                 }
                 else
                 {
@@ -231,7 +239,12 @@ public class BanPickRunner
                 break;
         }
     }
-
+    
+    private void initializeEvents()
+    {
+        RecieveBanPickSummon = new UnityEvent<Enums.ESummon>();
+        RecieveBanPickSummon.AddListener((eSummon) => GetBanPickRequest(eSummon));
+    }
 }
 public struct RoundStatePair
 {
