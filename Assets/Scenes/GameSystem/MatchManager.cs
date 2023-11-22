@@ -295,29 +295,3 @@ public class MatchManager
 
     }
 }
-
-//public class Group
-//{
-//    public Enums.ETeam TeamSide;
-//    public Team Team;
-//    public List<Player> SelectedPlayers;
-//    public List<Enums.ESummon> SelectedSummon;
-//    public List<Enums.ESummon> BannedSummon;
-//    public Dictionary<Player, Enums.ESummon> PlayerSummonPair;
-//    public int Score;
-
-//    public Group(Team team)//, List<Player> selectedOne)
-//    {
-//        Team = team;
-//        SelectedPlayers = new List<Player>();
-//        SelectedSummon = new List<Enums.ESummon>();
-//        BannedSummon = new List<Enums.ESummon>();
-//        PlayerSummonPair = new Dictionary<Player, Enums.ESummon>();
-//    }
-
-//}
-//public struct MatchStatePair
-//{
-//    public Enums.EBanPickState State { get; set; }
-//    public Enums.ETeam Turn { get; set; }
-//}
