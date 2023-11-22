@@ -77,23 +77,6 @@ public class SpitGlider : Summon
                 
                 if (stateInfo.IsName("Attack") && (stateInfo.normalizedTime >= 0.9f) && (count==0))
                 {
-                    // 가장 가까운 적을 찾기
-                    //GameObject[] enemies = GameObject.FindGameObjectsWithTag("Summon");
-                    //GameObject nearestEnemy = null;
-                    //float nearestDistance = float.MaxValue;
-                    //foreach (GameObject enemy in enemies)
-                    //{
-                    //    if (enemy.GetComponent<Summon>().MyTeam == false && enemy != summon)
-                    //    {
-                    //        float distance = Vector2.Distance(summon.transform.position, enemy.transform.position);
-                    //        if (distance < nearestDistance)
-                    //        {
-                    //            nearestEnemy = enemy;
-                    //            nearestDistance = distance;
-                    //        }
-                    //    }
-                    //}
-
                     // 발사
                     if (target != null)
                     {
@@ -104,13 +87,11 @@ public class SpitGlider : Summon
                         Vector3 direction = (target.transform.position - projectilePosition).normalized;
                         projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
 
-                        Debug.Log("split glider's Attack Spitting");
                         count = 1;
                         return true;
                     }
 
                 }
-                Debug.Log("split glider's Attack is running");
 
                 return true;
             }
@@ -147,7 +128,6 @@ public class SpitGlider : Summon
                     cc.ApplyCC(summon, target, cc.Stats);
 
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    Debug.Log("SeedSpitting return false");
                     isStart = false;
                     return false;
                 }
@@ -231,7 +211,6 @@ public class SpitGlider : Summon
                         summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 2f;
                         isStart = false;
                     }
-                    Debug.Log("AerialBombardment return false");
                     return false;
                 }
                 return true;

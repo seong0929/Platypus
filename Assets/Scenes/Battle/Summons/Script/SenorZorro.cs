@@ -26,7 +26,6 @@ public class SenorZorro : Summon
             skill.StartSkillCooldown();
         }
 
-
         CreateBehaviorTree();
     }
     private void Update()
@@ -75,7 +74,6 @@ public class SenorZorro : Summon
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
                     isStart = false;
 
-                    Debug.Log("Attack return false");
                     return false;
                 }
                 return true;
@@ -185,7 +183,6 @@ public class SenorZorro : Summon
                     FlipSprite(summon, target);
 
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    Debug.Log("FlecheSkill return false");
                     return false;
                 }
                 return true;

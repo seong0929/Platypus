@@ -311,7 +311,6 @@ namespace BehaviorTree
         public DoIdle() { }
         public override ENodeState Evaluate()
         {
-            Debug.Log("Idle Evaluate");
             GameObject self = (GameObject)GetData("Self");
             _animator = self.GetComponent<Animator>();
 
