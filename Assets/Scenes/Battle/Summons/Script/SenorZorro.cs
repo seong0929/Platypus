@@ -273,7 +273,11 @@ public class SenorZorro : Summon
                                     new CheckUltGage(skills[((int)ESummonAction.Ult)]),
                                     new TaskUlt(skills[((int)ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(skills[((int)ESummonAction.Attack)]), // 일반 공격
+                                new Sequence(new List<Node>
+                                {
+                                    new CheckSkill(skills[((int)ESummonAction.Attack)]),
+                                    new TaskAttack(skills[((int)ESummonAction.Attack)]), // 일반 공격
+                                })
                             })
                         }),
                         //적이 너무 가까우면, 이동
