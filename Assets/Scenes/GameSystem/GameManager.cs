@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using static Enums;
 /*
  * GameManager
  * 
@@ -117,15 +117,15 @@ public class GameManager : MonoBehaviour
         Opponent = TeamManager.Teams[2];
         // ---- END: FOR THE TEST --- //
         Date date = new Date() { Year = 2023, Month = 8, Day = 18 };
-        Round = new Round(2, 3, 2, userTeam, Opponent);
+        Round = new Round(1, 3, 2, userTeam, Opponent);
 
         // ---- START: FOR THE TEST --- //
         List<Player> opponentSelected = new List<Player>();
         opponentSelected.Add(Opponent.Players[0]);
-        opponentSelected.Add(Opponent.Players[1]);
 
         Round.GroupB.SelectedPlayers = opponentSelected;
 
+        Round.SetAvaiableSummons(new List<Enums.ESummon>() { Enums.ESummon.SenorZorro, Enums.ESummon.SenorZorro1, ESummon.SenorZorro2, ESummon.SenorZorro3 });
         // ---- END: FOR THE TEST --- //
     }
 
