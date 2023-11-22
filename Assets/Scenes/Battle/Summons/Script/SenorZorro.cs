@@ -98,8 +98,14 @@ public class SenorZorro : Summon
         {
             if(isStart == false)
             {
+
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
                 animator.SetTrigger("Skill");
+
                 isStart = true;
+                movableDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] * 2;
+
                 return true;
             }
             else
