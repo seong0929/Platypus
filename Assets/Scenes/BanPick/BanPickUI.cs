@@ -19,14 +19,19 @@ public class BanPickUI : MonoBehaviour
 
     private Round match;
 
+    private BanPickRunner banPickRunner;
+
     // Start is called before the first frame update
     void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+
         match = gameManager.Round;
         TeamA = match.GroupA.SelectedPlayers;
         TeamB = match.GroupB.SelectedPlayers;
         PickableSummons = match.AvaiableSummons;
+
+        banPickRunner = new BanPickRunner(match.PlayerNum, match.AvaiableSummons);
     }
 
     void Start()
