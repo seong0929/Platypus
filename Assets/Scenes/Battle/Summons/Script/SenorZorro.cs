@@ -292,6 +292,8 @@ public class SenorZorro : Summon
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
                                     new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
+                                new DoMoveAwayFromEnemy() // 일반 이동으로 멀어짐
+
                             })
                         })
                     })

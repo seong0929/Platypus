@@ -277,6 +277,55 @@ namespace BehaviorTree
             return ENodeState.Success;
         }
     }
+
+    //적과 멀어지기
+    public class DoMoveAwayFromEnemy : Node
+    {
+        private Animator _animator;
+        private Transform _transform;
+        private SpriteRenderer _spriteRenderer;
+        private Rigidbody2D _rb;
+        private float _moveSpeed;
+
+        public DoMoveAwayFromEnemy() { }
+        public override ENodeState Evaluate()
+        {
+            GameObject self = (GameObject)GetData("Self");
+            _transform = self.transform;
+            _animator = self.GetComponent<Animator>();
+            _spriteRenderer = self.GetComponent<SpriteRenderer>();
+            _moveSpeed = self.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)];
+            _rb = self.GetComponent<Rigidbody2D>();
+
+            Transform target = (Transform)GetData("target");
+            // ToDo: 여러 상대방 중 어떤 상대방?
+            // 상대방 바라보기
+            if (target != null)
+            {
+                if (_transform.position.x < target.transform.position.x)
+                {
+                    _spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    _spriteRenderer.flipX = false;
+                }
+            }
+
+            // 애니메이션
+            _animator.SetBool("Idle", false);
+            _animator.SetBool("Move", true);
+            SetData("State", ESummonState.Move);
+
+            // 이동
+            Vector3 direction = (_transform.position - target.transform.position).normalized;
+            _transform.position += direction * _moveSpeed * Time.deltaTime;
+            _rb.velocity = Vector2.zero;
+
+
+            return ENodeState.Success;
+        }
+    }
     // 사거리 이내에 있는 지 확인
     public class CheckEnemyInAttackRange : Node
     {
@@ -374,7 +423,7 @@ namespace BehaviorTree
         public CheckSkill(Skill skill)
         {
             _skill = skill;
-            _coolTime = skill.Stats[((int)ESkillStats.CoolTime)];
+            _coolTime = _skill.Stats[((int)ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
