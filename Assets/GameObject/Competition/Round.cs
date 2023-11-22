@@ -17,8 +17,8 @@ public class Round
     public Group GroupB;
 
     public EElement? Stage;
-    public ETeam? Winner;
-    public ETeam? Loser;
+    public ETeamSide? Winner;
+    public ETeamSide? Loser;
 
     public List<ESummon> AvaiableSummons;
 
@@ -47,7 +47,7 @@ public class Round
 
 public class Group
 {
-    public Enums.ETeam TeamSide;
+    public Enums.ETeamSide TeamSide;
     public Team Team;
     public List<Player> SelectedPlayers;
     public List<Enums.ESummon> SelectedSummon;

@@ -44,7 +44,7 @@ public class SummonCard : MonoBehaviour
         _selectButton.onClick.AddListener(() => SelectButtonClicked());
     }
 
-    public void CardSelected(Enums.ETeam eTeam)
+    public void CardSelected(Enums.ETeamSide eTeam)
     {
         _selectButton.interactable = false;
         Banner.SetActive(true);
@@ -52,7 +52,7 @@ public class SummonCard : MonoBehaviour
         BannerImage.sprite = Picked;
 
         Color bannerColor;
-        if(eTeam == Enums.ETeam.TeamA)
+        if(eTeam == Enums.ETeamSide.TeamA)
         {
             bannerColor = teamASelectedColor;
         }

@@ -42,9 +42,9 @@ public class BanPickUI : MonoBehaviour
 
         SetSummons(sumons, sumons);
     }
-    private void SetTurn(Enums.ETeam eturn, Enums.EBanPickState eBanPickState)
+    private void SetTurn(Enums.ETeamSide eturn, Enums.EBanPickState eBanPickState)
     {
-        if(eturn == Enums.ETeam.TeamA)
+        if(eturn == Enums.ETeamSide.TeamA)
         {
             _scroll.TurnBlueScroll();
         }

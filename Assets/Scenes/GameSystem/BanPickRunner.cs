@@ -50,5 +50,5 @@ public class BanPickRunner
 public struct RoundStatePair
 {
     public Enums.EBanPickState State { get; set; }
-    public Enums.ETeam Turn { get; set; }
+    public Enums.ETeamSide Turn { get; set; }
 }

@@ -52,7 +52,7 @@ public static class Enums
     {
         Mad
     }
-    public enum ETeam
+    public enum ETeamSide
     {
         TeamA,
         TeamB

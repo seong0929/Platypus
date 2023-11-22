@@ -12,8 +12,8 @@ public class Match
     public Team TeamA;
     public Team TeamB;
 
-    public ETeam? Winner;
-    public ETeam? Loser;
+    public ETeamSide? Winner;
+    public ETeamSide? Loser;
 
     public Date Date;
 
