@@ -16,7 +16,10 @@ MonoBehaviour:
   MovementSpeed: 0
   Health: 0
   NormalDamage: 0
-  Defense: 0
+  Defence: 0
+  PersonalDistance: 0
+  CoolTime: 0
+  UltGauge: 0
   DefaultSprite: {fileID: 21300000, guid: c5bf5684853b9aa4c83388f45fbcc982, type: 2}
   ElementType: 2
-  CrystalNum: 5
+  CrystalNum: 1
