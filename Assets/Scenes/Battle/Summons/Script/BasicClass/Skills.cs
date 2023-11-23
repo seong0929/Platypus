@@ -66,6 +66,7 @@ namespace Skills
 
         public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
+            // summon이 시전자, target이 cc 걸린 타겟, 그 외 필요 수치
             switch (target.GetComponent<Summon>().CurrentCC)
             {
                 case ECC.Stun:
@@ -109,9 +110,7 @@ namespace Skills
         {
             target.GetComponent<Summon>().CurrentCC = ECC.KnockBack;
 
-            Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
-            Vector2 dirVec = (target.transform.position - summon.transform.position).normalized;
-            rb.AddForce(dirVec * power, ForceMode2D.Impulse);
+            target.transform.position = (target.transform.position - summon.transform.position).normalized * power + target.transform.position;
         }
         private void Stun(GameObject target, float duration)
         {

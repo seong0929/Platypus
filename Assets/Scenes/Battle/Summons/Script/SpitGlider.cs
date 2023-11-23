@@ -105,7 +105,7 @@ public class SpitGlider : Summon
             base.stats = skillStats;
 
             HasCc = ECC.KnockBack;
-            float[] ccStats = { 1f, 30f };
+            float[] ccStats = { 1f, 3f };
             cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
