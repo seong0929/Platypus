@@ -31,7 +31,7 @@ public class MoveScene : MonoBehaviour
         GameManager gameManager;
         gameManager = FindObjectOfType<GameManager>();
 
-        gameManager.MakeMatch();
+        gameManager.MakeRound();
         // ---- END: FOR THE TEST --- //
 
         SceneManager.LoadScene("SelectPlayers");

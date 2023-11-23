@@ -1,47 +1,69 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class ScoutCard : MonoBehaviour
 {
     private GameManager gameManager;
 
-    [SerializeField] int _nth;
-    [SerializeField] Text _name;
-    [SerializeField] Text _level;
-    [SerializeField] GameObject _scoutButton;
+    [SerializeField]
+    private int nth;
 
-    private Player _thePlayer;
+    [SerializeField]
+    private Text Name;
+    [SerializeField]
+    private Text Level;
 
-    private void Start()
+    [SerializeField]
+    private GameObject ScoutButton;
+
+    private Player thePlayer;
+
+    void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        _thePlayer = gameManager.TeamManager.FAs.Players[_nth];
+        if(gameManager == null)
+        {
+            Debug.Log("gameManager is null");
+        }
+        thePlayer = gameManager.TeamManager.FAs.Players[nth];
 
         if (gameManager != null)
         {
             // Access the data from GameManager and update the UI text
-            _name.text = _thePlayer.Name;
-            _level.text = "Level:" + _thePlayer.Level.ToString();
+            Name.text = thePlayer.Name;
+            Level.text = "Level:" + thePlayer.Level.ToString();
 
-            _scoutButton.GetComponent<Button>().onClick.AddListener(Scout);
+            ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
         }
         else
         {
-            _name.text = "error";
-            _level.text = "Level:" + "error";
+            Name.text = "error";
+            Level.text = "Level:" + "error";
 
         }
     }
 
     public void Scout()
     {
-
-        gameManager.User.Team.ScoutPlayer(_thePlayer);
-        Debug.Log("Scout"+_thePlayer.Name);
+        if (gameManager == null)
+        {
+            Debug.Log("gameManager is null");
+        }
+        if (thePlayer == null) 
+        {
+        Debug.Log("thePlayer is null");
+        }
+        if (gameManager.GetUserTeam() == null)
+        {
+            Debug.Log("gameManager.GetUserTeam() is null");
+        }
+        gameManager.GetUserTeam().ScoutPlayer(thePlayer);
+        Debug.Log("Scout"+thePlayer.Name);
 
         /////////////// NEED FIX LATER /////////////
-        gameManager.User.Team.AddPlayerToRoster(_thePlayer);
-        Debug.Log("Roster player num: " + gameManager.User.Team.Roster.Count);
+        gameManager.GetUserTeam().AddPlayerToRoster(thePlayer);
+        Debug.Log("Roster player num: " + gameManager.GetUserTeam().Roster.Count);
     }
 
 }

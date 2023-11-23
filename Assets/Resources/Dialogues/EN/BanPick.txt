@@ -1,0 +1,6 @@
+Scroll_SelectStage=Select a Stage.
+Scroll_Ban=Ban a Summon.
+Scroll_Pick=Pick a Summon.
+Scroll_SetPair=Set Pair.
+Scroll_SelectStrategy=Select Strategies.
+
