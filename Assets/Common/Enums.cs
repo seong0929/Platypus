@@ -74,7 +74,6 @@ public static class Enums
         KR,
         EN
     }
-<<<<<<< HEAD
     // 노드 상태
     public enum ENodeState
     {
@@ -93,7 +92,7 @@ public static class Enums
         Skill,   // 스킬 사용 중
         Ult, // Ult 사용 중
         Move    // 이동 중
-=======
+    }
     public enum ETeamSide
     {
         TeamA,
@@ -125,7 +124,6 @@ public static class Enums
     {
         FullLeague,
         Tournament,
-        DoubleElimination,
->>>>>>> c92a5d25fb9101545b0ea2cc03c91f12e159c031
+        DoubleElimination
     }
 }
