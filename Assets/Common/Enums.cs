@@ -3,7 +3,7 @@ public static class Enums
     public enum ESummon
     {
         SenorZorro,
-        SpitGlider
+        SpitGlider,
         SenorZorro1,
         SenorZorro2,
         SenorZorro3,
