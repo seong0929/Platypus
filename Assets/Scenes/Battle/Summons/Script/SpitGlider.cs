@@ -90,9 +90,7 @@ public class SpitGlider : Summon
                         count = 1;
                         return true;
                     }
-
                 }
-
                 return true;
             }
         }

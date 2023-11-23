@@ -47,11 +47,13 @@ namespace Skills
         {
             if (summon.transform.position.x < target.transform.position.x)
             {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
+                summon.transform.localScale = new Vector3(-1, 1, 1);
+                //summon.GetComponent<SpriteRenderer>().flipX = true;
             }
             else
             {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
+                summon.transform.localScale = new Vector3(1, 1, 1);
+                //summon.GetComponent<SpriteRenderer>().flipX = false;
             }
         }
     }

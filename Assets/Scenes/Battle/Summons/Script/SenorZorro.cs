@@ -147,7 +147,6 @@ public class SenorZorro : Summon
                     }
                     
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-
                     isMoved = true;
 
                     return true;

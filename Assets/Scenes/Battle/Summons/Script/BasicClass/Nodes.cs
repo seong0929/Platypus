@@ -256,11 +256,13 @@ namespace BehaviorTree
             {
                 if (_transform.position.x < target.transform.position.x)
                 {
-                    _spriteRenderer.flipX = true;
+                    _transform.localScale = new Vector3(-1, 1, 1);
+                    //_spriteRenderer.flipX = true;
                 }
                 else
                 {
-                    _spriteRenderer.flipX = false;
+                    _transform.localScale = new Vector3(1, 1, 1);
+                    //_spriteRenderer.flipX = false;
                 }
             }
 
@@ -304,11 +306,13 @@ namespace BehaviorTree
             {
                 if (_transform.position.x < target.transform.position.x)
                 {
-                    _spriteRenderer.flipX = true;
+                    _transform.localScale = new Vector3(-1, 1, 1);
+                    //_spriteRenderer.flipX = true;
                 }
                 else
                 {
-                    _spriteRenderer.flipX = false;
+                    _transform.localScale = new Vector3(1, 1, 1);
+                    //_spriteRenderer.flipX = false;
                 }
             }
 
