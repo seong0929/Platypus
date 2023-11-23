@@ -4,6 +4,7 @@ public static class Enums
     {
         SenorZorro,
         SpitGlider,
+        // 테스트를 위한 Enum 값들
         SenorZorro1,
         SenorZorro2,
         SenorZorro3,
@@ -13,7 +14,10 @@ public static class Enums
         SenorZorro7,
         SenorZorro8,
         SenorZorro9,
-        SenorZorro10
+        SenorZorro10,
+        SpitGlider1,
+        SpitGlider2,
+        SpitGlider3
     }
     public enum ESummonStats
     {
