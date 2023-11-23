@@ -21,7 +21,7 @@ public class SpitGlider : Summon
     private void Awake()
     {
         skills.Add(new Attack());
-        skills.Add(new SeedSpitting());
+        skills.Add(new AirStrike());
         skills.Add(new AerialBombardment());
         
         foreach (Skill skill in skills)
@@ -95,12 +95,12 @@ public class SpitGlider : Summon
             }
         }
     }
-    public class SeedSpitting : Skill
+    public class AirStrike : Skill
     {
         private CC cc = new CC();
         private float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
 
-        public SeedSpitting()
+        public AirStrike()
         {
             base.stats = skillStats;
 
