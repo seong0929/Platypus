@@ -4,33 +4,28 @@ public class Projectile : MonoBehaviour
 {
     public Sprite[] Seeds;
     private SpriteRenderer _renderer;
-    private Sprite _curSprite;
+    public float damageAmount;
 
     private void Start()
     {
         _renderer = this.GetComponent<SpriteRenderer>();
-        _renderer.sprite = Seeds[1];
-        _curSprite = _renderer.sprite;
+        _renderer.sprite = Seeds[0];
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Summon")) // Summon°ú Ãæµ¹ °¨Áö
+        if (collision.gameObject.CompareTag("Summon")) // Summonê³¼ ì¶©ëŒ ê°ì§€
         {
-            if (collision.gameObject != this.transform.parent.gameObject) // ÀÚ½ÅÀ» Á¦¿ÜÇÑ summon°ú ¸¸³ª¸é ÆÄ±«
+            var summon = collision.gameObject.GetComponent<Summon>();
+
+            if ((summon != null) && (collision.gameObject != this.transform.parent.gameObject)) // ìì‹ ì„ ì œì™¸í•œ summonê³¼ ë§Œë‚˜ë©´ íŒŒê´´
             {
+                summon.TakeDamage(damageAmount);
                 Destroy(gameObject);
             }
         }
     }
-    public void ChangeTheSprite()
+    public void ChangeTheSprite(int idx)
     {
-        if(_curSprite == Seeds[0])
-        {
-            _renderer.sprite = Seeds[1];
-        }
-        else
-        {
-            _renderer.sprite = Seeds[0];
-        }
+        _renderer.sprite = Seeds[idx];
     }
 }

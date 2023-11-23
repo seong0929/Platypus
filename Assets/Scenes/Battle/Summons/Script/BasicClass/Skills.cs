@@ -4,24 +4,25 @@ using static Enums;
 
 namespace Skills
 {
-    // ½ºÅ³ Å« Æ²
+    // ìŠ¤í‚¬ í° í‹€
     public class Skill
     {
         public float SkiilCounter = 0;
         public ECC HasCc;
         protected float[] stats;
         protected float skillCooldown = 0f;
+        protected bool isStart = false;
 
-        public virtual void Execute(GameObject summon, GameObject target, Animator animator)
+        public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            // µ¿ÀÛ ±¸Çö
+            return false;            // ë™ì‘ êµ¬í˜„
         }
         public float[] Stats
         {
             get { return stats; }
             set { stats = value; }
         }
-        #region ÄğÅ¸ÀÓ
+        #region ì¿¨íƒ€ì„
         public bool IsSkillCooldown()
         {
             return skillCooldown > 0f;
@@ -46,23 +47,26 @@ namespace Skills
         {
             if (summon.transform.position.x < target.transform.position.x)
             {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
+                summon.transform.localScale = new Vector3(-1, 1, 1);
+                //summon.GetComponent<SpriteRenderer>().flipX = true;
             }
             else
             {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
+                summon.transform.localScale = new Vector3(1, 1, 1);
+                //summon.GetComponent<SpriteRenderer>().flipX = false;
             }
         }
     }
-    // CC ±â Å«Æ²
+    // CC ê¸° í°í‹€
     public class CC
     {
-        #region CC ¼¼ÆÃ
+        #region CC ì„¸íŒ…
         private float[] stats;
         protected float ccCooldown;
 
         public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
+            // summonì´ ì‹œì „ì, targetì´ cc ê±¸ë¦° íƒ€ê²Ÿ, ê·¸ ì™¸ í•„ìš” ìˆ˜ì¹˜
             switch (target.GetComponent<Summon>().CurrentCC)
             {
                 case ECC.Stun:
@@ -87,7 +91,7 @@ namespace Skills
             set { stats = value; }
         }
         #endregion
-        #region ÄğÅ¸ÀÓ
+        #region ì¿¨íƒ€ì„
         public bool IsCcCooldown(float time)
         {
             return ccCooldown >= time;
@@ -101,14 +105,12 @@ namespace Skills
             ccCooldown += deltaTime;
         }
         #endregion
-        #region CC±â Á¾·ù
+        #region CCê¸° ì¢…ë¥˜
         private void KnockBack(GameObject summon, GameObject target, float power) 
         {
             target.GetComponent<Summon>().CurrentCC = ECC.KnockBack;
 
-            Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
-            Vector2 dirVec = (target.transform.position - summon.transform.position).normalized;
-            rb.AddForce(dirVec * power, ForceMode2D.Impulse);
+            target.transform.position = (target.transform.position - summon.transform.position).normalized * power + target.transform.position;
         }
         private void Stun(GameObject target, float duration)
         {
@@ -123,7 +125,7 @@ namespace Skills
         {
             yield return new WaitForSeconds(duration);
 
-            // Stun »óÅÂ¸¦ ÇØÁ¦ÇÏ°í ¿òÁ÷ÀÏ ¼ö ÀÖµµ·Ï º¯°æ
+            // Stun ìƒíƒœë¥¼ í•´ì œí•˜ê³  ì›€ì§ì¼ ìˆ˜ ìˆë„ë¡ ë³€ê²½
             target.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
 
             target.GetComponent<Summon>().CurrentCC = ECC.None;

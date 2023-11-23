@@ -4,38 +4,26 @@ using BehaviorTree;
 using Skills;
 using static Enums;
 
-//°øÅëÀûÀÌµÇ ÇÔ¼ö ³»¿ëÀÌ ´Ş¶óÁö´Â Å¬·¡½º
+//ê³µí†µì ì´ë˜ í•¨ìˆ˜ ë‚´ìš©ì´ ë‹¬ë¼ì§€ëŠ” í´ë˜ìŠ¤
 public abstract class Summon : MonoBehaviour
 {
     public string SummonName;
     public GameObject Opponent;
     public ECC CurrentCC;
     public float[] CurrentCCStats;
-    public bool MyTeam;     //ToDo: BattleManager¿¡¼­ ÆÀ ÆÇº° ÃÊ±âÈ­
+    public bool MyTeam;     //ToDo: BattleManagerì—ì„œ íŒ€ íŒë³„ ì´ˆê¸°í™”
+    public float _deadTime;
 
-    protected float[] stats;  //ÀÓ½Ã ½ºÅÈ: »ç°Å¸®, ÀÌµ¿¼Óµµ, Ã¼·Â, µ¥¹ÌÁö, ¹æ¾î·Â
-    protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: ÀÏ¹İ °ø°İ, 1: ½ºÅ³, 2: ±Ã
+    protected float[] stats;  //ì„ì‹œ ìŠ¤íƒ¯: ì‚¬ê±°ë¦¬, ì´ë™ì†ë„, ì²´ë ¥, ë°ë¯¸ì§€, ë°©ì–´ë ¥
+    protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: ì¼ë°˜ ê³µê²©, 1: ìŠ¤í‚¬, 2: ê¶
 
     private bool _isAlive = true;
-    private float _deadTime;
 
     #region settings
     public float[] Stats
     {
         get { return stats; }
         set { stats = value; }
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        switch (collision.name)
-        {
-            case "Summon":
-                //TODO: Åõ»çÃ¼ È¤Àº °ø°İÀÇ µ¥¹ÌÁö °¡Á®¿À±â
-                //TakeDamage(collision.);   // ´©±¸ÀÇ ½ºÅ³ µ¥¹ÌÁö
-                break;
-            default:
-                break;
-        }
     }
     protected abstract Node CreateBehaviorTree();
     #endregion
@@ -44,12 +32,13 @@ public abstract class Summon : MonoBehaviour
     {
         if(stats[((int)ESummonStats.Health)] <= 0)
         {
-            _isAlive = false;
+            _isAlive = true;
             return _isAlive;
         }
-        _isAlive = true;
+        _isAlive = false;
         return _isAlive;
     }
+    // ë°ë¯¸ì§€ ë°›ì€ í•¨ìˆ˜
     public void TakeDamage(float damage)
     {
         float actualDamage = Mathf.Max(damage - stats[((int)ESummonStats.Defence)], 0);
@@ -60,17 +49,26 @@ public abstract class Summon : MonoBehaviour
             _isAlive = false;
         }
     }
+    // ë°ë¯¸ì§€ ì£¼ëŠ” í•¨ìˆ˜
     public void GiveDamage(Summon target, float damage)
     {
+        // ê·¼ê±°ë¦¬ëŠ” ìŠ¤í‚¬ì—, ì›ê±°ë¦¬ëŠ” ì›ê±°ë¦¬ ë¬´ê¸°ì— ì¶”ê°€
         target.TakeDamage(damage);
     }
     #endregion
     #region CC
-    // CC °É·ÁÀÖ´Â Áö ¿©ºÎ ÆÇ´Ü
+    // CC ê±¸ë ¤ìˆëŠ” ì§€ ì—¬ë¶€ íŒë‹¨
     public bool HasCC()
     {
         if (CurrentCC == ECC.None) return false;
         else return true;
+    }
+    // CC í˜¹ì€ ì£½ì—ˆëŠ”ì§€ í™•ì¸
+    // - ì¼ë°˜ task nodeë¥¼ interruptí•˜ê¸° ìœ„í•´ ì‚¬ìš©
+    public bool CheckCriticalEvent()
+    {
+        if(HasCC() || IsDead()) return true;
+        return false;
     }
     #endregion
 }

@@ -9,132 +9,200 @@ public class SenorZorro : Summon
     #region Settings
     public SenorZorro()
     {
-        //ToDo: GameManager¸¦ ÅëÇØ ÇÈ µÈ Ä³¸´ÅÍ ½ºÅÈ °¡Á®¿À±â
-        float[] summonStats = { 0.7f, 1f, 150f, 5f, 0.5f };
+        //ToDo: GameManagerë¥¼ í†µí•´ í”½ ëœ ìºë¦¿í„° ìŠ¤íƒ¯ ê°€ì ¸ì˜¤ê¸°
+        float[] summonStats = { 0.7f, 1f, 1500f, 5f};
 
-        //Summon Å¬·¡½ºÀÇ »ı¼ºÀÚ¸¦ È£ÃâÇÏ¸é¼­ ÃÊ±âÈ­µÈ °ªÀ» Àü´Ş
+        //Summon í´ë˜ìŠ¤ì˜ ìƒì„±ìë¥¼ í˜¸ì¶œí•˜ë©´ì„œ ì´ˆê¸°í™”ëœ ê°’ì„ ì „ë‹¬
         base.stats = summonStats;
     }
-
     private void Awake()
     {
         skills.Add(new Attack());
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
+
+        foreach (Skill skill in skills)
+        {
+            skill.StartSkillCooldown();
+        }
+
+        CreateBehaviorTree();
     }
     private void Update()
     {
         UpdateSkillCooldowns(Time.deltaTime);
-        CreateBehaviorTree().Evaluate();
+        if (_rootNode != null) 
+        {
+            _rootNode.Evaluate();
+        }
     }
     #endregion
     #region Skill
     public class Attack: Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 0.8f, 1f, 2f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public Attack()
         {
-            float[] skillStats = { 0.8f, 1f, 2f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
             base.stats = skillStats;
 
             HasCc = ECC.None;
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            FlipSprite(summon, target);
-
-            animator.SetBool("Idle", false);
-            animator.SetBool("Move", false);
-            if (!IsSkillCooldown())
+            // initiate attack
+            if(isStart == false)
             {
+                isStart = true;
+                FlipSprite(summon, target);
+
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);            
                 animator.SetTrigger("Attack");
-                StartSkillCooldown();
+
+                return true;
             }
+            else
+            {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+                if (stateInfo.IsName("Attack") && stateInfo.normalizedTime >= 0.9f)
+                {
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                    isStart = false;
+
+                    return false;
+                }
+                return true;
+            }
+            
         }
     }
     public class FootworkSkill : Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 0.8f, 7f, 0f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
+        private bool isMoved = false;
+        private float movableDistance = 0f;
 
         public FootworkSkill()
         {
-            float[] skillStats = { 0.8f, 5f, 0f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
             base.stats = skillStats;
 
             HasCc = ECC.None;
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            Vector2 summonPosition = summon.transform.position;
-            Vector2 targetPosition = target.transform.position;
-            float distance = Vector2.Distance(summonPosition, targetPosition);
-
-            Vector2 moveDirection;
-            if (summonPosition.x < targetPosition.x)
+            if(isStart == false)
             {
-                moveDirection = Vector2.right;
+
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
+                animator.SetTrigger("Skill");
+
+                isStart = true;
+                movableDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] * 2;
+
+                return true;
             }
             else
             {
-                moveDirection = Vector2.left;
-            }
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-            FlipSprite(summon, target);
+                FlipSprite(summon, target);
+                if(isMoved && stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.9f && isMoved)
+                {
+                    isMoved = false;
+                    isStart = false;
+                    return false;
+                }
+                if (stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.4f && isMoved == false)
+                {
+                    Vector2 summonPosition = summon.transform.position;
+                    Vector2 targetPosition = target.transform.position;
+                    float distance = Vector2.Distance(summonPosition, targetPosition);
+                    float attackRagne = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
 
-            if (!IsSkillCooldown())
-            {
-                animator.SetTrigger("Skill");
-                // ToDo: °³¼± ÇÊ¿ä(½ÇÁ¦·Î µÚ·Î ¿òÁ÷ÀÌÁö ¾ÊÀ½)
-                if (distance > summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)])
-                {
-                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * Time.deltaTime);
+                    // ë©€ë¦¬ ìˆì„ ë•Œ
+                    if (distance > attackRagne)
+                    {
+                        // ë©€ì§€ë§Œ, ìµœëŒ€ ì´ë™ì‹œ ê³µê²© ë²”ìœ„ ë³´ë‹¤ ê°€ê¹Œì›Œì§ˆ ìœ„í—˜ì´ ìˆëŠ” ê²½ìš°
+                        if ((distance - movableDistance) < attackRagne)
+                        {
+                            summon.transform.position = (summonPosition- targetPosition).normalized * attackRagne + targetPosition;
+                        }
+
+                        // ë©€ë¦¬ ìˆì„ ë•Œ
+                        summon.transform.position = summonPosition + (targetPosition - summonPosition).normalized * movableDistance;
+                    }
+                    // ê°€ê¹Œì´ ìˆì„ ë•Œ
+                    else
+                    {
+                        summon.transform.position = (summonPosition - targetPosition).normalized * attackRagne + targetPosition;
+                    }
+                    
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                    isMoved = true;
+
+                    return true;
                 }
-                else
-                {
-                    summon.transform.Translate(moveDirection * summon.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] * Time.deltaTime);
-                }
-                StartSkillCooldown();
+                return true;
             }
         }
     }
     public class FlecheSkill : Skill
     {
         private CC cc = new CC();
+        private float[] skillStats = { 20f, 19f, 10f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public FlecheSkill()
         {
-            float[] skillStats = { 20f, 20f, 10f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
             base.stats = skillStats;
 
             HasCc = ECC.None;
             float[] ccStats = { 0f, 0f };
             cc.Stats = ccStats;
         }
-        public override void Execute(GameObject summon, GameObject target, Animator animator)
-        {
-            float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
-            if (!IsSkillCooldown())
+        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        {            
+            if (isStart == false)
             {
                 animator.SetTrigger("UltIn");
+                isStart = true;
+                return true;
+            }
+            else
+            {
+                // need to check if skill is done                
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if(stateInfo.IsName("UltIn") && stateInfo.normalizedTime >= 0.9f)
+                {
+                    float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
 
-                Vector3 direction = (target.transform.position - summon.transform.position).normalized;
-                float distance = Vector3.Distance(summon.transform.position, target.transform.position);
-                float teleportDistance = distance - appearDistance;
+                    animator.SetTrigger("UltOut");
 
-                Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
-                summon.transform.position = teleportPosition;
+                    isStart = false;
 
-                animator.SetTrigger("UltOut");
+                    Vector3 direction = (target.transform.position - summon.transform.position).normalized;
+                    float distance = Vector3.Distance(summon.transform.position, target.transform.position);
+                    float teleportDistance = distance - appearDistance;
 
-                Vector3 appearPosition = target.transform.position + direction * appearDistance;
-                summon.transform.position = appearPosition;
-                FlipSprite(summon, target);
-                StartSkillCooldown();
+                    Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
+                    summon.transform.position = teleportPosition;
+
+                    Vector3 appearPosition = target.transform.position + direction * appearDistance;
+                    summon.transform.position = appearPosition;
+                    FlipSprite(summon, target);
+
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
+                    return false;
+                }
+                return true;
             }
         }
     }
@@ -147,91 +215,97 @@ public class SenorZorro : Summon
     }
     #endregion
     #region BehaviorTree
+    private Node _rootNode = null;
     protected override Node CreateBehaviorTree()
     {
-        Node root = new Selector(new List<Node>
+        _rootNode = new Selector(new List<Node>
         {
-            //Çàµ¿ °áÁ¤
+            //í–‰ë™ ê²°ì •
             new Selector(new List<Node>{
-                // ¸®½ºÆù
+                // ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
-                    new TaskRespawn(this.gameObject)
+                    new DutyRespawn()
                 }),
-                // Ä³¸¯ÅÍ »ıÁ¸ ¿©ºÎ È®ÀÎ ÈÄ, ¸®½ºÆù
+                // ìºë¦­í„° ìƒì¡´ ì—¬ë¶€ í™•ì¸ í›„, ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
-                    new Inverter(new CheckIfAlive(this.gameObject)),
-                    new TaskDie(this.gameObject),
+                    new Inverter(new CheckIfAlive()),
+                    new DutyDie(),
                 }),
-                // CC ¿©ºÎ È®ÀÎ
+                // CC ì—¬ë¶€ í™•ì¸
                 new Sequence(new List<Node>
                 {
-                    new CheckCC(this.gameObject),
-                    new TaskCC(this.gameObject),
+                    new CheckCC(),
+                    new DutyCC(),
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ÀÖ´Ù¸é, Çàµ¿
+                //ì ì´ ì”¬ ì•ˆì— ìˆë‹¤ë©´, í–‰ë™
                 new Sequence(new List<Node>
                 {
                     new CheckEnemyInScene(),
                     new Selector(new List<Node>
                     {
-                        //ÀûÀÌ ¸Ö¸® ÀÖ´Ù¸é, °¡±îÀÌ ÀÌµ¿
+                        //ì ì´ ë©€ë¦¬ ìˆë‹¤ë©´, ê°€ê¹Œì´ ì´ë™
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyOutOfAttackRange(this.gameObject),
-                            //½ºÅ³ÀÌ ÀÖ´Ù¸é ½ºÅ³ »ç¿ë, ¾Æ´Ï¸é ÀÌµ¿
+                            new CheckEnemyOutOfAttackRange(),
+                            //ìŠ¤í‚¬ì´ ìˆë‹¤ë©´ ìŠ¤í‚¬ ì‚¬ìš©, ì•„ë‹ˆë©´ ì´ë™
                             new Selector(new List<Node>
                             {
-                                new Sequence(new List<Node>
+                                new Sequence(new List<Node> //ìŠ¤í‚¬ ì‚¬ìš©
                                 {
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                                    new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
+                                    new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy(this.gameObject)
+                                new DoMoveToEnemy() // ì¼ë°˜ ì´ë™
                             })
                         }),
-                        //ÀûÀÌ °ø°İ ¹üÀ§ ¾È¿¡ ÀÖ´Ù¸é, °ø°İ
+                        //ì ì´ ê³µê²© ë²”ìœ„ ì•ˆì— ìˆë‹¤ë©´, ê³µê²©
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyInAttackRange(this.gameObject),
-                            new Inverter(new CheckEnemyTooClose(this.gameObject)),
+                            new CheckEnemyInAttackRange(),
+                            new Inverter(new CheckEnemyTooClose()),
                             new Selector(new List<Node>{
-                                new Sequence(new List<Node>
+                                new Sequence(new List<Node> // ê¶êµ­ê¸° ì‚¬ìš©
                                 {
                                     new CheckUltGage(skills[((int)ESummonAction.Ult)]),
-                                    new TaskUlt(this.gameObject, skills[((int)ESummonAction.Ult)])
+                                    new TaskUlt(skills[((int)ESummonAction.Ult)])
                                 }),
-                                new TaskAttack(this.gameObject, skills[((int)ESummonAction.Attack)]),
-                            })
-                        }),
-                        //ÀûÀÌ ³Ê¹« °¡±î¿ì¸é, ÀÌµ¿
-                        new Sequence(new List<Node>
-                        {
-                            new CheckEnemyTooClose(this.gameObject),
-                            //½ºÅ³ÀÌ ÀÖ´Ù¸é ½ºÅ³ »ç¿ë, ¾Æ´Ï¸é ÀÌµ¿
-                            new Selector(new List<Node>
-                            {
                                 new Sequence(new List<Node>
                                 {
+                                    new CheckSkill(skills[((int)ESummonAction.Attack)]),
+                                    new TaskAttack(skills[((int)ESummonAction.Attack)]), // ì¼ë°˜ ê³µê²©
+                                })
+                            })
+                        }),
+                        //ì ì´ ë„ˆë¬´ ê°€ê¹Œìš°ë©´, ì´ë™
+                        new Sequence(new List<Node>
+                        {
+                            new CheckEnemyTooClose(),
+                            //ìŠ¤í‚¬ì´ ìˆë‹¤ë©´ ìŠ¤í‚¬ ì‚¬ìš©, ì•„ë‹ˆë©´ ì´ë™
+                            new Selector(new List<Node>
+                            {
+                                new Sequence(new List<Node> // ì´ë™ ìŠ¤í‚¬ ì‚¬ìš©
+                                {
                                     new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                                    new TaskSkill(this.gameObject, skills[((int)ESummonAction.Skill)])
+                                    new TaskSkill(skills[((int)ESummonAction.Skill)])
                                 }),
-                                new TaskMoveToEnemy(this.gameObject)
+                                new DoMoveAwayFromEnemy() // ì¼ë°˜ ì´ë™ìœ¼ë¡œ ë©€ì–´ì§
+
                             })
                         })
                     })
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ¾ø´Ù¸é, Idle
+                //ì ì´ ì”¬ ì•ˆì— ì—†ë‹¤ë©´, Idle
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
-                    new TaskIdle(this.gameObject)
+                    new DoIdle()
                 })
             })
         });
-        return root;
+        return _rootNode;
     }
     #endregion
 }

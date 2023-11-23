@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static Enums;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace BehaviorTree
 {
-    // ºñÇì¹öÆ®¸®
-    public abstract class Tree : MonoBehaviour
+    // ë¹„í—¤ë²„íŠ¸ë¦¬
+    public abstract class Tree //: MonoBehaviour
     {
         private Node _root = null;
 
@@ -15,32 +18,20 @@ namespace BehaviorTree
         private void Update()
         {
             if (_root != null)
-                _root.Evaluate();   // Æò°¡
+                _root.Evaluate();   // í‰ê°€
         }
         protected abstract Node SetupTree();
     }
-    // ³ëµå »óÅÂ
-    public enum ENodeState
-    {
-        Running,
-        Success,
-        Failure
-    }
-    // ¼ÒÈ¯¼ö ³ëµå »óÅÂ
-    public enum ESummonState
-    {
-        Running,    // »ì¾ÆÀÖÀ½
-        Dead,   // Á×À½
-        Respawn // ¸®½ºÆù Áß
-    }
-    // ³ëµå Å¬·¡½º
+    // ë…¸ë“œ í´ë˜ìŠ¤
     public class Node
     {
-        public Node Parent; // ºÎ¸ğ ³ëµå
-        protected ENodeState state; // Çö »óÅÂ
-        protected List<Node> children = new List<Node>();   // ÀÚ½Ä ³ëµå
-        private Dictionary<string, object> _dataContext = new Dictionary<string, object>(); // ÀúÀåÇÑ °ª
-        #region »ı¼ºÀÚ
+        public Node Parent; // ë¶€ëª¨ ë…¸ë“œ
+        public bool IsRoot => Parent == null; // ë£¨íŠ¸ ë…¸ë“œì¸ì§€ í™•ì¸
+        
+        protected ENodeState state; // í˜„ ìƒíƒœ
+        protected List<Node> children = new List<Node>();   // ìì‹ ë…¸ë“œ
+        private Dictionary<string, object> _dataContext = new Dictionary<string, object>(); // ì €ì¥í•œ ê°’
+        #region ìƒì„±ì
         public Node()
         {
             Parent = null;
@@ -55,105 +46,181 @@ namespace BehaviorTree
             node.Parent = this;
             children.Add(node);
         }
-        public virtual ENodeState Evaluate() => ENodeState.Failure; // Æò°¡ °¡»ó ÇÔ¼ö
+        public virtual ENodeState Evaluate() => ENodeState.Failure; // í‰ê°€ ê°€ìƒ í•¨ìˆ˜
         #endregion
-        public void SetData(string key, object value) { _dataContext[key] = value; }    // µ¥ÀÌÅÍ ÀúÀå
-        // µ¥ÀÌÅÍ °¡Á®¿À±â
+        public void SetData(string key, object value) // ë°ì´í„° ì €ì¥ 
+        {
+            Node node = this;
+
+            if (IsRoot) // ë£¨íŠ¸ë…¸ë“œë©´ ì €ì¥í•˜ê¸°
+            {
+                _dataContext[key] = value;
+                return;
+            }
+            else // ë£¨íŠ¸ë…¸ë“œê°€ ì•„ë‹ˆë¼ë©´ ë£¨íŠ¸ë…¸ë“œë¥¼ ì°¾ì•„ ì €ì¥í•˜ê¸°
+            {
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
+                {
+                    rootNode.SetData(key, value);
+                }
+            }
+                        
+        }
+        // ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
         public object GetData(string key)
         {
             object value = null;
-            if (_dataContext.TryGetValue(key, out value))
-                return value;
 
-            Node node = Parent;
-            while (node != null)
+            if (IsRoot)
             {
-                value = node.GetData(key);
-                if (value != null)
+                if (_dataContext.TryGetValue(key, out value))
+                {
                     return value;
-                node = node.Parent;
+                }
+                else
+                {
+                    Debug.Log("Get Data: Key not found");
+                    return null; // Key not found in the dictionary
+                }
             }
-            return null;
+            else
+            {
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
+                {
+                    return rootNode.GetData(key);
+                }
+                else
+                {
+                    Debug.Log("Get Data: Root node not found");
+                    return null; // Root node not found
+                }
+            }
         }
-        // µ¥ÀÌÅÍ Áö¿ì±â
+        // ë°ì´í„° ì§€ìš°ê¸°
         public bool ClearData(string key)
         {
-            if (_dataContext.ContainsKey(key))
+            Debug.Log("Clear Data: " + key);
+
+            if(IsRoot)
             {
-                _dataContext.Remove(key);
-                return true;
-            }
-            Node node = Parent;
-            while (node != null)
-            {
-                bool cleared = node.ClearData(key);
-                if (cleared)
+                if (_dataContext.ContainsKey(key))
+                {
+                    _dataContext.Remove(key);
                     return true;
-                node = node.Parent;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            return false;
+            else
+            {
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
+                {
+                    return rootNode.ClearData(key);
+                }
+                else
+                {
+                    Debug.Log("Clear Data: Root node not found");
+                    return false; // Root node not found
+                }
+            }
         }
+
+        // Helper method to find the root node
+        private Node FindRootNode()
+        {
+            Node currentNode = this;
+            while (!currentNode.IsRoot)
+            {
+                currentNode = currentNode.Parent;
+            }
+            return currentNode;
+        }
+
     }
-    // ½ÃÄö½º ³ëµå
+    // ì‹œí€€ìŠ¤ ë…¸ë“œ
     public class Sequence : Node
     {
+        private int lastRunningNodeIndex = -1;
         public Sequence() : base() { }
         public Sequence(List<Node> children) : base(children) { }
-        // == and ÇÏ³ª¶óµµ ½ÇÆĞ ½Ã ½ÇÆĞ
+        // == and í•˜ë‚˜ë¼ë„ ì‹¤íŒ¨ ì‹œ ì‹¤íŒ¨
         public override ENodeState Evaluate()
         {
-            bool anyChildIsRunning = false;
+            // Start from the beginning or the last running node
+            int startIndex = lastRunningNodeIndex >= 0 ? lastRunningNodeIndex : 0;
 
-            foreach (Node node in children)
+            for (int i = startIndex; i < children.Count; i++)
             {
-                switch (node.Evaluate())
+                ENodeState childState = children[i].Evaluate();
+
+                switch (childState)
                 {
                     case ENodeState.Failure:
+                        lastRunningNodeIndex = -1; // Reset
                         state = ENodeState.Failure;
                         return state;
-                    case ENodeState.Success:
-                        continue;
                     case ENodeState.Running:
-                        anyChildIsRunning = true;
-                        continue;
-                    default:
-                        state = ENodeState.Success;
-                        return state;
-                }
-            }
-            state = anyChildIsRunning ? ENodeState.Running : ENodeState.Success;
-            return state;
-        }
-    }
-    // ¼¿·ºÅÍ ³ëµå
-    public class Selector : Node
-    {
-        public Selector() : base() { }
-        public Selector(List<Node> children) : base(children) { }
-        // == or ¸ğµç ÀÚ½ÄÀÌ ½ÇÆĞÇØ¾ß ½ÇÆĞ
-        public override ENodeState Evaluate()
-        {
-            foreach (Node node in children)
-            {
-                switch (node.Evaluate())
-                {
-                    case ENodeState.Failure:
-                        continue;
-                    case ENodeState.Success:
-                        state = ENodeState.Success;
-                        return state;
-                    case ENodeState.Running:
+                        lastRunningNodeIndex = i; // Remember the running node
                         state = ENodeState.Running;
                         return state;
-                    default:
+                    case ENodeState.Success:
+                       lastRunningNodeIndex = -1;
+                        // Continue to next child
                         continue;
                 }
             }
+
+            // All nodes succeeded
+            lastRunningNodeIndex = -1; // Reset
+            state = ENodeState.Success;
+            return state;
+
+        }
+    }
+    // ì…€ë ‰í„° ë…¸ë“œ
+    public class Selector : Node
+    {
+        private int lastRunningNodeIndex = -1;
+        public Selector() : base() { }
+        public Selector(List<Node> children) : base(children) { }
+        // == or ëª¨ë“  ìì‹ì´ ì‹¤íŒ¨í•´ì•¼ ì‹¤íŒ¨
+        public override ENodeState Evaluate()
+        {
+            int startIndex = lastRunningNodeIndex >= 0 ? lastRunningNodeIndex : 0;
+
+            for (int i = startIndex; i < children.Count; i++)
+            {
+                ENodeState childState = children[i].Evaluate();
+
+                switch (childState)
+                {
+                    case ENodeState.Success:
+                        lastRunningNodeIndex = -1; // Reset
+                        state = ENodeState.Success;
+                        return state;
+                    case ENodeState.Running:
+                        lastRunningNodeIndex = i; // Remember the running node
+                        state = ENodeState.Running;
+                        return state;
+                    case ENodeState.Failure:
+                        lastRunningNodeIndex = -1;
+                        // Continue to next child
+                        continue;
+                }
+            }
+
+            // All nodes failed
+            lastRunningNodeIndex = -1; // Reset
             state = ENodeState.Failure;
             return state;
         }
     }
-    // ÆĞ·² ³ëµå
+    // íŒ¨ëŸ´ ë…¸ë“œ
     public class ParallelNode : Node
     {
         private int _successChildrenNum;
@@ -201,7 +268,7 @@ namespace BehaviorTree
             return state;
         }
     }
-    // ÀÎ¹öÅÍ ³ëµå
+    // ì¸ë²„í„° ë…¸ë“œ
     public class Inverter : Node
     {
         protected Node child;
@@ -211,7 +278,7 @@ namespace BehaviorTree
             this.child = child;
             this.child.Parent = this;
         }
-        // ÀÚ½ÄÀÇ °á°úÀÇ ¹İ´ë·Î ¹İÈ¯
+        // ìì‹ì˜ ê²°ê³¼ì˜ ë°˜ëŒ€ë¡œ ë°˜í™˜
         public override ENodeState Evaluate()
         {
             switch (child.Evaluate())
