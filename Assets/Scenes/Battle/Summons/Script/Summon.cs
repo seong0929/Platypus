@@ -49,7 +49,7 @@ public abstract class Summon : MonoBehaviour
             _isAlive = false;
         }
     }
-    // 데미 주는 함수
+    // 데미지 주는 함수
     public void GiveDamage(Summon target, float damage)
     {
         // 근거리는 스킬에, 원거리는 원거리 무기에 추가
@@ -62,6 +62,13 @@ public abstract class Summon : MonoBehaviour
     {
         if (CurrentCC == ECC.None) return false;
         else return true;
+    }
+    // CC 혹은 죽었는지 확인
+    // - 일반 task node를 interrupt하기 위해 사용
+    public bool CheckCriticalEvent()
+    {
+        if(HasCC() || IsDead()) return true;
+        return false;
     }
     #endregion
 }

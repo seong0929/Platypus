@@ -11,10 +11,11 @@ namespace Skills
         public ECC HasCc;
         protected float[] stats;
         protected float skillCooldown = 0f;
+        protected bool isStart = false;
 
-        public virtual void Execute(GameObject summon, GameObject target, Animator animator)
+        public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            // 동작 구현
+            return false;            // 동작 구현
         }
         public float[] Stats
         {
@@ -46,11 +47,13 @@ namespace Skills
         {
             if (summon.transform.position.x < target.transform.position.x)
             {
-                summon.GetComponent<SpriteRenderer>().flipX = true;
+                summon.transform.localScale = new Vector3(-1, 1, 1);
+                //summon.GetComponent<SpriteRenderer>().flipX = true;
             }
             else
             {
-                summon.GetComponent<SpriteRenderer>().flipX = false;
+                summon.transform.localScale = new Vector3(1, 1, 1);
+                //summon.GetComponent<SpriteRenderer>().flipX = false;
             }
         }
     }
@@ -63,6 +66,7 @@ namespace Skills
 
         public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
+            // summon이 시전자, target이 cc 걸린 타겟, 그 외 필요 수치
             switch (target.GetComponent<Summon>().CurrentCC)
             {
                 case ECC.Stun:
@@ -106,9 +110,7 @@ namespace Skills
         {
             target.GetComponent<Summon>().CurrentCC = ECC.KnockBack;
 
-            Rigidbody2D rb = target.GetComponent<Rigidbody2D>();
-            Vector2 dirVec = (target.transform.position - summon.transform.position).normalized;
-            rb.AddForce(dirVec * power, ForceMode2D.Impulse);
+            target.transform.position = (target.transform.position - summon.transform.position).normalized * power + target.transform.position;
         }
         private void Stun(GameObject target, float duration)
         {
