@@ -200,6 +200,17 @@ public class BanPickRunner
     {
         RoundStateIndex++;
         UpdatePickableSummons();
+
+        BanPickUI.UpdateBanPickUIs.Invoke();
+        if(CurrentRoundState.State == EBanPickState.Done)
+        {
+            Debug.Log("BanPickRunner: BanPick is done.");
+            Round.GroupA.BannedSummon = BannedSummonsTeamA;
+            Round.GroupB.BannedSummon = BannedSummonsTeamB;
+            Round.GroupA.SelectedSummon = PickedSummonsTeamA;
+            Round.GroupB.SelectedSummon = PickedSummonsTeamB;
+        }
+
     }
 
     public void GetBanPickRequest(object value)
@@ -235,6 +246,8 @@ public class BanPickRunner
                 }
                 break;
 
+            case EBanPickState.Done:
+                break;
             default:
                 break;
         }

@@ -12,6 +12,7 @@ public class BanPickOrder
         new RoundStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeamSide.TeamA },
         new RoundStatePair { State = Enums.EBanPickState.Pick, Turn = Enums.ETeamSide.TeamB },
 
+        new RoundStatePair { State = Enums.EBanPickState.Done, Turn = Enums.ETeamSide.TeamB },
         //new RoundStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamA },
         //new RoundStatePair { State = Enums.EBanPickState.SetPair, Turn = Enums.ETeam.TeamB },
 
