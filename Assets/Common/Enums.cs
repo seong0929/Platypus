@@ -4,6 +4,16 @@ public static class Enums
     {
         SenorZorro,
         SpitGlider
+        SenorZorro1,
+        SenorZorro2,
+        SenorZorro3,
+        SenorZorro4,
+        SenorZorro5,
+        SenorZorro6,
+        SenorZorro7,
+        SenorZorro8,
+        SenorZorro9,
+        SenorZorro10
     }
     public enum ESummonStats
     {
@@ -60,6 +70,7 @@ public static class Enums
         KR,
         EN
     }
+<<<<<<< HEAD
     // 노드 상태
     public enum ENodeState
     {
@@ -78,5 +89,39 @@ public static class Enums
         Skill,   // 스킬 사용 중
         Ult, // Ult 사용 중
         Move    // 이동 중
+=======
+    public enum ETeamSide
+    {
+        TeamA,
+        TeamB
+    }
+    public enum EElement
+    {
+        Sepia,
+        Emerald,
+        Aqua,
+        None
+    }
+    public enum EBanPickState
+    {
+        SelectStage,
+        Ban,
+        Pick,
+        SetPair,
+        SelectStrategy,
+        Done
+    }
+    public enum ESchedule
+    {
+        Scout,
+        Break,
+        Match
+    }
+    public enum ECompetitionType
+    {
+        FullLeague,
+        Tournament,
+        DoubleElimination,
+>>>>>>> c92a5d25fb9101545b0ea2cc03c91f12e159c031
     }
 }
