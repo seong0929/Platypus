@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using static Enums;
 
 public class BanPickUI : MonoBehaviour
 {
@@ -19,7 +21,7 @@ public class BanPickUI : MonoBehaviour
     [SerializeField] GameObject ScrollObject;
 
     private Round round;
-
+    public static UnityEvent UpdateBanPickUIs = new UnityEvent();
 
     // Start is called before the first frame update
     void Awake()
@@ -46,6 +48,10 @@ public class BanPickUI : MonoBehaviour
         sumons.Add(Enums.ESummon.SenorZorro);
 
         SetSummons(sumons, sumons);
+
+        initializeEvents();
+        UpdateBanPickUI();
+        updateBanPickRunnerInfo();
     }
     private void SetTurn(Enums.ETeamSide eturn, Enums.EBanPickState eBanPickState)
     {
@@ -69,6 +75,7 @@ public class BanPickUI : MonoBehaviour
         }
 
         _scroll.SetText(scrollText);
+        UpdateBanPickUI();
     }
     private void InitializeTeamPanel(GameObject panelGameObject, List<Player> teamMembers, bool isTeamA)
     {
@@ -110,5 +117,49 @@ public class BanPickUI : MonoBehaviour
     private void InitializeScroll()
     {
         _scroll = ScrollObject.GetComponent<Scroll>();
+    }
+
+    private void UpdateScroll()
+    {
+        RoundStatePair roundStatePair = banPickRunner.GetCurrentRoundState();
+        
+        ETeamSide turn = roundStatePair.Turn;
+        EBanPickState eBanPickState = roundStatePair.State;
+
+        if (turn == ETeamSide.TeamA)
+        {
+            _scroll.TurnBlueScroll();
+        }
+        else
+        {
+            _scroll.TurnRedScroll();
+        }
+
+        string scrollText = "None";
+        if (eBanPickState == EBanPickState.Ban)
+        {
+            scrollText = "Ban a Summon.";
+        }
+        else if (eBanPickState == EBanPickState.Pick)
+        {
+            scrollText = "Select a Summon.";
+        }
+        if(eBanPickState == EBanPickState.Done)
+        {
+            scrollText = "Done.";
+        }
+        _scroll.SetText(scrollText);
+    }
+    public void UpdateBanPickUI()
+    {
+        UpdateScroll();
+
+        updateBanPickRunnerInfo();
+    }
+
+    private void initializeEvents()
+    {
+        UpdateBanPickUIs = new UnityEvent();
+        UpdateBanPickUIs.AddListener(() => UpdateBanPickUI());
     }
 }
