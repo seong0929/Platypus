@@ -131,10 +131,7 @@ public class SelectPlayer : MonoBehaviour
 
     private void SendMatchManager()
     {
-        //gameManager.MatchManager.GroupA.SelectedPlayers = selected;
-        gameManager.MakeRound();
         gameManager.Round.GroupA.SelectedPlayers = selected;
         List<Player> SelectedPlayers = gameManager.Round.GroupA.SelectedPlayers;
-        Debug.Log("selected Players:" + SelectedPlayers[0].Name + ", " + SelectedPlayers[1].Name);
     }
 }
