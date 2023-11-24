@@ -51,7 +51,6 @@ public class BanPickUI : MonoBehaviour
 
         initializeEvents();
         UpdateBanPickUI();
-        updateBanPickRunnerInfo();
     }
     private void SetTurn(Enums.ETeamSide eturn, Enums.EBanPickState eBanPickState)
     {
@@ -154,7 +153,6 @@ public class BanPickUI : MonoBehaviour
     {
         UpdateScroll();
         UpdateSummonCards();
-        updateBanPickRunnerInfo();
     }
     private void UpdateSummonCards()
     {
