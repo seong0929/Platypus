@@ -153,8 +153,45 @@ public class BanPickUI : MonoBehaviour
     public void UpdateBanPickUI()
     {
         UpdateScroll();
-
+        UpdateSummonCards();
         updateBanPickRunnerInfo();
+    }
+    private void UpdateSummonCards()
+    {
+        SummonCardsPanel summonCardsPanel = SummonCardsPanelObject.GetComponent<SummonCardsPanel>();
+        
+        List<ESummon> PickableSummons = banPickRunner.GetPickableSummons();
+        foreach (ESummon eSummon in PickableSummons)
+        {
+            SummonCard summonCard = summonCardsPanel.GetSummonCard(eSummon);
+            summonCard.CardSelectable();
+        }
+
+        List<ESummon> BannedSummonsTeamA = banPickRunner.BannedSummonsTeamA;
+        List<ESummon> BannedSummonsTeamB = banPickRunner.BannedSummonsTeamB;
+        foreach (ESummon eSummon in BannedSummonsTeamA)
+        {
+            SummonCard summonCard = summonCardsPanel.GetSummonCard(eSummon);
+            summonCard.CardBanned();
+        }
+        foreach (ESummon eSummon in BannedSummonsTeamB)
+        {
+            SummonCard summonCard = summonCardsPanel.GetSummonCard(eSummon);
+            summonCard.CardBanned();
+        }
+
+        List<ESummon> PickedSummonsTeamA = banPickRunner.PickedSummonsTeamA;
+        List<ESummon> PickedSummonsTeamB = banPickRunner.PickedSummonsTeamB;
+        foreach (ESummon eSummon in PickedSummonsTeamA)
+        {
+            SummonCard summonCard = summonCardsPanel.GetSummonCard(eSummon);
+            summonCard.CardSelected(ETeamSide.TeamA);
+        }
+        foreach (ESummon eSummon in PickedSummonsTeamB)
+        {
+            SummonCard summonCard = summonCardsPanel.GetSummonCard(eSummon);
+            summonCard.CardSelected(ETeamSide.TeamB);
+        }
     }
 
     private void initializeEvents()

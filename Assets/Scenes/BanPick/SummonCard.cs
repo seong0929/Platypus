@@ -74,6 +74,12 @@ public class SummonCard : MonoBehaviour
         BannerImage.sprite = Banned;
     }
 
+    public void CardSelectable()
+    {
+        _selectButton.interactable = true;
+        Banner.SetActive(false);
+    }
+
     private void fetchComponents()
     {
         PanelImage = Panel.GetComponent<Image>();

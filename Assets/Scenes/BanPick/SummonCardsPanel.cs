@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using static Enums;
-
+using System.IO;
 
 public class SummonCardsPanel : MonoBehaviour
 {
@@ -12,26 +12,31 @@ public class SummonCardsPanel : MonoBehaviour
     [SerializeField] GameObject SummonCardPrefab;
     [SerializeField] GameObject Panel;
 
-    public List<Enums.ESummon> PickableSummons;
+    public List<ESummon> PickableSummons;
     private List<SummonCard> cards = new List<SummonCard>();
+    private Dictionary<ESummon, SummonCard> summonCardDictionary = new Dictionary<ESummon, SummonCard>();
 
     void Start()
     {
         
     }
-    public void SetPickableSummons(List<Enums.ESummon> pickableSummons)
+    public void SetPickableSummons(List<ESummon> pickableSummons)
     {
         PickableSummons = pickableSummons;
     }
     public void CreateCards()
     {
-        foreach(Enums.ESummon eSummon in PickableSummons)
-        {
-            CreateCard(eSummon);
+        foreach (ESummon eSummon in PickableSummons)
+        { 
+            summonCardDictionary.Add(eSummon, CreateCard(eSummon));
         }
     }
 
-    public void CreateCard(Enums.ESummon eSummon)
+    public SummonCard GetSummonCard(ESummon eSummon)
+    {
+        return summonCardDictionary[eSummon];
+    }
+    public SummonCard CreateCard(ESummon eSummon)
     {
         GameObject instantiatedPrefab = Instantiate(SummonCardPrefab, transform);
         instantiatedPrefab.transform.SetParent(Panel.transform);
@@ -43,7 +48,7 @@ public class SummonCardsPanel : MonoBehaviour
         SummonScriptableObject summonScriptableObject = Resources.Load<SummonScriptableObject>(targetPath);
         if (summonScriptableObject != null)
         {
-            Enums.EElement eElement = summonScriptableObject.ElementType;
+            EElement eElement = summonScriptableObject.ElementType;
             Sprite eSprite = summonScriptableObject.DefaultSprite;
             summonCard.ElementType = eElement;
             summonCard.SummonSprite = eSprite;
@@ -57,6 +62,7 @@ public class SummonCardsPanel : MonoBehaviour
         }
 
         cards.Add(summonCard);
+        return summonCard;
     }
 
 }

@@ -69,9 +69,9 @@ public class BanPickRunner
         PickedSummonsTeamA = new List<ESummon>();
         PickedSummonsTeamB = new List<ESummon>();
 
-        UpdatePickableSummons();
-
         RoundStateIndex = 0;
+
+        UpdatePickableSummons();
 
         initializeEvents();
     }
@@ -125,6 +125,18 @@ public class BanPickRunner
         }
     }
 
+    public List<ESummon> GetPickableSummons()
+    {
+        ETeamSide team = CurrentRoundState.Turn;
+        if (team == ETeamSide.TeamA)
+        {
+            return PickableSummonsA;
+        }
+        else
+        {
+            return PickableSummonsB;
+        }
+    }
     public void UpdatePickableSummons()
     {
         PickableSummonsA = new List<ESummon>();
@@ -134,7 +146,7 @@ public class BanPickRunner
 
         foreach (ESummon summon in AvaiableSummons)
         {
-            if (!banPickedSummons.Contains(summon))
+            if (!banPickedSummons.Contains(summon) && !PickedSummonsTeamA.Contains(summon) && !PickedSummonsTeamB.Contains(summon))
             {
                 if(SummonPriceDict.ContainsKey(summon))
                 {
@@ -225,6 +237,11 @@ public class BanPickRunner
             case EBanPickState.Ban:
                 if(value.GetType() == typeof(ESummon))
                 {
+                    if(GetBanPickedSummons().Contains((ESummon)value))
+                    {
+                        Debug.LogError("Summon is already banned or picked: " + value.ToString());
+                        return;
+                    }
                     AddBannedSummon(CurrentRoundState.Turn, (ESummon)value);
                     NextRoundState();
                 }
@@ -237,6 +254,11 @@ public class BanPickRunner
             case EBanPickState.Pick:
                 if (value.GetType() == typeof(ESummon))
                 {
+                    if (GetBanPickedSummons().Contains((ESummon)value))
+                    {
+                        Debug.LogError("Summon is already banned or picked: " + value.ToString());
+                        return;
+                    }
                     AddPickedSummon(CurrentRoundState.Turn, (ESummon)value);
                     NextRoundState();
                 }
