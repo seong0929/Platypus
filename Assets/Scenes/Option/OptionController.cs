@@ -16,7 +16,7 @@ public class OptionController : MonoBehaviour
     private SoundManager _soundManager;
     private Enums.ELanguage _currentLanguage = Enums.ELanguage.KR;
 
-    #region ¼¼ÆÃ
+    #region ì„¸íŒ…
     private void Awake()
     {
         _languageText = _languageContainer.GetComponentInChildren<TextMeshProUGUI>();
@@ -43,12 +43,12 @@ public class OptionController : MonoBehaviour
 
         LoadSettings();
 
-        // »ç¿îµå °ü·Ã
+        // ì‚¬ìš´ë“œ ê´€ë ¨
         _bgmSlider.onValueChanged.AddListener(OnBgmVolumeChanged);
         _soundEffectSlider.onValueChanged.AddListener(OnSoundEffectVolumeChanged);
         _masterVolumSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
 
-        // ¾ğ¾î °ü·Ã
+        // ì–¸ì–´ ê´€ë ¨
         _leftButton.onClick.AddListener(() => ChangeLanguage(-1));
         _rightButton.onClick.AddListener(() => ChangeLanguage(1));
 
@@ -56,46 +56,46 @@ public class OptionController : MonoBehaviour
 
         UpdateLanguageText();
     }
-    // º¼·ı Å©±â °¡Á®¿À±â
+    // ë³¼ë¥¨ í¬ê¸° ê°€ì ¸ì˜¤ê¸°
     private void LoadSettings()
     {
-        // ¸¶½ºÅÍ º¼·ı ·Îµå
+        // ë§ˆìŠ¤í„° ë³¼ë¥¨ ë¡œë“œ
         float masterVolum = _soundManager.MasterVolume;
         _masterVolumSlider.value = masterVolum;
 
-        // BGM º¼·ı ·Îµå
+        // BGM ë³¼ë¥¨ ë¡œë“œ
         float bgmVolume = _soundManager.BgmVolume;
         _bgmSlider.value = bgmVolume;
 
-        // »ç¿îµå ÀÌÆåÆ® º¼·ı ·Îµå
+        // ì‚¬ìš´ë“œ ì´í™íŠ¸ ë³¼ë¥¨ ë¡œë“œ
         float soundEffectVolume = _soundManager.SoundEffectVolume;
         _soundEffectSlider.value = soundEffectVolume;
     }
     #endregion
-    #region »ç¿îµå
-    // ¸¶½ºÅÍ º¼·ı º¯°æ
+    #region ì‚¬ìš´ë“œ
+    // ë§ˆìŠ¤í„° ë³¼ë¥¨ ë³€ê²½
     private void OnMasterVolumeChanged(float value)
     {
         _soundManager.MasterVolume = value;
         _soundManager.SaveSettings();
     }
-    // BGM º¼·ı º¯°æ
+    // BGM ë³¼ë¥¨ ë³€ê²½
     private void OnBgmVolumeChanged(float value)
     {
         _soundManager.BgmVolume = value;
         _soundManager.SaveSettings();
     }
-    // »ç¿îµå ÀÌÆÑÆ® º¯°æ
+    // ì‚¬ìš´ë“œ ì´íŒ©íŠ¸ ë³€ê²½
     private void OnSoundEffectVolumeChanged(float value)
     {
         _soundManager.SoundEffectVolume = value;
         _soundManager.SaveSettings();
     }
     #endregion
-    // ToDo: ¾ğ¾î ¹ø¿ª ´Ù¸¥ Å¬·¡½º·Î ¿Å±â±â, °ª ÀúÀå¸¸ ¿©±â¼­
+    // ToDo: ì–¸ì–´ ë²ˆì—­ ë‹¤ë¥¸ í´ë˜ìŠ¤ë¡œ ì˜®ê¸°ê¸°, ê°’ ì €ì¥ë§Œ ì—¬ê¸°ì„œ
     private void ChangeLanguage(int direction)
     {
-        _currentLanguage = (Enums.ELanguage)(((int)_currentLanguage + direction + 2) % 2);    // ELanguageÀÇ °¹¼ö
+        _currentLanguage = (Enums.ELanguage)(((int)_currentLanguage + direction + 2) % 2);    // ELanguageì˜ ê°¯ìˆ˜
         UpdateLanguageText();
     }
     private void OnConfirmButtonClicked()
@@ -103,7 +103,7 @@ public class OptionController : MonoBehaviour
         string selectedLanguage = _currentLanguage.ToString();
         Debug.Log("Selected Language: " + selectedLanguage);
 
-        // TODO: ¾ğ¾î º¯°æÇÏ´Â µ¿ÀÛÀ» Ãß°¡
+        // TODO: ì–¸ì–´ ë³€ê²½í•˜ëŠ” ë™ì‘ì„ ì¶”ê°€
     }
     private void UpdateLanguageText()
     {

@@ -5,13 +5,13 @@ using static Enums;
 
 public class BattleManager : MonoBehaviour
 {
-    //Singleton Instance ¼±¾ğ
+    //Singleton Instance ì„ ì–¸
     public static BattleManager instance = null;
 
     [Header("# Game Control")]
-    public float GameTime;  // °æ°ú ½Ã°£
-    public float MaxGameTime = Constants.Play_TIME;   //ÀüÅõ½Ã°£
-    public TMP_Text TimerText;       // Å¸ÀÌ¸Ó UI
+    public float GameTime;  // ê²½ê³¼ ì‹œê°„
+    public float MaxGameTime = Constants.Play_TIME;   //ì „íˆ¬ì‹œê°„
+    public TMP_Text TimerText;       // íƒ€ì´ë¨¸ UI
     
     private List<ESummon> SummonListA;
     private List<ESummon> SummonListB;
@@ -116,33 +116,33 @@ public class BattleManager : MonoBehaviour
         GameTime += Time.deltaTime;
         if (GameTime > MaxGameTime)
         {
-            // ToDo: °ÔÀÓ Á¾·á
+            // ToDo: ê²Œì„ ì¢…ë£Œ
         }
         UpdateTimerUI();
     }
-    //ÀÏ½ÃÁ¤Áö
+    //ì¼ì‹œì •ì§€
     public void PauseGame()
     {
         Time.timeScale = 0;
     }
-    // Àç½ÃÀÛ
+    // ì¬ì‹œì‘
     public void ResumeGame()
     {
         Time.timeScale = 1;
     }
-    //ToDo: ¹èÆ²¾À¿¡¼­ ³Ñ¾î¿Â ¼ÒÈ¯¼ö¸¦ ÀÎ¼ö¿¡ ³Ö±â
+    //ToDo: ë°°í‹€ì”¬ì—ì„œ ë„˜ì–´ì˜¨ ì†Œí™˜ìˆ˜ë¥¼ ì¸ìˆ˜ì— ë„£ê¸°
     public void AssignTeam(GameObject[] summons)
     {
-        //ToDo: ¹èÆ²¾À¿¡¼­ user°¡ ¼±ÅÃÇß´Â Áö ¾È Çß´Â Áö ÆÇ´ÜÇÏ´Â ÇÔ¼ö ÇÊ¿ä
+        //ToDo: ë°°í‹€ì”¬ì—ì„œ userê°€ ì„ íƒí–ˆëŠ” ì§€ ì•ˆ í–ˆëŠ” ì§€ íŒë‹¨í•˜ëŠ” í•¨ìˆ˜ í•„ìš”
         foreach (GameObject summon in summons)
         {
-            //if() ¹èÆ²¾À¿¡¼­ ¼±ÅÃÀ» Çß´Ù¸é
+            //if() ë°°í‹€ì”¬ì—ì„œ ì„ íƒì„ í–ˆë‹¤ë©´
             summon.GetComponent<Summon>().MyTeam = true;
-            //else¹èÆ²¾À¿¡¼­ ¼±ÅÃÀº µÇÁö ¾Ê¾ÒÁö¸¸, ³Ñ¾î ¿Â °æ¿ì
+            //elseë°°í‹€ì”¬ì—ì„œ ì„ íƒì€ ë˜ì§€ ì•Šì•˜ì§€ë§Œ, ë„˜ì–´ ì˜¨ ê²½ìš°
             summon.GetComponent<Summon>().MyTeam = false;
         }
     }
-    // UI¿¡ Å¸ÀÌ¸Ó °ªÀ» Ç¥½Ã
+    // UIì— íƒ€ì´ë¨¸ ê°’ì„ í‘œì‹œ
     private void UpdateTimerUI()
     {
         float remainingTime = Mathf.Max(MaxGameTime - GameTime, 0f);

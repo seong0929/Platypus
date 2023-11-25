@@ -29,37 +29,37 @@ public class SoundManager : MonoBehaviour
     {
         LoadSettings();
     }
-    #region ÀúÀå
-    // ¼³Á¤ °ª ºÒ·¯¿À±â
+    #region ì €ì¥
+    // ì„¤ì • ê°’ ë¶ˆëŸ¬ì˜¤ê¸°
     private void LoadSettings()
     {
-        // BGM º¼·ı ·Îµå
+        // BGM ë³¼ë¥¨ ë¡œë“œ
         BgmVolume = PlayerPrefs.GetFloat("SoundManager_MasterVolume", 1.0f);
 
-        // BGM º¼·ı ·Îµå
+        // BGM ë³¼ë¥¨ ë¡œë“œ
         BgmVolume = PlayerPrefs.GetFloat("SoundManager_BgmVolume", 1.0f);
 
-        // »ç¿îµå ÀÌÆåÆ® º¼·ı ·Îµå
+        // ì‚¬ìš´ë“œ ì´í™íŠ¸ ë³¼ë¥¨ ë¡œë“œ
         SoundEffectVolume = PlayerPrefs.GetFloat("SoundManager_SoundEffectVolume", 1.0f);
     }
-    // ¼³Á¤ °ª ÀúÀåÇÏ±â
+    // ì„¤ì • ê°’ ì €ì¥í•˜ê¸°
     public void SaveSettings()
     {
-        // BGM º¼·ı ÀúÀå
+        // BGM ë³¼ë¥¨ ì €ì¥
         PlayerPrefs.SetFloat("SoundManager_MasterVolume", MasterVolume);
 
-        // BGM º¼·ı ÀúÀå
+        // BGM ë³¼ë¥¨ ì €ì¥
         PlayerPrefs.SetFloat("SoundManager_BgmVolume", BgmVolume);
 
-        // »ç¿îµå ÀÌÆåÆ® º¼·ı ÀúÀå
+        // ì‚¬ìš´ë“œ ì´í™íŠ¸ ë³¼ë¥¨ ì €ì¥
         PlayerPrefs.SetFloat("SoundManager_SoundEffectVolume", SoundEffectVolume);
 
-        // PlayerPrefs µ¥ÀÌÅÍ¸¦ µğ½ºÅ©¿¡ ÀúÀå
+        // PlayerPrefs ë°ì´í„°ë¥¼ ë””ìŠ¤í¬ì— ì €ì¥
         PlayerPrefs.Save();
     }
     #endregion
-    #region »ç¿îµå
-    // BGM Àç»ı
+    #region ì‚¬ìš´ë“œ
+    // BGM ì¬ìƒ
     public void PlayBGM(AudioClip bgmClip)
     {
         _bgmAudioSource.clip = bgmClip;
@@ -67,12 +67,12 @@ public class SoundManager : MonoBehaviour
         _bgmAudioSource.loop = true;
         _bgmAudioSource.Play();
     }
-    // BGM ¸ØÃß±â
+    // BGM ë©ˆì¶”ê¸°
     public void StopBGM()
     {
         _bgmAudioSource.Stop();
     }
-    // »ç¿îµå ÀÌÆÑÆ® Àç»ı
+    // ì‚¬ìš´ë“œ ì´íŒ©íŠ¸ ì¬ìƒ
     public void PlaySoundEffect(AudioClip soundEffectClip)
     {
         _soundEffectAudioSource.PlayOneShot(soundEffectClip, MasterVolume * SoundEffectVolume);

@@ -30,7 +30,7 @@ public class FieldLimit : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
-    // °æ±âÀå Äµ¹ö½º¿¡ ¸Â°Ô Å©±â Á¶Á¤
+    // ê²½ê¸°ìž¥ ìº”ë²„ìŠ¤ì— ë§žê²Œ í¬ê¸° ì¡°ì •
     private void AdjustColliderToCanvasSize()
     {
         if (canvas != null)
@@ -40,7 +40,7 @@ public class FieldLimit : MonoBehaviour
             _boxCollider.size = new Vector2(canvasRect.sizeDelta.x * (1f / 90f), canvasRect.sizeDelta.y * (1f / 90f));
         }
     }
-    // Ä³¸¯ÅÍ°¡ °æ±âÀå ¹ÛÀ¸·Î ³ª°¡¸é ¹Ý´ë ¹æÇâÀ¸·Î Æ¨±â±â
+    // ìºë¦­í„°ê°€ ê²½ê¸°ìž¥ ë°–ìœ¼ë¡œ ë‚˜ê°€ë©´ ë°˜ëŒ€ ë°©í–¥ìœ¼ë¡œ íŠ•ê¸°ê¸°
     private void BounceOffField(Transform objTransform)
     {
         Vector3 objPosition = objTransform.position;
@@ -56,7 +56,7 @@ public class FieldLimit : MonoBehaviour
     {
         GameObject[] summonCharacters = GameObject.FindGameObjectsWithTag("Summon");
 
-        // Ä³¸¯ÅÍ°¡ °æ±âÀåÀ» ¹þ¾î³µÀ» ¶§ ÃÊ±â À§Ä¡·Î µÇµ¹¸®±â
+        // ìºë¦­í„°ê°€ ê²½ê¸°ìž¥ì„ ë²—ì–´ë‚¬ì„ ë•Œ ì´ˆê¸° ìœ„ì¹˜ë¡œ ë˜ëŒë¦¬ê¸°
         foreach (var summonCharacter in summonCharacters)
         {
             if (summonCharacter.transform.position.x > _boxCollider.bounds.max.x ||
