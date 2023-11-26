@@ -5,7 +5,7 @@ public static class Enums
         SenorZorro,
         SpitGlider,
         // 테스트를 위한 Enum 값들
-        SenorZorro1,
+        PoToad,
         SenorZorro2,
         SenorZorro3,
         SenorZorro4,

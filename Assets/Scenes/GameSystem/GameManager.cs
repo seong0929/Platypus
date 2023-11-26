@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
 
         Round.GroupB.SelectedPlayers = opponentSelected;
 
-        Round.SetAvaiableSummons(new List<Enums.ESummon>() { Enums.ESummon.SenorZorro, Enums.ESummon.SenorZorro1, ESummon.SenorZorro2, ESummon.SenorZorro3, ESummon.SpitGlider, ESummon.SpitGlider1, ESummon.SpitGlider2, ESummon.SpitGlider3 });
+        Round.SetAvaiableSummons(new List<Enums.ESummon>() { Enums.ESummon.SenorZorro, Enums.ESummon.PoToad, ESummon.SenorZorro2, ESummon.SenorZorro3, ESummon.SpitGlider, ESummon.SpitGlider1, ESummon.SpitGlider2, ESummon.SpitGlider3 });
         // ---- END: FOR THE TEST --- //
     }
 
