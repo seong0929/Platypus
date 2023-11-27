@@ -18,6 +18,9 @@ public class BattleManager : MonoBehaviour
 
     public GameObject SenorZorroPrefab;
     public GameObject SpitGliderPrefab;
+    public GameObject PoToadPrefab;
+
+    private Dictionary<ESummon, GameObject> summonPrefabs;
 
     private void Awake()
     {
@@ -25,6 +28,7 @@ public class BattleManager : MonoBehaviour
     }
     private void Start()
     {
+        InitializeSummonPrefabDictionary();
         SetupGameSummons();
         GameTime = 0;
     }
@@ -33,6 +37,30 @@ public class BattleManager : MonoBehaviour
     {
         GetCalledSummons();
         SetSummonInScene();
+    }
+
+    private void InitializeSummonPrefabDictionary()
+    {
+        summonPrefabs = new Dictionary<ESummon, GameObject> 
+        { 
+            { ESummon.SenorZorro, SenorZorroPrefab },
+            { ESummon.SpitGlider, SpitGliderPrefab },
+            { ESummon.PoToad, PoToadPrefab },
+            
+            // added for test
+            { ESummon.SenorZorro2, SenorZorroPrefab },
+            { ESummon.SenorZorro3, SenorZorroPrefab },
+            { ESummon.SenorZorro4, SenorZorroPrefab },
+            { ESummon.SenorZorro5, SenorZorroPrefab },
+            { ESummon.SenorZorro6, SenorZorroPrefab },
+            { ESummon.SenorZorro7, SenorZorroPrefab },
+            { ESummon.SenorZorro8, SenorZorroPrefab },
+            { ESummon.SenorZorro9, SenorZorroPrefab },
+            { ESummon.SenorZorro10, SenorZorroPrefab },
+            { ESummon.SpitGlider1, SpitGliderPrefab },
+            { ESummon.SpitGlider2, SpitGliderPrefab },
+            { ESummon.SpitGlider3, SpitGliderPrefab }        
+        };
     }
 
     private void GetCalledSummons() 
@@ -88,19 +116,12 @@ public class BattleManager : MonoBehaviour
     {
         GameObject summonObject = null;
 
-        if(summon.ToString().Contains("SenorZorro"))
-        {
-            summonObject = Instantiate(SenorZorroPrefab);
-        }
-        else if(summon.ToString().Contains("SpitGlider"))
-        {
-            summonObject = Instantiate(SpitGliderPrefab);
-        }
-        else
+        if(summonPrefabs.ContainsKey(summon) == false)
         {
             Debug.Log("Summon is not defined");
             return;
         }
+        summonObject = Instantiate(summonPrefabs[summon]);
          
         if(isTeamA)
         {
@@ -111,6 +132,7 @@ public class BattleManager : MonoBehaviour
             summonObject.transform.position = new Vector3(5, 0, 0);
         }
     }
+
     private void Update()
     {
         GameTime += Time.deltaTime;
