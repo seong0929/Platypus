@@ -165,13 +165,16 @@ namespace Skills
         {
             target.GetComponent<Summon>().CurrentCC = ECC.SlowDown;
             target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] -= power;
+            Debug.Log("SlowDown" + target + ":" + target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)]);
             target.GetComponent<MonoBehaviour>().StartCoroutine(ReleaseSlowDown(target, power, duration));
         }
         private IEnumerator ReleaseSlowDown(GameObject target, float power, float duration)
         {
+            Debug.Log("In ReleaseSlowDown fn");
             yield return new WaitForSeconds(duration);
             target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] += power;
             target.GetComponent<Summon>().CurrentCC = ECC.None;
+            Debug.Log("SlowUp" + target + ":" + target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)]);
         }
         #endregion
     }

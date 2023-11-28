@@ -75,6 +75,7 @@ public class PoToad : Summon
             if (_isStart == false)
             {
                 animator.SetTrigger("Skill");
+                Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("Skill"));
                 FlipSprite(summon, target);
                 _isStart = true;
                 return true;
@@ -83,6 +84,7 @@ public class PoToad : Summon
             {
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
                 {
+                    Debug.Log("In SlimeLick");
                     target.GetComponent<Summon>().CurrentCCStats = _debuffer.Stats;
                     target.GetComponent<Summon>().CurrentCC = HasCc;
                     _debuffer.ApplyCC(summon, target, _debuffer.Stats);
@@ -99,6 +101,7 @@ public class PoToad : Summon
     {
         private Buffer _buffer = new Buffer();
         private GameObject _area;
+        private GameObject _areaPrfab;
         private float[] _skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
         // 사거리가 Elixir의 크기와 일치해야 함
 
@@ -114,6 +117,7 @@ public class PoToad : Summon
         {
             if (_isStart == false)
             {
+                _area = summon.GetComponent<PoToad>().Area;
                 animator.SetTrigger("UltIn");
                 FlipSprite(summon, target);
                 _isStart = true;
@@ -121,18 +125,17 @@ public class PoToad : Summon
             }
             else
             {
-                _area = summon.GetComponent<PoToad>().Area;
-                GameObject area = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
+                _areaPrfab = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
 
                 // 회복
-                TickDown(area, _buffer, _buffer.Stats[((int)EBufferStats.Tick)]);
+                TickDown(_areaPrfab, _buffer, _buffer.Stats[((int)EBufferStats.Tick)]);
                 
                 // 궁극기 끝날 때
                 if (IsDone(_buffer.Stats[((int)EBufferStats.Time)]))
                 {
                     Debug.Log("End PoToad's Ult");
                     animator.SetTrigger("UltOut");
-                    Destroy(area);
+                    Destroy(_areaPrfab);
                     _isStart = false;
                     return false;
                 }
