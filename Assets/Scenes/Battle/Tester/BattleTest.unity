@@ -469,8 +469,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Timer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -591,8 +591,13 @@ MonoBehaviour:
   GameTime: 0
   MaxGameTime: 180
   TimerText: {fileID: 0}
+  SummonListA: 
+  SummonListB: 
   SenorZorroPrefab: {fileID: 8544673299357075893, guid: 4d50364200c488e468bab32f34209837, type: 3}
   SpitGliderPrefab: {fileID: 8544673299357075893, guid: 89ba3a7fa8dc67e459bd66039df4fb34, type: 3}
+  PoToad: {fileID: 0}
+  SummonObjectsA: []
+  SummonObjectsB: []
 --- !u!1 &942806675
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,8 +866,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Home
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1102,8 +1107,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Battle
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

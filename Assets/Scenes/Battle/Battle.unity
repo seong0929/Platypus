@@ -1233,5 +1233,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: TeamHUD
       objectReference: {fileID: 0}
+    - target: {fileID: 1459798486884946383, guid: 9741b1e2e70690444aec76af5f310e28, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+    - target: {fileID: 1459798486884946383, guid: 9741b1e2e70690444aec76af5f310e28, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9741b1e2e70690444aec76af5f310e28, type: 3}
