@@ -101,6 +101,7 @@ public class PoToad : Summon
         private GameObject _area;
         private float[] _skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
         // 사거리가 Elixir의 크기와 일치해야 함
+
         public ElixirTorrent()
         {
             base._stats = _skillStats;
@@ -129,6 +130,7 @@ public class PoToad : Summon
                 // 궁극기 끝날 때
                 if (IsDone(_buffer.Stats[((int)EBufferStats.Time)]))
                 {
+                    Debug.Log("End PoToad's Ult");
                     animator.SetTrigger("UltOut");
                     Destroy(area);
                     _isStart = false;
@@ -140,7 +142,9 @@ public class PoToad : Summon
     }
     private static IEnumerator TickDown(GameObject area, Buffer buffer, float tick)
     {
+        Debug.Log("In TickDoen Fn");
         yield return new WaitForSeconds(tick);
+        Debug.Log("In TickDoen Fn next to yield");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, area.transform.localScale.x);
         // ToDo: 팀 구분
         foreach (Collider2D collider in colliders)
@@ -151,6 +155,7 @@ public class PoToad : Summon
                 if (buffedTeam != null)
                 {
                     buffer.Heling(buffedTeam, buffer.Stats[((int)EBufferStats.Power)]);
+                    Debug.Log(buffedTeam + "&" + buffedTeam.GetComponent<Summon>().Stats[((int)ESummonStats.Health)]);
                 }
             }
         }

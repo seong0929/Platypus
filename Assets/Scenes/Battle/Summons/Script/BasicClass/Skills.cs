@@ -58,12 +58,15 @@ namespace Skills
         }
         public bool IsDone(float duration)
         {
+            Debug.Log("In IsDone fn");
             CheckDone(duration);
             return _done;
         }
         private IEnumerator CheckDone(float duration)
         {
+            Debug.Log("In CheckDone fn");
             yield return new WaitForSeconds(duration);
+            Debug.Log("In CheckDone fn next");
             _done = true;
         }
         #endregion
