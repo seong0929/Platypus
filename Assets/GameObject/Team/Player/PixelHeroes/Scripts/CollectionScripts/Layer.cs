@@ -31,6 +31,10 @@ namespace Assets.PixelHeroes.Scripts.CollectionScripts
 
         public Color32[] GetPixels(string data, Color32[] mask, string changed)
         {
+            if(Regex.Match(data, @"(?<Name>[\w \[\]]+)(?<Paint>#\w+)?(?:\/(?<H>[-\d]+):(?<S>[-\d]+):(?<V>[-\d]+))?").Success == false)
+            {
+                Debug.LogError("Regex failed: "+ data.ToString());
+            }
             var match = Regex.Match(data, @"(?<Name>[\w \[\]]+)(?<Paint>#\w+)?(?:\/(?<H>[-\d]+):(?<S>[-\d]+):(?<V>[-\d]+))?");
             var name = match.Groups["Name"].Value;
             var index = Textures.FindIndex(i => i.name == name);

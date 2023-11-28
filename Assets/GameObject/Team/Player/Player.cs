@@ -395,5 +395,6 @@ public class CharacterAppearance
         Cape = _CapeOptions[Random.Range(0, _CapeOptions.Count)];
         Back = _BackOptions[Random.Range(0, _BackOptions.Count)];
         Mask = _maskOptions[Random.Range(0, _maskOptions.Count)];
+        Horns = _HornOptions[Random.Range(0, _HornOptions.Count)];
     }
 }
