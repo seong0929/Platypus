@@ -191,6 +191,63 @@ Transform:
   m_Father: {fileID: 1470946860}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &271212043
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927997259691, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_Name
+      value: SpawnPoint
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
 --- !u!1 &331912457
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,8 +526,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Timer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -576,6 +633,7 @@ MonoBehaviour:
   GameTime: 0
   MaxGameTime: 180
   TimerText: {fileID: 601944081}
+  SpawnPoint: {fileID: 0}
   SenorZorroPrefab: {fileID: 8544673299357075893, guid: 4d50364200c488e468bab32f34209837, type: 3}
   SpitGliderPrefab: {fileID: 8544673299357075893, guid: 89ba3a7fa8dc67e459bd66039df4fb34, type: 3}
   PoToadPrefab: {fileID: 1566618110003923544, guid: 5a507ad31cd340b4dbb9254a44fede28, type: 3}
@@ -862,8 +920,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Home
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1103,8 +1161,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Battle
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

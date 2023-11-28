@@ -8,7 +8,6 @@ namespace BehaviorTree
     // 리스폰 확인
     public class CheckRespawn : Node
     {
-    // ToDo: SetData 초기화를 GamaManager에 넣기
         private GameObject _gameObject;
 
         public CheckRespawn(GameObject gameObject)
@@ -48,7 +47,36 @@ namespace BehaviorTree
 
             _animator = self.GetComponent<Animator>();
             _summon = self;
-            //ToDo: 리스폰 위치에 순간이동, 게임 메니저에서 리스폰 지점 찾기
+
+            // 리스폰 위치에 순간이동
+            if (self.GetComponent<Summon>().MyTeam)
+            {
+                // 해당 위치에 다른 유닛이 있는지 확인
+                foreach (Transform point in BattleManager.instance.ASpawn)
+                {
+                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+
+                    if (colliders.Length == 0)
+                    {
+                        self.transform.position = point.position;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                foreach (Transform point in BattleManager.instance.BSpawn)
+                {
+                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+
+                    if (colliders.Length == 0)
+                    {
+                        self.transform.position = point.position;
+                        break;
+                    }
+                }
+            }
+            
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
             SetData("State", ESummonState.Default);
             _summon.tag = "Summon";

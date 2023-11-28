@@ -164,7 +164,6 @@ public class PoToad : Summon
     }
     #endregion
     #region BehaviorTree
-
     private Node _rootNode = null;
 
     protected override Node CreateBehaviorTree()

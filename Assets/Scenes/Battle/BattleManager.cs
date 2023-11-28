@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 using static Enums;
 
 public class BattleManager : MonoBehaviour
@@ -12,9 +13,12 @@ public class BattleManager : MonoBehaviour
     public float GameTime;  // 경과 시간
     public float MaxGameTime = Constants.Play_TIME;   //전투시간
     public TMP_Text TimerText;       // 타이머 UI
-    
+    public GameObject SpawnPoint;   // 스폰 위치
+
     private List<ESummon> SummonListA;
     private List<ESummon> SummonListB;
+    private Transform[] TeamASpawn;
+    private Transform[] TeamBSpawn;
 
     public GameObject SenorZorroPrefab;
     public GameObject SpitGliderPrefab;
@@ -28,6 +32,9 @@ public class BattleManager : MonoBehaviour
     }
     private void Start()
     {
+        TeamASpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamA"));
+        TeamBSpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamB"));
+
         InitializeSummonPrefabDictionary();
         SetupGameSummons();
         GameTime = 0;
@@ -125,11 +132,29 @@ public class BattleManager : MonoBehaviour
          
         if(isTeamA)
         {
-            summonObject.transform.position = new Vector3(-5, 0, 0);
+            foreach (Transform point in ASpawn)
+            {
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+
+                if (colliders.Length == 0)
+                {
+                    summonObject.transform.position = point.position;
+                    break;
+                }
+            }
         }
         else
         {
-            summonObject.transform.position = new Vector3(5, 0, 0);
+            foreach (Transform point in BSpawn)
+            {
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+
+                if (colliders.Length == 0)
+                {
+                    summonObject.transform.position = point.position;
+                    break;
+                }
+            }
         }
     }
 
@@ -173,5 +198,27 @@ public class BattleManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60f);
 
         TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+    private Transform[] GetChildTransforms(Transform parent)
+    {
+        int childCount = parent.childCount;
+        Transform[] childTransforms = new Transform[childCount];
+
+        for (int i = 0; i < childCount; i++)
+        {
+            childTransforms[i] = parent.GetChild(i);
+        }
+
+        return childTransforms;
+    }
+    public Transform[] ASpawn
+    {
+        get { return TeamASpawn; }
+        set { TeamASpawn = value; }
+    }
+    public Transform[] BSpawn
+    {
+        get { return TeamBSpawn; }
+        set { TeamBSpawn = value; }
     }
 }
