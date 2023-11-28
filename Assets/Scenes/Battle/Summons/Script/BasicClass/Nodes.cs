@@ -576,5 +576,28 @@ namespace BehaviorTree
             }
         }
     }
+    // 사거리 내 누군가라도 있는 가
+    public class CheckAnyone : Node
+    {
+        private GameObject _area;
+
+        public CheckAnyone(GameObject area) 
+        {
+            _area = area; 
+        }
+        public override ENodeState Evaluate()
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(_area.transform.position, _area.transform.localScale.x);
+
+            if (colliders != null)
+            {
+                return ENodeState.Success;
+            }
+            else
+            {
+                return ENodeState.Failure;
+            }
+        }
+    }
     #endregion
 }

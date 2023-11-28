@@ -13,7 +13,7 @@ public class PoToad : Summon
     public PoToad()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 1f, 0.7f, 800f, 3f };
+        float[] summonStats = { 1f, 0.3f, 800f, 3f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.stats = summonStats;
@@ -100,7 +100,7 @@ public class PoToad : Summon
         private Buffer _buffer = new Buffer();
         private GameObject _area;
         private float[] _skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
-
+        // 사거리가 Elixir의 크기와 일치해야 함
         public ElixirTorrent()
         {
             base._stats = _skillStats;
@@ -121,11 +121,10 @@ public class PoToad : Summon
             else
             {
                 _area = summon.GetComponent<PoToad>().Area;
-                _area.transform.localScale *= _skillStats[0];
                 GameObject area = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
 
                 // 회복
-                TickDown(area, _buffer, _skillStats, _buffer.Stats[((int)EBufferStats.Tick)]);
+                TickDown(area, _buffer, _buffer.Stats[((int)EBufferStats.Tick)]);
                 
                 // 궁극기 끝날 때
                 if (IsDone(_buffer.Stats[((int)EBufferStats.Time)]))
@@ -139,10 +138,10 @@ public class PoToad : Summon
             }
         }
     }
-    private static IEnumerator TickDown(GameObject area, Buffer buffer, float[] skillStats, float tick)
+    private static IEnumerator TickDown(GameObject area, Buffer buffer, float tick)
     {
         yield return new WaitForSeconds(tick);
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, skillStats[0]);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, area.transform.localScale.x);
         // ToDo: 팀 구분
         foreach (Collider2D collider in colliders)
         {
@@ -195,7 +194,7 @@ public class PoToad : Summon
                 // 궁극기가 준비되었다면
                 new Sequence(new List<Node>
                 {
-                    //new CheckAnyne(),
+                    new CheckAnyone(Area),
                     new CheckUltGage(skills[((int)ESummonAction.Ult)]),
                     new TaskUlt(skills[((int)ESummonAction.Ult)])
                 }),
