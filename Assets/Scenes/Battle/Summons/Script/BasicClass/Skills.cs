@@ -7,6 +7,7 @@ namespace Skills
     // 스킬 큰 틀
     public class Skill
     {
+        #region Settings
         public float SkiilCounter = 0;
         public ECC HasCc;
         protected float[] stats;
@@ -22,6 +23,18 @@ namespace Skills
             get { return stats; }
             set { stats = value; }
         }
+        public void FlipSprite(GameObject summon, GameObject target)
+        {
+            if (summon.transform.position.x < target.transform.position.x)
+            {
+                summon.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                summon.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        #endregion
         #region 쿨타임
         public bool IsSkillCooldown()
         {
@@ -43,19 +56,6 @@ namespace Skills
             }
         }
         #endregion
-        public void FlipSprite(GameObject summon, GameObject target)
-        {
-            if (summon.transform.position.x < target.transform.position.x)
-            {
-                summon.transform.localScale = new Vector3(-1, 1, 1);
-                //summon.GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                summon.transform.localScale = new Vector3(1, 1, 1);
-                //summon.GetComponent<SpriteRenderer>().flipX = false;
-            }
-        }
     }
     // CC 기 큰틀
     public class CC
@@ -74,6 +74,9 @@ namespace Skills
                     break;
                 case ECC.KnockBack:
                     KnockBack(summon, target, stats[((int)ECCStats.Power)]);
+                    break;
+                case ECC.SlowDown:
+                    SlowDown(target, stats[((int)ECCStats.Power)], stats[((int)ECCStats.Time)]);
                     break;
                 case ECC.None:
                 default:
@@ -128,6 +131,18 @@ namespace Skills
             // Stun 상태를 해제하고 움직일 수 있도록 변경
             target.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
 
+            target.GetComponent<Summon>().CurrentCC = ECC.None;
+        }
+        private void SlowDown(GameObject target, float power, float duration)
+        {
+            target.GetComponent<Summon>().CurrentCC = ECC.SlowDown;
+            target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] -= power;
+            target.GetComponent<MonoBehaviour>().StartCoroutine(ReleaseSlowDown(target, power, duration));
+        }
+        private IEnumerator ReleaseSlowDown(GameObject target, float power, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] += power;
             target.GetComponent<Summon>().CurrentCC = ECC.None;
         }
         #endregion

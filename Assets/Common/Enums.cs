@@ -4,8 +4,8 @@ public static class Enums
     {
         SenorZorro,
         SpitGlider,
-        // 테스트를 위한 Enum 값들
         PoToad,
+        // 테스트를 위한 Enum 값들
         SenorZorro2,
         SenorZorro3,
         SenorZorro4,
@@ -62,7 +62,8 @@ public static class Enums
     {
         None,
         Stun,
-        KnockBack
+        KnockBack,
+        SlowDown
     }
     public enum ECCStats
     {

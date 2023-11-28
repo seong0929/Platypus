@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7109904074719579327}
   m_Layer: 0
   m_Name: PoToad
-  m_TagString: Untagged
+  m_TagString: Summon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 1566618110003923544}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9beed5786db144f4582c63996e0fe987, type: 2}
+  m_Controller: {fileID: 9100000, guid: a1d51b6dad3971540865b7dc451f72a1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -183,3 +183,4 @@ MonoBehaviour:
   CurrentCCStats: []
   MyTeam: 0
   _deadTime: 0
+  Area: {fileID: 7959615659237009251, guid: 04277437594be584e9ed40f8d32f73b3, type: 3}

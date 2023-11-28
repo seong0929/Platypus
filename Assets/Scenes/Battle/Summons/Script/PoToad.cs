@@ -6,6 +6,8 @@ using static Enums;
 
 public class PoToad : Summon
 {
+    public GameObject Area;
+
     #region Settings
     public PoToad()
     {
@@ -35,12 +37,11 @@ public class PoToad : Summon
     }
     #endregion
     #region Skill
+    // 해당 캐릭터는 일반 공격이 없다
     public class Attack : Skill
     {
-        private GameObject _projectile;
         private CC cc = new CC();
-        private float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
-        private int count;
+        private float[] skillStats = { -1f, -1f, -1f };   // 사거리, 쿨타임, 데미지
 
         public Attack()
         {
@@ -52,49 +53,20 @@ public class PoToad : Summon
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (isStart == false)
-            {
-                count = 0;
-                isStart = true;
-                FlipSprite(summon, target);
-
-                animator.SetBool("Idle", false);
-                animator.SetBool("Move", false);
-                animator.SetTrigger("Attack");
-
-                return true;
-            }
-            else
-            {
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                if (count > 0)
-                {
-                    isStart = false;
-                    return false;
-                }
-
-                if (stateInfo.IsName("Attack") && (stateInfo.normalizedTime >= 0.9f) && (count == 0))
-                {
-                    if (target != null)
-                    {
-                        return true;
-                    }
-                }
-                return true;
-            }
+            return false;
         }
     }
     public class SlimeLick : Skill
     {
         private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
+        private float[] skillStats = { 1f, 1f, 10f };   // 사거리, 쿨타임, 데미지
 
         public SlimeLick()
         {
             base.stats = skillStats;
 
-            HasCc = ECC.None;   // 둔화
-            float[] ccStats = { 1f, 3f };
+            HasCc = ECC.SlowDown;
+            float[] ccStats = { 2f, 2f };
             cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
@@ -125,8 +97,8 @@ public class PoToad : Summon
     public class ElixirTorrent : Skill
     {
         private CC cc = new CC();
-        private GameObject _projectile;
-        private float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
+        private GameObject _area;
+        private float[] skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
 
         public ElixirTorrent()
         {
@@ -140,7 +112,7 @@ public class PoToad : Summon
         {
             if (isStart == false)
             {
-                animator.SetTrigger("Ult1");
+                animator.SetTrigger("UltIn");
                 FlipSprite(summon, target);
                 isStart = true;
                 return true;
@@ -148,8 +120,29 @@ public class PoToad : Summon
             else
             {
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                if (stateInfo.IsName("Ult") && stateInfo.normalizedTime >= 0.9f)
+                _area = summon.GetComponent<PoToad>().Area;
+                _area.transform.localScale *= skillStats[0];
+                GameObject area = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, skillStats[0]);
+                
+                // 회복
+                // ToDo: 팀 구분, 회복 시간
+                foreach (Collider2D collider in colliders)
                 {
+                    if (collider.CompareTag("Summon"))
+                    {
+                        Summon buffedTeam = collider.GetComponent<Summon>();
+                        if (buffedTeam != null)
+                        {
+                            buffedTeam.Stats[((int)ESummonStats.Health)] += 2; // 힐량
+                        }
+                    }
+                }
+                // 궁극기 끝날 때
+                if (stateInfo.IsName("Ult") && stateInfo.normalizedTime >= 0.9f) //ToDo: 유지 시간
+                {
+                    animator.SetTrigger("UltOut");
+                    Destroy(area);
                     isStart = false;
                     return false;
                 }
@@ -193,38 +186,32 @@ public class PoToad : Summon
                     new CheckCC(),
                     new DutyCC(),
                 }),
-                //적이 씬 안에 있다면, 행동
+                // 궁극기가 준비되었다면
                 new Sequence(new List<Node>
                 {
+                    //new CheckAnyne(),
+                    new CheckUltGage(skills[((int)ESummonAction.Ult)]),
+                    new TaskUlt(skills[((int)ESummonAction.Ult)])
+                }),
+                new Sequence(new List<Node>
+                {
+                    // 씬 안에 있는 지 확인
                     new CheckEnemyInScene(),
                     new Selector(new List<Node>
                     {
-                        //궁극기 게이지 찼으면, 궁극기
-                        new Sequence(new List<Node>
-                        {
-                            new CheckUltGage(skills[((int)ESummonAction.Ult)]),
-                            new TaskUlt(skills[((int)ESummonAction.Ult)])
-                        }),
                         //적이 멀리 있다면, 가까이 이동
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyOutOfAttackRange(),
                             new DoMoveToEnemy()
                         }),
-                        //적이 너무 가까우면, 스킬
-                        new Sequence(new List<Node>
-                        {
-                            new CheckEnemyTooClose(),
-                            new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                            new TaskSkill(skills[((int)ESummonAction.Skill)])
-                        }),
-                        //적이 공격 범위 안에 있다면, 공격
+                        //공격 범위 안에 들어 왔다면 공격
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(),
-                            new CheckSkill(skills[((int)ESummonAction.Attack)]),
-                            new TaskAttack(skills[((int)ESummonAction.Attack)]),
-                        })
+                            new CheckSkill(skills[((int)ESummonAction.Skill)]),
+                            new TaskSkill(skills[((int)ESummonAction.Skill)])
+                        }),
                     })
                 }),
                 //적이 씬 안에 없다면, Idle
