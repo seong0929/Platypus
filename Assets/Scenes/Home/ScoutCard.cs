@@ -1,3 +1,4 @@
+using Assets.PixelHeroes.Scripts.CharacterScripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,9 @@ public class ScoutCard : MonoBehaviour
     [SerializeField]
     private GameObject ScoutButton;
 
+    [SerializeField]
+    private GameObject Character;
+
     private Player thePlayer;
 
     void Start()
@@ -33,6 +37,11 @@ public class ScoutCard : MonoBehaviour
             // Access the data from GameManager and update the UI text
             Name.text = thePlayer.Name;
             Level.text = "Level:" + thePlayer.Level.ToString();
+            if(Character != null && Character.GetComponent<CharacterBuilder>() != null)
+            {
+                Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
+                Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
+            }
 
             ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
         }
