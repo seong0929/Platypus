@@ -100,7 +100,6 @@ public class PoToad : Summon
         private Buffer _buffer = new Buffer();
         private GameObject _area;
         private float[] _skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
-        private bool _done;
 
         public ElixirTorrent()
         {
@@ -117,22 +116,19 @@ public class PoToad : Summon
                 animator.SetTrigger("UltIn");
                 FlipSprite(summon, target);
                 _isStart = true;
-                _done = false;
                 return true;
             }
             else
             {
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 _area = summon.GetComponent<PoToad>().Area;
                 _area.transform.localScale *= _skillStats[0];
                 GameObject area = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
 
                 // 회복
-                // ToDo: 회복 시간 초과 시 _Done이 ture로
                 TickDown(area, _buffer, _skillStats, _buffer.Stats[((int)EBufferStats.Tick)]);
                 
                 // 궁극기 끝날 때
-                if (_done)
+                if (IsDone(_buffer.Stats[((int)EBufferStats.Time)]))
                 {
                     animator.SetTrigger("UltOut");
                     Destroy(area);

@@ -13,6 +13,7 @@ namespace Skills
         protected float[] _stats;
         protected float _skillCooldown = 0f;
         protected bool _isStart = false;
+        private bool _done = false;
 
         public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -54,6 +55,16 @@ namespace Skills
                     _skillCooldown = 0f;
                 }
             }
+        }
+        public bool IsDone(float duration)
+        {
+            CheckDone(duration);
+            return _done;
+        }
+        private IEnumerator CheckDone(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            _done = true;
         }
         #endregion
     }
