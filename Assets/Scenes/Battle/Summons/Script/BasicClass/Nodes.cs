@@ -54,7 +54,7 @@ namespace BehaviorTree
                 // 해당 위치에 다른 유닛이 있는지 확인
                 foreach (Transform point in BattleManager.instance.ASpawn)
                 {
-                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
 
                     if (colliders.Length == 0)
                     {
@@ -67,7 +67,7 @@ namespace BehaviorTree
             {
                 foreach (Transform point in BattleManager.instance.BSpawn)
                 {
-                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
 
                     if (colliders.Length == 0)
                     {

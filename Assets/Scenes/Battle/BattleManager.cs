@@ -134,7 +134,7 @@ public class BattleManager : MonoBehaviour
         {
             foreach (Transform point in ASpawn)
             {
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
 
                 if (colliders.Length == 0)
                 {
@@ -147,7 +147,7 @@ public class BattleManager : MonoBehaviour
         {
             foreach (Transform point in BSpawn)
             {
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 1f); // 조절 가능한 반지름 사용
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
 
                 if (colliders.Length == 0)
                 {
