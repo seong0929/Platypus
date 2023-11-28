@@ -248,6 +248,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+--- !u!1 &271212044 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 435376927997259691, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+  m_PrefabInstance: {fileID: 271212043}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &331912457
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +638,7 @@ MonoBehaviour:
   GameTime: 0
   MaxGameTime: 180
   TimerText: {fileID: 601944081}
-  SpawnPoint: {fileID: 0}
+  SpawnPoint: {fileID: 271212044}
   SenorZorroPrefab: {fileID: 8544673299357075893, guid: 4d50364200c488e468bab32f34209837, type: 3}
   SpitGliderPrefab: {fileID: 8544673299357075893, guid: 89ba3a7fa8dc67e459bd66039df4fb34, type: 3}
   PoToadPrefab: {fileID: 1566618110003923544, guid: 5a507ad31cd340b4dbb9254a44fede28, type: 3}
