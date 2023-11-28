@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using BehaviorTree;
 using Skills;
@@ -40,16 +41,16 @@ public class PoToad : Summon
     // 해당 캐릭터는 일반 공격이 없다
     public class Attack : Skill
     {
-        private CC cc = new CC();
-        private float[] skillStats = { -1f, -1f, -1f };   // 사거리, 쿨타임, 데미지
+        private Buffer _buffer = new Buffer();
+        private float[] _skillStats = { -1f, -1f, -1f };   // 사거리, 쿨타임, 데미지
 
         public Attack()
         {
-            base.stats = skillStats;
-
+            base._stats = _skillStats;
+            float[] bufferStats = { 0f, 0f };
+            _buffer.Stats = bufferStats;
+            _buffer.Type = EBufferType.None;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -58,36 +59,36 @@ public class PoToad : Summon
     }
     public class SlimeLick : Skill
     {
-        private CC cc = new CC();
-        private float[] skillStats = { 1f, 1f, 10f };   // 사거리, 쿨타임, 데미지
+        private Buffer _debuffer = new Buffer();
+        private float[] _skillStats = { 1f, 1f, 10f };   // 사거리, 쿨타임, 데미지
 
         public SlimeLick()
         {
-            base.stats = skillStats;
-
+            base._stats = _skillStats;
+            float[] debufferStats = { 2f, 2f, -1f };
+            _debuffer.Stats = debufferStats;
+            _debuffer.Type = EBufferType.Debuffer;
             HasCc = ECC.SlowDown;
-            float[] ccStats = { 2f, 2f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (isStart == false)
+            if (_isStart == false)
             {
                 animator.SetTrigger("Skill");
                 FlipSprite(summon, target);
-                isStart = true;
+                _isStart = true;
                 return true;
             }
             else
             {
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
                 {
-                    target.GetComponent<Summon>().CurrentCCStats = cc.Stats;
+                    target.GetComponent<Summon>().CurrentCCStats = _debuffer.Stats;
                     target.GetComponent<Summon>().CurrentCC = HasCc;
-                    cc.ApplyCC(summon, target, cc.Stats);
+                    _debuffer.ApplyCC(summon, target, _debuffer.Stats);
 
-                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    isStart = false;
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), _skillStats[((int)ESkillStats.Damage)]);
+                    _isStart = false;
                     return false;
                 }
                 return true;
@@ -96,57 +97,66 @@ public class PoToad : Summon
     }
     public class ElixirTorrent : Skill
     {
-        private CC cc = new CC();
+        private Buffer _buffer = new Buffer();
         private GameObject _area;
-        private float[] skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
+        private float[] _skillStats = { 5f, 30f, 0f };   // 사거리, 쿨타임, 데미지
+        private bool _done;
 
         public ElixirTorrent()
         {
-            base.stats = skillStats;
-
+            base._stats = _skillStats;
+            float[] bufferStats = { 5f, 2f, 1f };
+            _buffer.Stats = bufferStats;
+            _buffer.Type = EBufferType.Buffer;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (isStart == false)
+            if (_isStart == false)
             {
                 animator.SetTrigger("UltIn");
                 FlipSprite(summon, target);
-                isStart = true;
+                _isStart = true;
+                _done = false;
                 return true;
             }
             else
             {
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 _area = summon.GetComponent<PoToad>().Area;
-                _area.transform.localScale *= skillStats[0];
+                _area.transform.localScale *= _skillStats[0];
                 GameObject area = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, skillStats[0]);
-                
+
                 // 회복
-                // ToDo: 팀 구분, 회복 시간
-                foreach (Collider2D collider in colliders)
-                {
-                    if (collider.CompareTag("Summon"))
-                    {
-                        Summon buffedTeam = collider.GetComponent<Summon>();
-                        if (buffedTeam != null)
-                        {
-                            buffedTeam.Stats[((int)ESummonStats.Health)] += 2; // 힐량
-                        }
-                    }
-                }
+                // ToDo: 회복 시간 초과 시 _Done이 ture로
+                TickDown(area, _buffer, _skillStats, _buffer.Stats[((int)EBufferStats.Tick)]);
+                
                 // 궁극기 끝날 때
-                if (stateInfo.IsName("Ult") && stateInfo.normalizedTime >= 0.9f) //ToDo: 유지 시간
+                if (_done)
                 {
                     animator.SetTrigger("UltOut");
                     Destroy(area);
-                    isStart = false;
+                    _isStart = false;
                     return false;
                 }
                 return true;
+            }
+        }
+    }
+    private static IEnumerator TickDown(GameObject area, Buffer buffer, float[] skillStats, float tick)
+    {
+        yield return new WaitForSeconds(tick);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, skillStats[0]);
+        // ToDo: 팀 구분
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.CompareTag("Summon"))
+            {
+                GameObject buffedTeam = collider.GetComponent<GameObject>();
+                if (buffedTeam != null)
+                {
+                    buffer.Heling(buffedTeam, buffer.Stats[((int)EBufferStats.Power)]);
+                }
             }
         }
     }

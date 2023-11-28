@@ -58,6 +58,13 @@ public static class Enums
     {
         Mad
     }
+    public enum EBufferType
+    {
+        None,
+        Buffer,
+        Debuffer,
+        CC
+    }
     public enum ECC
     {
         None,
@@ -65,10 +72,11 @@ public static class Enums
         KnockBack,
         SlowDown
     }
-    public enum ECCStats
+    public enum EBufferStats
     {
         Time,
-        Power
+        Power,
+        Tick
     }
     public enum ELanguage
     {

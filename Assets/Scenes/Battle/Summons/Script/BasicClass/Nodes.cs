@@ -133,7 +133,7 @@ namespace BehaviorTree
     public class DutyCC : Node
     {
         private Summon _summon;
-        private CC cc = new CC();
+        private Buffer cc = new Buffer();
 
         public DutyCC() { }
         public override ENodeState Evaluate()
@@ -151,17 +151,17 @@ namespace BehaviorTree
             if (_summon.HasCC())
             {
                 // CC 쿨타임 끝
-                if (!cc.IsCcCooldown(_summon.CurrentCCStats[((int)ECCStats.Time)]))
+                if (!cc.IsBufferCooldown(_summon.CurrentCCStats[((int)EBufferStats.Time)]))
                 {
                     cc.FinishedCC(_summon.gameObject);
-                    cc.ResetCcCooldown();
+                    cc.ResetBufferCooldown();
                     SetData("State", ESummonState.Default);
                     return ENodeState.Success;
                 }
                 // CC 쿨타임 안 끝남
                 else
                 {
-                    cc.UpdateCcCooldown(Time.deltaTime);
+                    cc.UpdateBufferCooldown(Time.deltaTime);
                     return ENodeState.Running;
                 }
             }

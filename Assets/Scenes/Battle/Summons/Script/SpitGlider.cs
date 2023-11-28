@@ -40,24 +40,24 @@ public class SpitGlider : Summon
     public class Attack : Skill
     {
         private GameObject _projectile;
-        private CC cc = new CC();
-        private float[] skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
-        private int count;
+        private Buffer _buffer = new Buffer();
+        private float[] _skillStats = { 5f, 1f, 2f };   // 사거리, 쿨타임, 데미지
+        private int _count;
 
         public Attack()
         {
-            base.stats = skillStats;
-
+            base._stats = _skillStats;
+            float[] bufferStats = { -1f, -1f, -1f };
+            _buffer.Stats = bufferStats;
+            _buffer.Type = EBufferType.None;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (isStart == false)
+            if (_isStart == false)
             {
-                count = 0;
-                isStart = true;
+                _count = 0;
+                _isStart = true;
                 FlipSprite(summon, target);
 
                 animator.SetBool("Idle", false);
@@ -69,25 +69,25 @@ public class SpitGlider : Summon
             else 
             {
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                if(count > 0)
+                if(_count > 0)
                 {
-                    isStart = false;
+                    _isStart = false;
                     return false;
                 }
                 
-                if (stateInfo.IsName("Attack") && (stateInfo.normalizedTime >= 0.9f) && (count==0))
+                if (stateInfo.IsName("Attack") && (stateInfo.normalizedTime >= 0.9f) && (_count==0))
                 {
                     // 발사
                     if (target != null)
                     {
                         _projectile = summon.GetComponent<SpitGlider>().Projectile;
-                        _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
+                        _projectile.GetComponent<Projectile>().damageAmount = _skillStats[((int)ESkillStats.Damage)];
                         Vector3 projectilePosition = summon.transform.position;
                         GameObject projectile = Instantiate(_projectile, projectilePosition, Quaternion.identity, summon.transform);
                         Vector3 direction = (target.transform.position - projectilePosition).normalized;
                         projectile.GetComponent<Rigidbody2D>().velocity = direction * 2; // 필요에 따라 속도 조정
 
-                        count = 1;
+                        _count = 1;
                         return true;
                     }
                 }
@@ -97,36 +97,36 @@ public class SpitGlider : Summon
     }
     public class AirStrike : Skill
     {
-        private CC cc = new CC();
-        private float[] skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
+        private Buffer _cc = new Buffer();
+        private float[] _skillStats = { 0.8f, 10f, 5f };   // 사거리, 쿨타임, 데미지
 
         public AirStrike()
         {
-            base.stats = skillStats;
-
+            base._stats = _skillStats;
+            float[] ccStats = { 1f, 3f, -1f };
+            _cc.Stats = ccStats;
+            _cc.Type = EBufferType.CC;
             HasCc = ECC.KnockBack;
-            float[] ccStats = { 1f, 3f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (isStart == false)
+            if (_isStart == false)
             {
                 animator.SetTrigger("Skill");
                 FlipSprite(summon, target);
-                isStart = true; 
+                _isStart = true; 
                 return true;
             }
             else
             {                
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
                 {
-                    target.GetComponent<Summon>().CurrentCCStats = cc.Stats;
+                    target.GetComponent<Summon>().CurrentCCStats = _cc.Stats;
                     target.GetComponent<Summon>().CurrentCC = HasCc;
-                    cc.ApplyCC(summon, target, cc.Stats);
+                    _cc.ApplyCC(summon, target, _cc.Stats);
 
-                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    isStart = false;
+                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), _skillStats[((int)ESkillStats.Damage)]);
+                    _isStart = false;
                     return false;
                 }
                 return true;
@@ -135,25 +135,25 @@ public class SpitGlider : Summon
     }
     public class AerialBombardment : Skill
     {
-        private CC cc = new CC();
+        private Buffer _buffer = new Buffer();
         private GameObject _projectile;
-        private float[] skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
+        private float[] _skillStats = { 10f, 25f, 1f };   // 사거리, 쿨타임, 데미지
 
         public AerialBombardment()
         {
-            base.stats = skillStats;
-            
+            base._stats = _skillStats;
+            float[] bufferStats = { -1f, -1f, -1f };
+            _buffer.Stats = bufferStats;
+            _buffer.Type = EBufferType.None;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if (isStart == false)
+            if (_isStart == false)
             {
                 animator.SetTrigger("Ult1");
                 FlipSprite(summon, target);
-                isStart = true;
+                _isStart = true;
                 return true;
             }
             else
@@ -162,7 +162,7 @@ public class SpitGlider : Summon
                 if (stateInfo.IsName("Ult1") && stateInfo.normalizedTime >= 1f)
                 {
                     _projectile = summon.GetComponent<SpitGlider>().Projectile;
-                    _projectile.GetComponent<Projectile>().damageAmount = skillStats[((int)ESkillStats.Damage)];
+                    _projectile.GetComponent<Projectile>().damageAmount = _skillStats[((int)ESkillStats.Damage)];
 
                     if (stateInfo.normalizedTime >= 1f)
                     {
@@ -207,7 +207,7 @@ public class SpitGlider : Summon
                     {
                         summon.tag = "Summon";
                         summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] *= 2f;
-                        isStart = false;
+                        _isStart = false;
                     }
                     return false;
                 }

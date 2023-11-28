@@ -10,9 +10,9 @@ namespace Skills
         #region Settings
         public float SkiilCounter = 0;
         public ECC HasCc;
-        protected float[] stats;
-        protected float skillCooldown = 0f;
-        protected bool isStart = false;
+        protected float[] _stats;
+        protected float _skillCooldown = 0f;
+        protected bool _isStart = false;
 
         public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
@@ -20,8 +20,8 @@ namespace Skills
         }
         public float[] Stats
         {
-            get { return stats; }
-            set { stats = value; }
+            get { return _stats; }
+            set { _stats = value; }
         }
         public void FlipSprite(GameObject summon, GameObject target)
         {
@@ -38,45 +38,78 @@ namespace Skills
         #region 쿨타임
         public bool IsSkillCooldown()
         {
-            return skillCooldown > 0f;
+            return _skillCooldown > 0f;
         }
         public void StartSkillCooldown()
         {
-            skillCooldown = stats[(int)ESkillStats.CoolTime];
+            _skillCooldown = _stats[(int)ESkillStats.CoolTime];
         }
         public void UpdateSkillCooldown(float deltaTime)
         {
-            if (stats[((int)ESkillStats.CoolTime)] > 0f)
+            if (_stats[((int)ESkillStats.CoolTime)] > 0f)
             {
-                skillCooldown -= deltaTime;
-                if (skillCooldown <= 0f)
+                _skillCooldown -= deltaTime;
+                if (_skillCooldown <= 0f)
                 {
-                    skillCooldown = 0f;
+                    _skillCooldown = 0f;
                 }
             }
         }
         #endregion
     }
-    // CC 기 큰틀
-    public class CC
+    // 버퍼 디버퍼 큰틀
+    public class Buffer
     {
-        #region CC 세팅
-        private float[] stats;
-        protected float ccCooldown;
+        #region 공통
+        private float[] _stats;
+        private float _bufferCooldown;
+        private EBufferType _type;
 
+        public float[] Stats
+        {
+            get { return _stats; }
+            set { _stats = value; }
+        }
+        public EBufferType Type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
+        #endregion
+        #region 쿨타임
+        public bool IsBufferCooldown(float time)
+        {
+            return _bufferCooldown >= time;
+        }
+        public void ResetBufferCooldown()
+        {
+            _bufferCooldown = 0;
+        }
+        public void UpdateBufferCooldown(float deltaTime)
+        {
+            _bufferCooldown += deltaTime;
+        }
+        #endregion
+        #region 버퍼 세팅
+        public void Heling(GameObject target, float heal)
+        {
+            target.GetComponent<Summon>().Stats[((int)ESummonStats.Health)] += heal;
+        }
+        #endregion
+        #region CC 세팅
         public void ApplyCC(GameObject summon, GameObject target, float[] stats)
         {
             // summon이 시전자, target이 cc 걸린 타겟, 그 외 필요 수치
             switch (target.GetComponent<Summon>().CurrentCC)
             {
                 case ECC.Stun:
-                    Stun(target, stats[((int)ECCStats.Time)]);
+                    Stun(target, stats[((int)EBufferStats.Time)]);
                     break;
                 case ECC.KnockBack:
-                    KnockBack(summon, target, stats[((int)ECCStats.Power)]);
+                    KnockBack(summon, target, stats[((int)EBufferStats.Power)]);
                     break;
                 case ECC.SlowDown:
-                    SlowDown(target, stats[((int)ECCStats.Power)], stats[((int)ECCStats.Time)]);
+                    SlowDown(target, stats[((int)EBufferStats.Power)], stats[((int)EBufferStats.Time)]);
                     break;
                 case ECC.None:
                 default:
@@ -88,33 +121,8 @@ namespace Skills
         {
             summon.GetComponent<Summon>().CurrentCC = ECC.None;
         }
-        public float[] Stats
-        {
-            get { return stats; }
-            set { stats = value; }
-        }
-        #endregion
-        #region 쿨타임
-        public bool IsCcCooldown(float time)
-        {
-            return ccCooldown >= time;
-        }
-        public void ResetCcCooldown()
-        {
-            ccCooldown = 0;
-        }
-        public void UpdateCcCooldown(float deltaTime)
-        {
-            ccCooldown += deltaTime;
-        }
         #endregion
         #region CC기 종류
-        private void KnockBack(GameObject summon, GameObject target, float power) 
-        {
-            target.GetComponent<Summon>().CurrentCC = ECC.KnockBack;
-
-            target.transform.position = (target.transform.position - summon.transform.position).normalized * power + target.transform.position;
-        }
         private void Stun(GameObject target, float duration)
         {
             target.GetComponent<Summon>().CurrentCC = ECC.Stun;
@@ -132,6 +140,12 @@ namespace Skills
             target.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
 
             target.GetComponent<Summon>().CurrentCC = ECC.None;
+        }
+        private void KnockBack(GameObject summon, GameObject target, float power) 
+        {
+            target.GetComponent<Summon>().CurrentCC = ECC.KnockBack;
+
+            target.transform.position = (target.transform.position - summon.transform.position).normalized * power + target.transform.position;
         }
         private void SlowDown(GameObject target, float power, float duration)
         {

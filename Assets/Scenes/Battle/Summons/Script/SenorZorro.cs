@@ -40,23 +40,22 @@ public class SenorZorro : Summon
     #region Skill
     public class Attack: Skill
     {
-        private CC cc = new CC();
+        private Buffer buffer = new Buffer();
         private float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
 
         public Attack()
         {
-            base.stats = skillStats;
-
+            base._stats = skillStats;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
+            float[] bufferStats = { -1f, -1f, -1f };
+            buffer.Stats = bufferStats;
+            buffer.Type = EBufferType.None;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            // initiate attack
-            if(isStart == false)
+            if(_isStart == false)
             {
-                isStart = true;
+                _isStart = true;
                 FlipSprite(summon, target);
 
                 animator.SetBool("Idle", false);
@@ -72,8 +71,7 @@ public class SenorZorro : Summon
                 if (stateInfo.IsName("Attack") && stateInfo.normalizedTime >= 0.9f)
                 {
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    isStart = false;
-
+                    _isStart = false;
                     return false;
                 }
                 return true;
@@ -83,31 +81,29 @@ public class SenorZorro : Summon
     }
     public class FootworkSkill : Skill
     {
-        private CC cc = new CC();
+        private Buffer buffer = new Buffer();
         private float[] skillStats = { 0.8f, 7f, 0f };   // 사거리, 쿨타임, 데미지
         private bool isMoved = false;
         private float movableDistance = 0f;
 
         public FootworkSkill()
         {
-            base.stats = skillStats;
-
+            base._stats = skillStats;
+            float[] bufferStats = { -1f, -1f, -1f };
+            buffer.Stats = bufferStats;
+            buffer.Type = EBufferType.None;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {
-            if(isStart == false)
+            if(_isStart == false)
             {
-
                 animator.SetBool("Idle", false);
                 animator.SetBool("Move", false);
                 animator.SetTrigger("Skill");
 
-                isStart = true;
+                _isStart = true;
                 movableDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] * 2;
-
                 return true;
             }
             else
@@ -118,7 +114,7 @@ public class SenorZorro : Summon
                 if(isMoved && stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.9f && isMoved)
                 {
                     isMoved = false;
-                    isStart = false;
+                    _isStart = false;
                     return false;
                 }
                 if (stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.4f && isMoved == false)
@@ -148,7 +144,6 @@ public class SenorZorro : Summon
                     
                     summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
                     isMoved = true;
-
                     return true;
                 }
                 return true;
@@ -157,37 +152,34 @@ public class SenorZorro : Summon
     }
     public class FlecheSkill : Skill
     {
-        private CC cc = new CC();
+        private Buffer buffer = new Buffer();
         private float[] skillStats = { 20f, 19f, 10f };   // 사거리, 쿨타임, 데미지
 
         public FlecheSkill()
         {
-            base.stats = skillStats;
-
+            base._stats = skillStats;
+            float[] bufferStats = { -1f, -1f, -1f };
+            buffer.Stats = bufferStats;
+            buffer.Type = EBufferType.None;
             HasCc = ECC.None;
-            float[] ccStats = { 0f, 0f };
-            cc.Stats = ccStats;
         }
         public override bool Execute(GameObject summon, GameObject target, Animator animator)
         {            
-            if (isStart == false)
+            if (_isStart == false)
             {
                 animator.SetTrigger("UltIn");
-                isStart = true;
+                _isStart = true;
                 return true;
             }
             else
             {
-                // need to check if skill is done                
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 if(stateInfo.IsName("UltIn") && stateInfo.normalizedTime >= 0.9f)
                 {
-                    float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
-
                     animator.SetTrigger("UltOut");
+                    _isStart = false;
 
-                    isStart = false;
-
+                    float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
                     Vector3 direction = (target.transform.position - summon.transform.position).normalized;
                     float distance = Vector3.Distance(summon.transform.position, target.transform.position);
                     float teleportDistance = distance - appearDistance;
