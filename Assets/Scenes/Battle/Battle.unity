@@ -198,6 +198,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 435376926713796921, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376926850785777, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376926929677507, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376926946434154, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927124550577, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927137508754, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927370810291, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927474793310, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927818561010, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 435376927997259690, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -245,6 +281,10 @@ PrefabInstance:
     - target: {fileID: 435376927997259691, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
       propertyPath: m_Name
       value: SpawnPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 435376927998309510, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77b03da6939fff9449701b3328060b3d, type: 3}
@@ -531,7 +571,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Timer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -639,6 +679,8 @@ MonoBehaviour:
   MaxGameTime: 180
   TimerText: {fileID: 601944081}
   SpawnPoint: {fileID: 271212044}
+  TeamASpawn: []
+  TeamBSpawn: []
   SenorZorroPrefab: {fileID: 8544673299357075893, guid: 4d50364200c488e468bab32f34209837, type: 3}
   SpitGliderPrefab: {fileID: 8544673299357075893, guid: 89ba3a7fa8dc67e459bd66039df4fb34, type: 3}
   PoToadPrefab: {fileID: 1566618110003923544, guid: 5a507ad31cd340b4dbb9254a44fede28, type: 3}
@@ -712,7 +754,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 2.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -925,7 +967,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Home
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1166,7 +1208,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Battle
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
