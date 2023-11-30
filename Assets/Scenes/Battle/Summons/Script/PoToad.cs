@@ -18,7 +18,6 @@ public class PoToad : Summon
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
 //        base.stats = summonStats;
         base.BaseStats = summonStats;
-        _rootNode.SetData("State", ESummonState.Respawn);
 
     }
 
@@ -33,6 +32,8 @@ public class PoToad : Summon
             skill.StartSkillCooldown();
         }
         CreateBehaviorTree();
+        _rootNode.SetData("State", ESummonState.Respawn);
+
     }
     private void Update()
     {

@@ -16,18 +16,22 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
+            Debug.Log("CheckRespawn");
             object s = GetData("State");
             if (s == null)
             {
                 SetData("State", ESummonState.Default);
                 SetData("Self", _gameObject);
+                Debug.Log("Default");
                 return ENodeState.Failure;
             }
             if (GetData("State").Equals(ESummonState.Respawn))
             {
+                Debug.Log("Respawn");
                 SetData("Self", _gameObject);
                 return ENodeState.Success;
             }
+            Debug.Log("Default2");
             return ENodeState.Failure;
         }
     }
