@@ -39,6 +39,7 @@ public class PoToad : Summon
     #endregion
     #region Skill
     // 해당 캐릭터는 일반 공격이 없다
+    // Attack 이 없는데 왜 필요한가?
     public class Attack : Skill
     {
         private Buffer _buffer = new Buffer();
@@ -126,22 +127,22 @@ public class PoToad : Summon
                 animator.SetTrigger("UltIn");
                 FlipSprite(summon, target);
                 _isStart = true;
+                _areaPrfab = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
+                // 회복               
+                summon.GetComponent<Summon>().RunCoroutine(TickDown(_areaPrfab, _buffer, _buffer.Stats[((int)EBufferStats.Tick)]));
+                summon.GetComponent<Summon>().RunCoroutine(CheckDone(_buffer.Stats[((int)EBufferStats.Time)]));
                 return true;
             }
             else
-            {
-                _areaPrfab = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
-
-                // 회복
-                TickDown(_areaPrfab, _buffer, _buffer.Stats[((int)EBufferStats.Tick)]);
-                
+            {                               
                 // 궁극기 끝날 때
-                if (IsDone(_buffer.Stats[((int)EBufferStats.Time)]))
+                if (IsDone())//_buffer.Stats[((int)EBufferStats.Time)]))
                 {
                     Debug.Log("End PoToad's Ult");
                     animator.SetTrigger("UltOut");
                     Destroy(_areaPrfab);
                     _isStart = false;
+                    ResetIsDone();
                     return false;
                 }
                 return true;
