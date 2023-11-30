@@ -13,10 +13,13 @@ public class PoToad : Summon
     public PoToad()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 1f, 0.3f, 800f, 3f };
+        float[] summonStats = { 1f, 0.3f, 10f, 3f };
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
-        base.stats = summonStats;
+//        base.stats = summonStats;
+        base.BaseStats = summonStats;
+        _rootNode.SetData("State", ESummonState.Respawn);
+
     }
 
     private void Awake()

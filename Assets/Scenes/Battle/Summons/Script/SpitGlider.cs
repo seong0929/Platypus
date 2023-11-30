@@ -12,10 +12,12 @@ public class SpitGlider : Summon
     public SpitGlider()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 5f, 0.5f, 1000f, 1f};
+        float[] summonStats = { 5f, 0.5f, 40f, 1f};
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
-        base.stats = summonStats;
+//        base.stats = summonStats;
+        base.BaseStats = summonStats;
+
     }
 
     private void Awake()
@@ -29,6 +31,7 @@ public class SpitGlider : Summon
             skill.StartSkillCooldown();
         }
         CreateBehaviorTree();
+        _rootNode.SetData("State", ESummonState.Respawn);
     }
     private void Update()
     {

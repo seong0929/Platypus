@@ -10,10 +10,11 @@ public class SenorZorro : Summon
     public SenorZorro()
     {
         //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 0.7f, 1f, 1500f, 5f};
+        float[] summonStats = { 0.7f, 1f, 40f, 5f};
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
-        base.stats = summonStats;
+//        base.stats = summonStats;
+        base.BaseStats = summonStats;
     }
     private void Awake()
     {
@@ -27,6 +28,8 @@ public class SenorZorro : Summon
         }
 
         CreateBehaviorTree();
+        _rootNode.SetData("State", ESummonState.Respawn);
+
     }
     private void Update()
     {

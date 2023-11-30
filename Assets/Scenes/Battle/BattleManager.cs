@@ -170,6 +170,7 @@ public class BattleManager : MonoBehaviour
             }
 
             summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
+            summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamA;
             summonObject.transform.position = TeamASpawn[position].position;
 
             //foreach (Transform point in ASpawn)
@@ -194,6 +195,7 @@ public class BattleManager : MonoBehaviour
                 position = 0;
             }
             summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
+            summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamB;
             summonObject.transform.position = TeamBSpawn[position].position;
             //foreach (Transform point in BSpawn)
             //{

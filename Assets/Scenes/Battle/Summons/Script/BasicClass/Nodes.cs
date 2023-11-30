@@ -24,7 +24,8 @@ namespace BehaviorTree
                 return ENodeState.Failure;
             }
             if (GetData("State").Equals(ESummonState.Respawn))
-            {                   
+            {
+                SetData("Self", _gameObject);
                 return ENodeState.Success;
             }
             return ENodeState.Failure;
@@ -85,6 +86,9 @@ namespace BehaviorTree
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
             SetData("State", ESummonState.Default);
             _summon.tag = "Summon";
+
+            self.GetComponent<Summon>().ResetStats();
+
             return ENodeState.Success;
         }
     }

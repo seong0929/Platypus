@@ -15,6 +15,8 @@ public abstract class Summon : MonoBehaviour
     public ETeamSide TeamSide;
     public int SpawnPositionOrder;
     public float _deadTime;
+
+    protected float[] BaseStats;
     [SerializeField]
     protected float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 일반 공격, 1: 스킬, 2: 궁
@@ -77,5 +79,13 @@ public abstract class Summon : MonoBehaviour
     public void RunCoroutine(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
+    }
+
+    public void ResetStats()
+    {
+        Stats[((int)ESummonStats.Health)] = BaseStats[((int)ESummonStats.Health)];
+        Stats[((int)ESummonStats.AttackRange)] = BaseStats[((int)ESummonStats.AttackRange)];
+        Stats[((int)ESummonStats.Defence)] = BaseStats[((int)ESummonStats.Defence)];
+        Stats[((int)ESummonStats.MoveSpeed)] = BaseStats[((int)ESummonStats.MoveSpeed)];
     }
 }
