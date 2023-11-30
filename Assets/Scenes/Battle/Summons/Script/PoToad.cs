@@ -12,10 +12,10 @@ public class PoToad : Summon
     #region Settings
     public PoToad()
     {
-        //ToDo: GameManager¸¦ ÅëÇØ ÇÈ µÈ Ä³¸´ÅÍ ½ºÅÈ °¡Á®¿À±â
+        //ToDo: GameManagerë¥¼ í†µí•´ í”½ ëœ ìºë¦¿í„° ìŠ¤íƒ¯ ê°€ì ¸ì˜¤ê¸°
         float[] summonStats = { 1f, 0.3f, 800f, 3f };
 
-        //Summon Å¬·¡½ºÀÇ »ı¼ºÀÚ¸¦ È£ÃâÇÏ¸é¼­ ÃÊ±âÈ­µÈ °ªÀ» Àü´Ş
+        //Summon í´ë˜ìŠ¤ì˜ ìƒì„±ìë¥¼ í˜¸ì¶œí•˜ë©´ì„œ ì´ˆê¸°í™”ëœ ê°’ì„ ì „ë‹¬
         base.stats = summonStats;
     }
 
@@ -38,11 +38,11 @@ public class PoToad : Summon
     }
     #endregion
     #region Skill
-    // ÇØ´ç Ä³¸¯ÅÍ´Â ÀÏ¹İ °ø°İÀÌ ¾ø´Ù
+    // í•´ë‹¹ ìºë¦­í„°ëŠ” ì¼ë°˜ ê³µê²©ì´ ì—†ë‹¤
     public class Attack : Skill
     {
         private Buffer _buffer = new Buffer();
-        private float[] _skillStats = { -1f, -1f, -1f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] _skillStats = { -1f, -1f, -1f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public Attack()
         {
@@ -60,7 +60,7 @@ public class PoToad : Summon
     public class SlimeLick : Skill
     {
         private Buffer _debuffer = new Buffer();
-        private float[] _skillStats = { 1f, 1f, 10f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
+        private float[] _skillStats = { 1f, 1f, 10f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
 
         public SlimeLick()
         {
@@ -102,8 +102,8 @@ public class PoToad : Summon
         private Buffer _buffer = new Buffer();
         private GameObject _area;
         private GameObject _areaPrfab;
-        private float[] _skillStats = { 5f, 30f, 0f };   // »ç°Å¸®, ÄğÅ¸ÀÓ, µ¥¹ÌÁö
-        // »ç°Å¸®°¡ ElixirÀÇ Å©±â¿Í ÀÏÄ¡ÇØ¾ß ÇÔ
+        private float[] _skillStats = { 5f, 30f, 0f };   // ì‚¬ê±°ë¦¬, ì¿¨íƒ€ì„, ë°ë¯¸ì§€
+        // ì‚¬ê±°ë¦¬ê°€ Elixirì˜ í¬ê¸°ì™€ ì¼ì¹˜í•´ì•¼ í•¨
 
         public ElixirTorrent()
         {
@@ -127,10 +127,10 @@ public class PoToad : Summon
             {
                 _areaPrfab = Instantiate(_area, summon.transform.position, Quaternion.identity, summon.transform);
 
-                // È¸º¹
+                // íšŒë³µ
                 TickDown(_areaPrfab, _buffer, _buffer.Stats[((int)EBufferStats.Tick)]);
                 
-                // ±Ã±Ø±â ³¡³¯ ¶§
+                // ê¶ê·¹ê¸° ëë‚  ë•Œ
                 if (IsDone(_buffer.Stats[((int)EBufferStats.Time)]))
                 {
                     Debug.Log("End PoToad's Ult");
@@ -149,7 +149,7 @@ public class PoToad : Summon
         yield return new WaitForSeconds(tick);
         Debug.Log("In TickDoen Fn next to yield");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, area.transform.localScale.x);
-        // ToDo: ÆÀ ±¸ºĞ
+        // ToDo: íŒ€ êµ¬ë¶„
         foreach (Collider2D collider in colliders)
         {
             if (collider.CompareTag("Summon"))
@@ -178,27 +178,27 @@ public class PoToad : Summon
     {
         _rootNode = new Selector(new List<Node>
         {
-            //Çàµ¿ °áÁ¤
+            //í–‰ë™ ê²°ì •
             new Selector(new List<Node>{
-                // ¸®½ºÆù
+                // ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new CheckRespawn(this.gameObject),
                     new DutyRespawn()
                 }),
-                // Ä³¸¯ÅÍ »ıÁ¸ ¿©ºÎ È®ÀÎ ÈÄ, ¸®½ºÆù
+                // ìºë¦­í„° ìƒì¡´ ì—¬ë¶€ í™•ì¸ í›„, ë¦¬ìŠ¤í°
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckIfAlive()),
                     new DutyDie(),
                 }),
-                // CC ¿©ºÎ È®ÀÎ
+                // CC ì—¬ë¶€ í™•ì¸
                 new Sequence(new List<Node>
                 {
                     new CheckCC(),
                     new DutyCC(),
                 }),
-                // ±Ã±Ø±â°¡ ÁØºñµÇ¾ú´Ù¸é
+                // ê¶ê·¹ê¸°ê°€ ì¤€ë¹„ë˜ì—ˆë‹¤ë©´
                 new Sequence(new List<Node>
                 {
                     new CheckAnyone(Area),
@@ -207,17 +207,17 @@ public class PoToad : Summon
                 }),
                 new Sequence(new List<Node>
                 {
-                    // ¾À ¾È¿¡ ÀÖ´Â Áö È®ÀÎ
+                    // ì”¬ ì•ˆì— ìˆëŠ” ì§€ í™•ì¸
                     new CheckEnemyInScene(),
                     new Selector(new List<Node>
                     {
-                        //ÀûÀÌ ¸Ö¸® ÀÖ´Ù¸é, °¡±îÀÌ ÀÌµ¿
+                        //ì ì´ ë©€ë¦¬ ìˆë‹¤ë©´, ê°€ê¹Œì´ ì´ë™
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyOutOfAttackRange(),
                             new DoMoveToEnemy()
                         }),
-                        //°ø°İ ¹üÀ§ ¾È¿¡ µé¾î ¿Ô´Ù¸é °ø°İ
+                        //ê³µê²© ë²”ìœ„ ì•ˆì— ë“¤ì–´ ì™”ë‹¤ë©´ ê³µê²©
                         new Sequence(new List<Node>
                         {
                             new CheckEnemyInAttackRange(),
@@ -226,7 +226,7 @@ public class PoToad : Summon
                         }),
                     })
                 }),
-                //ÀûÀÌ ¾À ¾È¿¡ ¾ø´Ù¸é, Idle
+                //ì ì´ ì”¬ ì•ˆì— ì—†ë‹¤ë©´, Idle
                 new Sequence(new List<Node>
                 {
                     new Inverter(new CheckEnemyInScene()),
