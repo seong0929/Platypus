@@ -74,6 +74,8 @@ public class PoToad : Summon
         {
             if (_isStart == false)
             {
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
                 animator.SetTrigger("Skill");
                 Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("Skill"));
                 FlipSprite(summon, target);
@@ -82,7 +84,8 @@ public class PoToad : Summon
             }
             else
             {
-                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+                AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                if (animatorStateInfo.IsName("Skill") && animatorStateInfo.normalizedTime >= 0.9f)
                 {
                     Debug.Log("In SlimeLick");
                     target.GetComponent<Summon>().CurrentCCStats = _debuffer.Stats;
@@ -118,6 +121,8 @@ public class PoToad : Summon
             if (_isStart == false)
             {
                 _area = summon.GetComponent<PoToad>().Area;
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
                 animator.SetTrigger("UltIn");
                 FlipSprite(summon, target);
                 _isStart = true;
