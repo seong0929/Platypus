@@ -1224,6 +1224,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scroll
       objectReference: {fileID: 0}
+    - target: {fileID: 4727158968818417009, guid: 9d63135eeabdd6a4882e58683e850c50, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 9a8274574c547fd4e9ebb2b4bb7ad74a, type: 2}
+    - target: {fileID: 4727158968818417009, guid: 9d63135eeabdd6a4882e58683e850c50, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -5750170006171508860, guid: 9a8274574c547fd4e9ebb2b4bb7ad74a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d63135eeabdd6a4882e58683e850c50, type: 3}
 --- !u!1001 &7811338850312532652
