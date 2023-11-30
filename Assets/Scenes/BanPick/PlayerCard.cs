@@ -61,6 +61,7 @@ public class PlayerCard : MonoBehaviour
     private Image proficientPanelImage1;
     private Image proficientPanelImage2;
     private List<Image> proficientSummonImages;
+    private CharacterAppearance _characterAppearance;
 
     private Color textColor0 = new Color(1f, 1f, 0.9f);
     private Color textColor1 = new Color(0.6f, 0.2f, 0.2f);
@@ -118,9 +119,10 @@ public class PlayerCard : MonoBehaviour
             LVNum.color = statColor2;
         }
     }
-    public void setPlayerImage(Image playerImage)
+    public void SetPlayerCharacter(CharacterAppearance characterAppearance)
     {
-
+        _characterAppearance = characterAppearance;
+        PlayerPanel.GetComponent<PlayerCharacterPanel>().SetCharacterPanel(characterAppearance);
     }
     private void SetStats()
     {
@@ -143,13 +145,13 @@ public class PlayerCard : MonoBehaviour
     {
         LVnum = lv;
         LVNum.text = LVnum.ToString();
-
     }
 
     public void SetName(string name)
     {
         PlayerName = name;
     }
+
     public void SetProficient(List<ESummon> proficientList)
     {
 
