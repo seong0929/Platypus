@@ -1,3 +1,4 @@
+using Assets.PixelHeroes.Scripts.CharacterScripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,31 +18,53 @@ public class ScoutCard : MonoBehaviour
     [SerializeField]
     private GameObject ScoutButton;
 
+    [SerializeField]
+    private GameObject Character;
+
     private Player thePlayer;
 
+    public ScoutCard(Player player)
+    {
+        SetPlayer(player);
+
+        // Access the data from GameManager and update the UI text
+        Name.text = thePlayer.Name;
+        Level.text = "Level:" + thePlayer.Level.ToString();
+        if (Character != null && Character.GetComponent<CharacterBuilder>() != null)
+        {
+            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
+            Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
+        }
+
+        ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
+    }
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        if(gameManager == null)
+        if (gameManager == null)
         {
             Debug.Log("gameManager is null");
         }
-        thePlayer = gameManager.TeamManager.FAs.Players[nth];
+    }
 
-        if (gameManager != null)
+
+    public void SetPlayer(Player player)
+    {
+        thePlayer = player;
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        Name.text = thePlayer.Name;
+        Level.text = "Level:" + thePlayer.Level.ToString();
+        if (Character != null && Character.GetComponent<CharacterBuilder>() != null)
         {
-            // Access the data from GameManager and update the UI text
-            Name.text = thePlayer.Name;
-            Level.text = "Level:" + thePlayer.Level.ToString();
-
-            ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
+            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
+            Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
         }
-        else
-        {
-            Name.text = "error";
-            Level.text = "Level:" + "error";
 
-        }
+        ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
     }
 
     public void Scout()

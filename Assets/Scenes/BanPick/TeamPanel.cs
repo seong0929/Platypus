@@ -14,6 +14,7 @@ public class TeamPanel : MonoBehaviour
     private List<int> dfsList = new List<int>();
     private List<int> lvList = new List<int>();
     private List<string> nameList = new List<string>();
+    private List<CharacterAppearance> characterAppearanceList = new List<CharacterAppearance>();
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +55,10 @@ public class TeamPanel : MonoBehaviour
     {
         nameList = names;
     }
+    public void SetPlayerCharacter(List<CharacterAppearance> characterAppearances)
+    {
+        characterAppearanceList = characterAppearances;
+    }
 
     private void destroyChildObjects()
     {
@@ -78,6 +83,7 @@ public class TeamPanel : MonoBehaviour
             playerCard.SetLV(lvList[i]);
             playerCard.SetTeam(bA);
             playerCard.SetName(nameList[i]);
+            playerCard.SetPlayerCharacter(characterAppearanceList[i]);
 
             cards.Add(playerCard);
         }

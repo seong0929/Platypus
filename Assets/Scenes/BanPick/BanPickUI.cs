@@ -85,6 +85,7 @@ public class BanPickUI : MonoBehaviour
         List<int> dfsList = new List<int>();
         List<int> lvList = new List<int>();
         List<string> nameList = new List<string>();
+        List<CharacterAppearance> characterAppearanceList = new List<CharacterAppearance>();
 
         foreach (Player member in teamMembers)
         {
@@ -92,12 +93,14 @@ public class BanPickUI : MonoBehaviour
             dfsList.Add(member.Defense);
             lvList.Add(member.Level);
             nameList.Add(member.Name);
+            characterAppearanceList.Add(member.Appearance);
         }
 
         panel.SetATKs(atkList);
         panel.SetDFSs(dfsList);
         panel.SetLVs(lvList);
         panel.SetPlayerNames(nameList);
+        panel.SetPlayerCharacter(characterAppearanceList);
 
         panel.CreateCards(teamMembers.Count);
     }

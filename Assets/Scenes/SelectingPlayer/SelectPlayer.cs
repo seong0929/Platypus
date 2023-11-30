@@ -62,17 +62,29 @@ public class SelectPlayer : MonoBehaviour
             GameObject rosterCard = Instantiate(rosterCardPrefab, RosterBox.transform);
             rosterCard.transform.localPosition = vector; // Set the local position of the roster card
 
-            Button cardButton = rosterCard.GetComponentInChildren<Button>();
-            Text cardText = rosterCard.GetComponentInChildren<Text>();
+            PlayerCharacterPanel playerCharacterPanel = rosterCard.GetComponentInChildren<PlayerCharacterPanel>();
+            if(playerCharacterPanel != null)
+            {
+                playerCharacterPanel.SetCharacterPanel(roster[i].Appearance);
+            }
+            else
+            {
+                Debug.LogError("PlayerCharacterPanel not found");
+            }
 
+            Text cardText = rosterCard.GetComponentInChildren<Text>();
             cardText.text = roster[i].Name;
 
             // Add an event listener to the button
-            int index = i; // To capture the current index value
-
+            Button cardButton = rosterCard.GetComponentInChildren<Button>();
             if(cardButton != null)
             {
+                int index = i; // To capture the current index value
                 cardButton.onClick.AddListener(() => OnRosterCardClicked(index));
+            }
+            else
+            {
+                Debug.LogError("Button not found");
             }
         }
     }
@@ -114,6 +126,16 @@ public class SelectPlayer : MonoBehaviour
             // Add an event listener to the button
             int index = i; // To capture the current index value
             cardButton.onClick.AddListener(() => OnSelectedCardClicked(index));
+
+            PlayerCharacterPanel playerCharacterPanel = SelectedCard.GetComponentInChildren<PlayerCharacterPanel>();
+            if (playerCharacterPanel != null)
+            {
+                playerCharacterPanel.SetCharacterPanel(selected[i].Appearance);
+            }
+            else
+            {
+                Debug.LogError("PlayerCharacterPanel not found");
+            }
         }
     }
 
