@@ -12,7 +12,8 @@ public abstract class Summon : MonoBehaviour
     public GameObject Opponent;
     public ECC CurrentCC;
     public float[] CurrentCCStats;
-    public bool MyTeam;     //ToDo: BattleManager에서 팀 판별 초기화
+    public ETeamSide TeamSide;
+    public int SpawnPositionOrder;
     public float _deadTime;
     [SerializeField]
     protected float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력

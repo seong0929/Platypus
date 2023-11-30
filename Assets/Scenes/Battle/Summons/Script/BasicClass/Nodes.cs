@@ -49,32 +49,37 @@ namespace BehaviorTree
             _summon = self;
 
             // 리스폰 위치에 순간이동
-            if (self.GetComponent<Summon>().MyTeam)
+            if (self.GetComponent<Summon>().TeamSide == ETeamSide.TeamA)
             {
-                // 해당 위치에 다른 유닛이 있는지 확인
-                foreach (Transform point in BattleManager.instance.ASpawn)
-                {
-                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+                int spawnPoint = self.GetComponent<Summon>().SpawnPositionOrder;
+                self.transform.position = BattleManager.instance.ASpawn[spawnPoint].position;
+                //// 해당 위치에 다른 유닛이 있는지 확인
+                //foreach (Transform point in BattleManager.instance.ASpawn)
+                //{
+                //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
 
-                    if (colliders.Length == 0)
-                    {
-                        self.transform.position = point.position;
-                        break;
-                    }
-                }
+                //    if (colliders.Length == 0)
+                //    {
+                //        self.transform.position = point.position;
+                //        break;
+                //    }
+                //}
             }
             else
             {
-                foreach (Transform point in BattleManager.instance.BSpawn)
-                {
-                    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+                int spawnPoint = self.GetComponent<Summon>().SpawnPositionOrder;
+                self.transform.position = BattleManager.instance.BSpawn[spawnPoint].position;
 
-                    if (colliders.Length == 0)
-                    {
-                        self.transform.position = point.position;
-                        break;
-                    }
-                }
+                //foreach (Transform point in BattleManager.instance.BSpawn)
+                //{
+                //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+
+                //    if (colliders.Length == 0)
+                //    {
+                //        self.transform.position = point.position;
+                //        break;
+                //    }
+                //}
             }
             
             //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려

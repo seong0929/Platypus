@@ -17,7 +17,9 @@ public class BattleManager : MonoBehaviour
 
     private List<ESummon> SummonListA;
     private List<ESummon> SummonListB;
+    [SerializeField]
     private Transform[] TeamASpawn;
+    [SerializeField]
     private Transform[] TeamBSpawn;
 
     public GameObject SenorZorroPrefab;
@@ -32,6 +34,23 @@ public class BattleManager : MonoBehaviour
     }
     private void Start()
     {
+        // check if TeamASpawn and TeamBSpawn are null
+        if (SpawnPoint == null)
+        {
+            Debug.Log("SpawnPoint is null");
+            return;
+        }
+        if (SpawnPoint.transform.Find("TeamA") == null)
+        {
+            Debug.Log("TeamA is null");
+            return;
+        }
+        if (SpawnPoint.transform.Find("TeamB") == null)
+        {
+            Debug.Log("TeamB is null");
+            return;
+        }
+
         TeamASpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamA"));
         TeamBSpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamB"));
 
@@ -110,16 +129,25 @@ public class BattleManager : MonoBehaviour
             Debug.Log("SummonListB is null");
             return;
         }
-        foreach (ESummon summon in SummonListA)
+
+        for(int i = 0; i < SummonListA.Count; i++)
         {
-            SpawnSummon(summon, true);
+            SpawnSummon(SummonListA[i], true, i);
         }
-        foreach (ESummon summon in SummonListB)
+        for (int i = 0; i < SummonListB.Count; i++)
         {
-            SpawnSummon(summon, false);
+            SpawnSummon(SummonListB[i], false, i);
         }
+        //foreach (ESummon summon in SummonListA)
+        //{
+        //    SpawnSummon(summon, true, 1);
+        //}
+        //foreach (ESummon summon in SummonListB)
+        //{
+        //    SpawnSummon(summon, false, 1);
+        //}
     }
-    private void SpawnSummon(ESummon summon, bool isTeamA)
+    private void SpawnSummon(ESummon summon, bool isTeamA, int position)
     {
         GameObject summonObject = null;
 
@@ -132,29 +160,51 @@ public class BattleManager : MonoBehaviour
          
         if(isTeamA)
         {
-            foreach (Transform point in ASpawn)
+            if(TeamASpawn.Length <= position)
             {
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
-
-                if (colliders.Length == 0)
-                {
-                    summonObject.transform.position = point.position;
-                    break;
-                }
+                position = TeamASpawn.Length - 1;
             }
+            if(position < 0)
+            {
+                position = 0;
+            }
+
+            summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
+            summonObject.transform.position = TeamASpawn[position].position;
+
+            //foreach (Transform point in ASpawn)
+            //{
+            //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+
+            //    if (colliders.Length == 0)
+            //    {
+            //        summonObject.transform.position = point.position;
+            //        break;
+            //    }
+            //}
         }
         else
         {
-            foreach (Transform point in BSpawn)
+            if (TeamBSpawn.Length <= position)
             {
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
-
-                if (colliders.Length == 0)
-                {
-                    summonObject.transform.position = point.position;
-                    break;
-                }
+                position = TeamBSpawn.Length - 1;
             }
+            if (position < 0)
+            {
+                position = 0;
+            }
+            summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
+            summonObject.transform.position = TeamBSpawn[position].position;
+            //foreach (Transform point in BSpawn)
+            //{
+            //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+
+            //    if (colliders.Length == 0)
+            //    {
+            //        summonObject.transform.position = point.position;
+            //        break;
+            //    }
+            //}
         }
     }
 
@@ -177,18 +227,18 @@ public class BattleManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
-    //ToDo: 배틀씬에서 넘어온 소환수를 인수에 넣기
-    public void AssignTeam(GameObject[] summons)
-    {
-        //ToDo: 배틀씬에서 user가 선택했는 지 안 했는 지 판단하는 함수 필요
-        foreach (GameObject summon in summons)
-        {
-            //if() 배틀씬에서 선택을 했다면
-            summon.GetComponent<Summon>().MyTeam = true;
-            //else배틀씬에서 선택은 되지 않았지만, 넘어 온 경우
-            summon.GetComponent<Summon>().MyTeam = false;
-        }
-    }
+    ////ToDo: 배틀씬에서 넘어온 소환수를 인수에 넣기
+    //public void AssignTeam(GameObject[] summons)
+    //{
+    //    //ToDo: 배틀씬에서 user가 선택했는 지 안 했는 지 판단하는 함수 필요
+    //    foreach (GameObject summon in summons)
+    //    {
+    //        //if() 배틀씬에서 선택을 했다면
+    //        summon.GetComponent<Summon>().MyTeam = true;
+    //        //else배틀씬에서 선택은 되지 않았지만, 넘어 온 경우
+    //        summon.GetComponent<Summon>().MyTeam = false;
+    //    }
+    //}
     // UI에 타이머 값을 표시
     private void UpdateTimerUI()
     {
