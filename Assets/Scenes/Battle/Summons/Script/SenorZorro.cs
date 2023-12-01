@@ -155,6 +155,7 @@ public class SenorZorro : Summon
                 animator.SetTrigger("Skill");
 
                 _isStart = true;
+                isMoved = false;
                 movableDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] * 2;
                 return true;
             }

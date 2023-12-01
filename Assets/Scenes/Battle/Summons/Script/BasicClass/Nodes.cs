@@ -135,7 +135,9 @@ namespace BehaviorTree
             _animator = _summon.GetComponent<Animator>();
             _timer += Time.deltaTime;
 
-            _animator.SetTrigger("Dead");
+            _animator.SetBool("Idle", false);
+            _animator.SetBool("Move", false);
+            _animator.SetTrigger("Dead");//애니메이터 Exit Transition 있어야함!!!
             if (_timer >= _waitTime )
             {
                 SetData("State", ESummonState.Respawn);
@@ -225,10 +227,12 @@ namespace BehaviorTree
             GameObject[] summons = GameObject.FindGameObjectsWithTag("Summon");
             GameObject self = (GameObject)GetData("Self");
 
+            Summon selfSummon = self.GetComponent<Summon>();
             // 상대방 있는 경우
             foreach (GameObject summon in summons)
             {
-                if (summon != self) // && summon.GetComponent<Summon>().myTeam == false
+                Summon otherSummon = summon.GetComponent<Summon>();
+                if ( !otherSummon.IsDead() && (otherSummon.TeamSide != selfSummon.TeamSide))//summon != self) // && summon.GetComponent<Summon>().myTeam == false
                 {
                     //if(summon.GetComponent<Summon>().myTeam == false){
                     SetData("target", summon.transform);
