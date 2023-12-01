@@ -179,16 +179,15 @@ namespace Skills
 
             targetSummon.CurrentCC = ECC.SlowDown;
             targetSummon.Stats[((int)ESummonStats.MoveSpeed)] = targetSummon.Stats[((int)ESummonStats.MoveSpeed)] / power;
-            Debug.Log("SlowDown" + target + ":" + targetSummon.Stats[((int)ESummonStats.MoveSpeed)]);
+            //Debug.Log("SlowDown" + target + ":" + targetSummon.Stats[((int)ESummonStats.MoveSpeed)]);
             targetSummon.RunCoroutine(ReleaseSlowDown(target, power, duration));
         }
         private IEnumerator ReleaseSlowDown(GameObject target, float power, float duration)
         {
-            Debug.Log("In ReleaseSlowDown fn");
             yield return new WaitForSeconds(duration);
             target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)] *= power;
             target.GetComponent<Summon>().CurrentCC = ECC.None;
-            Debug.Log("SlowUp" + target + ":" + target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)]);
+            //Debug.Log("SlowUp" + target + ":" + target.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)]);
         }
         #endregion
     }

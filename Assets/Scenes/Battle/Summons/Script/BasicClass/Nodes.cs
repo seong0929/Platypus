@@ -16,22 +16,18 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            Debug.Log("CheckRespawn");
             object s = GetData("State");
             if (s == null)
             {
                 SetData("State", ESummonState.Default);
                 SetData("Self", _gameObject);
-                Debug.Log("Default");
                 return ENodeState.Failure;
             }
             if (GetData("State").Equals(ESummonState.Respawn))
             {
-                Debug.Log("Respawn");
                 SetData("Self", _gameObject);
                 return ENodeState.Success;
             }
-            Debug.Log("Default2");
             return ENodeState.Failure;
         }
     }
@@ -296,19 +292,17 @@ namespace BehaviorTree
             _rb = self.GetComponent<Rigidbody2D>();
 
             Transform target = (Transform)GetData("target");
-            // ToDo: 여러 상대방 중 어떤 상대방?
+
             // 상대방 바라보기
             if (target != null)
             {
                 if (_transform.position.x < target.transform.position.x)
                 {
                     _transform.localScale = new Vector3(-1, 1, 1);
-                    //_spriteRenderer.flipX = true;
                 }
                 else
                 {
                     _transform.localScale = new Vector3(1, 1, 1);
-                    //_spriteRenderer.flipX = false;
                 }
             }
 
@@ -331,7 +325,6 @@ namespace BehaviorTree
     {
         private Animator _animator;
         private Transform _transform;
-        private SpriteRenderer _spriteRenderer;
         private Rigidbody2D _rb;
         private float _moveSpeed;
 
@@ -341,24 +334,20 @@ namespace BehaviorTree
             GameObject self = (GameObject)GetData("Self");
             _transform = self.transform;
             _animator = self.GetComponent<Animator>();
-            _spriteRenderer = self.GetComponent<SpriteRenderer>();
             _moveSpeed = self.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)];
             _rb = self.GetComponent<Rigidbody2D>();
 
             Transform target = (Transform)GetData("target");
-            // ToDo: 여러 상대방 중 어떤 상대방?
             // 상대방 바라보기
             if (target != null)
             {
                 if (_transform.position.x < target.transform.position.x)
                 {
                     _transform.localScale = new Vector3(-1, 1, 1);
-                    //_spriteRenderer.flipX = true;
                 }
                 else
                 {
                     _transform.localScale = new Vector3(1, 1, 1);
-                    //_spriteRenderer.flipX = false;
                 }
             }
 
@@ -415,7 +404,6 @@ namespace BehaviorTree
 
             _animator.SetBool("Idle", true);
             _animator.SetBool("Move", false);
-            _animator.SetBool("Attack", false);
             SetData("State", ESummonState.Default);
 
             return ENodeState.Success;

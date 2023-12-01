@@ -90,6 +90,5 @@ public abstract class Summon : MonoBehaviour
     public void ResetStats()
     {
         stats = (float[])BaseStats.Clone();
-        Debug.Log("ResetStats");
     }
 }

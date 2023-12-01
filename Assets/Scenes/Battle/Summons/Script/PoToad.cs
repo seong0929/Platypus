@@ -17,7 +17,6 @@ public class PoToad : Summon
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
         base.BaseStats = summonStats;
-
     }
 
     private void Awake()
@@ -32,7 +31,6 @@ public class PoToad : Summon
         }
         CreateBehaviorTree();
         _rootNode.SetData("State", ESummonState.Respawn);
-
     }
     private void Update()
     {
@@ -40,12 +38,10 @@ public class PoToad : Summon
         _rootNode.Evaluate();
         //Transform targetT = (Transform)_rootNode.GetData("target");
         //base.Target = targetT.gameObject;
-
     }
     #endregion
     #region Skill
     // 해당 캐릭터는 일반 공격이 없다
-    // Attack 이 없는데 왜 필요한가?
     public class Attack : Skill
     {
         private Buffer _buffer = new Buffer();
@@ -84,7 +80,6 @@ public class PoToad : Summon
                 animator.SetBool("Idle", false);
                 animator.SetBool("Move", false);
                 animator.SetTrigger("Skill");
-                Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("Skill"));
                 FlipSprite(summon, target);
                 _isStart = true;
                 return true;
@@ -94,7 +89,6 @@ public class PoToad : Summon
                 AnimatorStateInfo animatorStateInfo = animator.GetCurrentAnimatorStateInfo(0);
                 if (animatorStateInfo.IsName("Skill") && animatorStateInfo.normalizedTime >= 0.9f)
                 {
-                    Debug.Log("In SlimeLick");
                     target.GetComponent<Summon>().CurrentCCStats = _debuffer.Stats;
                     target.GetComponent<Summon>().CurrentCC = HasCc;
                     _debuffer.ApplyCC(summon, target, _debuffer.Stats);
@@ -142,9 +136,8 @@ public class PoToad : Summon
             else
             {                               
                 // 궁극기 끝날 때
-                if (IsDone())//_buffer.Stats[((int)EBufferStats.Time)]))
+                if (IsDone())
                 {
-                    Debug.Log("End PoToad's Ult");
                     animator.SetTrigger("UltOut");
                     Destroy(_areaPrfab);
                     _isStart = false;
@@ -157,9 +150,7 @@ public class PoToad : Summon
     }
     private static IEnumerator TickDown(GameObject area, Buffer buffer, float tick)
     {
-        Debug.Log("In TickDoen Fn");
         yield return new WaitForSeconds(tick);
-        Debug.Log("In TickDoen Fn next to yield");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(area.transform.position, area.transform.localScale.x);
         // ToDo: 팀 구분
         foreach (Collider2D collider in colliders)
