@@ -219,6 +219,8 @@ public class SenorZorro : Summon
         {            
             if (_isStart == false)
             {
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
                 animator.SetTrigger("UltIn");
                 _isStart = true;
                 return true;

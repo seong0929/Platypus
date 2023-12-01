@@ -156,6 +156,8 @@ public class SpitGlider : Summon
         {
             if (_isStart == false)
             {
+                animator.SetBool("Idle", false);
+                animator.SetBool("Move", false);
                 animator.SetTrigger("Ult1");
                 FlipSprite(summon, target);
                 _isStart = true;
