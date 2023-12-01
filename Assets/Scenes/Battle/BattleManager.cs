@@ -1,23 +1,32 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 using static Enums;
 
 public class BattleManager : MonoBehaviour
 {
-    //Singleton Instance ¼±¾ğ
+    //Singleton Instance ì„ ì–¸
     public static BattleManager instance = null;
 
     [Header("# Game Control")]
-    public float GameTime;  // °æ°ú ½Ã°£
-    public float MaxGameTime = Constants.Play_TIME;   //ÀüÅõ½Ã°£
-    public TMP_Text TimerText;       // Å¸ÀÌ¸Ó UI
-    
+    public float GameTime;  // ê²½ê³¼ ì‹œê°„
+    public float MaxGameTime = Constants.Play_TIME;   //ì „íˆ¬ì‹œê°„
+    public TMP_Text TimerText;       // íƒ€ì´ë¨¸ UI
+    public GameObject SpawnPoint;   // ìŠ¤í° ìœ„ì¹˜
+
     private List<ESummon> SummonListA;
     private List<ESummon> SummonListB;
+    [SerializeField]
+    private Transform[] TeamASpawn;
+    [SerializeField]
+    private Transform[] TeamBSpawn;
 
     public GameObject SenorZorroPrefab;
     public GameObject SpitGliderPrefab;
+    public GameObject PoToadPrefab;
+
+    private Dictionary<ESummon, GameObject> summonPrefabs;
 
     private void Awake()
     {
@@ -25,6 +34,27 @@ public class BattleManager : MonoBehaviour
     }
     private void Start()
     {
+        // check if TeamASpawn and TeamBSpawn are null
+        if (SpawnPoint == null)
+        {
+            Debug.Log("SpawnPoint is null");
+            return;
+        }
+        if (SpawnPoint.transform.Find("TeamA") == null)
+        {
+            Debug.Log("TeamA is null");
+            return;
+        }
+        if (SpawnPoint.transform.Find("TeamB") == null)
+        {
+            Debug.Log("TeamB is null");
+            return;
+        }
+
+        TeamASpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamA"));
+        TeamBSpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamB"));
+
+        InitializeSummonPrefabDictionary();
         SetupGameSummons();
         GameTime = 0;
     }
@@ -33,6 +63,30 @@ public class BattleManager : MonoBehaviour
     {
         GetCalledSummons();
         SetSummonInScene();
+    }
+
+    private void InitializeSummonPrefabDictionary()
+    {
+        summonPrefabs = new Dictionary<ESummon, GameObject> 
+        { 
+            { ESummon.SenorZorro, SenorZorroPrefab },
+            { ESummon.SpitGlider, SpitGliderPrefab },
+            { ESummon.PoToad, PoToadPrefab },
+            
+            // added for test
+            { ESummon.SenorZorro2, SenorZorroPrefab },
+            { ESummon.SenorZorro3, SenorZorroPrefab },
+            { ESummon.SenorZorro4, SenorZorroPrefab },
+            { ESummon.SenorZorro5, SenorZorroPrefab },
+            { ESummon.SenorZorro6, SenorZorroPrefab },
+            { ESummon.SenorZorro7, SenorZorroPrefab },
+            { ESummon.SenorZorro8, SenorZorroPrefab },
+            { ESummon.SenorZorro9, SenorZorroPrefab },
+            { ESummon.SenorZorro10, SenorZorroPrefab },
+            { ESummon.SpitGlider1, SpitGliderPrefab },
+            { ESummon.SpitGlider2, SpitGliderPrefab },
+            { ESummon.SpitGlider3, SpitGliderPrefab }        
+        };
     }
 
     private void GetCalledSummons() 
@@ -75,74 +129,119 @@ public class BattleManager : MonoBehaviour
             Debug.Log("SummonListB is null");
             return;
         }
-        foreach (ESummon summon in SummonListA)
+
+        for(int i = 0; i < SummonListA.Count; i++)
         {
-            SpawnSummon(summon, true);
+            SpawnSummon(SummonListA[i], true, i);
         }
-        foreach (ESummon summon in SummonListB)
+        for (int i = 0; i < SummonListB.Count; i++)
         {
-            SpawnSummon(summon, false);
+            SpawnSummon(SummonListB[i], false, i);
         }
+        //foreach (ESummon summon in SummonListA)
+        //{
+        //    SpawnSummon(summon, true, 1);
+        //}
+        //foreach (ESummon summon in SummonListB)
+        //{
+        //    SpawnSummon(summon, false, 1);
+        //}
     }
-    private void SpawnSummon(ESummon summon, bool isTeamA)
+    private void SpawnSummon(ESummon summon, bool isTeamA, int position)
     {
         GameObject summonObject = null;
 
-        if(summon.ToString().Contains("SenorZorro"))
-        {
-            summonObject = Instantiate(SenorZorroPrefab);
-        }
-        else if(summon.ToString().Contains("SpitGlider"))
-        {
-            summonObject = Instantiate(SpitGliderPrefab);
-        }
-        else
+        if(summonPrefabs.ContainsKey(summon) == false)
         {
             Debug.Log("Summon is not defined");
             return;
         }
+        summonObject = Instantiate(summonPrefabs[summon]);
          
         if(isTeamA)
         {
-            summonObject.transform.position = new Vector3(-5, 0, 0);
+            if(TeamASpawn.Length <= position)
+            {
+                position = TeamASpawn.Length - 1;
+            }
+            if(position < 0)
+            {
+                position = 0;
+            }
+
+            summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
+            summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamA;
+            summonObject.transform.position = TeamASpawn[position].position;
+
+            //foreach (Transform point in ASpawn)
+            //{
+            //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+
+            //    if (colliders.Length == 0)
+            //    {
+            //        summonObject.transform.position = point.position;
+            //        break;
+            //    }
+            //}
         }
         else
         {
-            summonObject.transform.position = new Vector3(5, 0, 0);
+            if (TeamBSpawn.Length <= position)
+            {
+                position = TeamBSpawn.Length - 1;
+            }
+            if (position < 0)
+            {
+                position = 0;
+            }
+            summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
+            summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamB;
+            summonObject.transform.position = TeamBSpawn[position].position;
+            //foreach (Transform point in BSpawn)
+            //{
+            //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
+
+            //    if (colliders.Length == 0)
+            //    {
+            //        summonObject.transform.position = point.position;
+            //        break;
+            //    }
+            //}
         }
     }
+
     private void Update()
     {
         GameTime += Time.deltaTime;
         if (GameTime > MaxGameTime)
         {
-            // ToDo: °ÔÀÓ Á¾·á
+            // ToDo: ê²Œì„ ì¢…ë£Œ
         }
         UpdateTimerUI();
     }
-    //ÀÏ½ÃÁ¤Áö
+    //ì¼ì‹œì •ì§€
     public void PauseGame()
     {
         Time.timeScale = 0;
     }
-    // Àç½ÃÀÛ
+    // ì¬ì‹œì‘
     public void ResumeGame()
     {
         Time.timeScale = 1;
     }
-    //ToDo: ¹èÆ²¾À¿¡¼­ ³Ñ¾î¿Â ¼ÒÈ¯¼ö¸¦ ÀÎ¼ö¿¡ ³Ö±â
-    public void AssignTeam(GameObject[] summons)
-    {
-        //ToDo: ¹èÆ²¾À¿¡¼­ user°¡ ¼±ÅÃÇß´Â Áö ¾È Çß´Â Áö ÆÇ´ÜÇÏ´Â ÇÔ¼ö ÇÊ¿ä
-        foreach (GameObject summon in summons)
-        {
-            //if() ¹èÆ²¾À¿¡¼­ ¼±ÅÃÀ» Çß´Ù¸é
-            summon.GetComponent<Summon>().MyTeam = true;
-            //else¹èÆ²¾À¿¡¼­ ¼±ÅÃÀº µÇÁö ¾Ê¾ÒÁö¸¸, ³Ñ¾î ¿Â °æ¿ì
-            summon.GetComponent<Summon>().MyTeam = false;
-        }
-    }
-    // UI¿¡ Å¸ÀÌ¸Ó °ªÀ» Ç¥½Ã
+    ////ToDo: ë°°í‹€ì”¬ì—ì„œ ë„˜ì–´ì˜¨ ì†Œí™˜ìˆ˜ë¥¼ ì¸ìˆ˜ì— ë„£ê¸°
+    //public void AssignTeam(GameObject[] summons)
+    //{
+    //    //ToDo: ë°°í‹€ì”¬ì—ì„œ userê°€ ì„ íƒí–ˆëŠ” ì§€ ì•ˆ í–ˆëŠ” ì§€ íŒë‹¨í•˜ëŠ” í•¨ìˆ˜ í•„ìš”
+    //    foreach (GameObject summon in summons)
+    //    {
+    //        //if() ë°°í‹€ì”¬ì—ì„œ ì„ íƒì„ í–ˆë‹¤ë©´
+    //        summon.GetComponent<Summon>().MyTeam = true;
+    //        //elseë°°í‹€ì”¬ì—ì„œ ì„ íƒì€ ë˜ì§€ ì•Šì•˜ì§€ë§Œ, ë„˜ì–´ ì˜¨ ê²½ìš°
+    //        summon.GetComponent<Summon>().MyTeam = false;
+    //    }
+    //}
+    // UIì— íƒ€ì´ë¨¸ ê°’ì„ í‘œì‹œ
     private void UpdateTimerUI()
     {
         float remainingTime = Mathf.Max(MaxGameTime - GameTime, 0f);
@@ -151,5 +250,27 @@ public class BattleManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(remainingTime % 60f);
 
         TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+    private Transform[] GetChildTransforms(Transform parent)
+    {
+        int childCount = parent.childCount;
+        Transform[] childTransforms = new Transform[childCount];
+
+        for (int i = 0; i < childCount; i++)
+        {
+            childTransforms[i] = parent.GetChild(i);
+        }
+
+        return childTransforms;
+    }
+    public Transform[] ASpawn
+    {
+        get { return TeamASpawn; }
+        set { TeamASpawn = value; }
+    }
+    public Transform[] BSpawn
+    {
+        get { return TeamBSpawn; }
+        set { TeamBSpawn = value; }
     }
 }

@@ -3,20 +3,30 @@ using UnityEngine;
 using BehaviorTree;
 using Skills;
 using static Enums;
+using System.Collections;
 
 //공통적이되 함수 내용이 달라지는 클래스
 public abstract class Summon : MonoBehaviour
 {
+    #region for the Inspector
+    public GameObject Target; 
+    public ESummonState State;
+    #endregion
+
     public string SummonName;
-    public GameObject Opponent;
+    public GameObject[] Opponents;
     public ECC CurrentCC;
     public float[] CurrentCCStats;
-    public bool MyTeam;     //ToDo: BattleManager에서 팀 판별 초기화
+    public ETeamSide TeamSide;
+    public int SpawnPositionOrder;
     public float _deadTime;
+    [SerializeField]
+    public float[] BaseStats;
 
-    protected float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
+    [SerializeField]
+    public float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 일반 공격, 1: 스킬, 2: 궁
-
+//    [SerializeField]
     private bool _isAlive = true;
 
     #region settings
@@ -32,11 +42,11 @@ public abstract class Summon : MonoBehaviour
     {
         if(stats[((int)ESummonStats.Health)] <= 0)
         {
-            _isAlive = true;
-            return _isAlive;
+            _isAlive = false;
+            return !_isAlive;
         }
-        _isAlive = false;
-        return _isAlive;
+        _isAlive = true;
+        return !_isAlive;
     }
     // 데미지 받은 함수
     public void TakeDamage(float damage)
@@ -71,4 +81,14 @@ public abstract class Summon : MonoBehaviour
         return false;
     }
     #endregion
+
+    public void RunCoroutine(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
+
+    public void ResetStats()
+    {
+        stats = (float[])BaseStats.Clone();
+    }
 }

@@ -4,8 +4,8 @@ public static class Enums
     {
         SenorZorro,
         SpitGlider,
+        PoToad,
         // 테스트를 위한 Enum 값들
-        SenorZorro1,
         SenorZorro2,
         SenorZorro3,
         SenorZorro4,
@@ -58,16 +58,25 @@ public static class Enums
     {
         Mad
     }
+    public enum EBufferType
+    {
+        None,
+        Buffer,
+        Debuffer,
+        CC
+    }
     public enum ECC
     {
         None,
         Stun,
-        KnockBack
+        KnockBack,
+        SlowDown
     }
-    public enum ECCStats
+    public enum EBufferStats
     {
         Time,
-        Power
+        Power,
+        Tick
     }
     public enum ELanguage
     {
