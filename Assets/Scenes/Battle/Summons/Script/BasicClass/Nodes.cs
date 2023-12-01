@@ -439,6 +439,7 @@ namespace BehaviorTree
             if (self.GetComponent<Summon>().CheckCriticalEvent())
             {
                 _skill.StartSkillCooldown();
+                _skill.ResetIsStartDone();
                 return ENodeState.Failure;
             }
 
@@ -454,6 +455,7 @@ namespace BehaviorTree
             else
             {
                 _skill.StartSkillCooldown();
+                _skill.ResetIsStartDone();
                 return ENodeState.Success;
             }
 
@@ -502,8 +504,9 @@ namespace BehaviorTree
 
             // Duty Event시, interrupt
             if(self.GetComponent<Summon>().CheckCriticalEvent())
-            {
+            {                
                 _skill.StartSkillCooldown();
+                _skill.ResetIsStartDone();
                 return ENodeState.Failure;
             }
 
@@ -517,6 +520,7 @@ namespace BehaviorTree
             else
             {
                 _skill.StartSkillCooldown();
+                _skill.ResetIsStartDone();
                 return ENodeState.Success;
             }
         }
@@ -565,6 +569,7 @@ namespace BehaviorTree
             if (self.GetComponent<Summon>().CheckCriticalEvent())
             {
                 _skill.StartSkillCooldown();
+                _skill.ResetIsStartDone();
                 return ENodeState.Failure;
             }
 
@@ -581,6 +586,7 @@ namespace BehaviorTree
             else
             {
                 _skill.StartSkillCooldown();
+                _skill.ResetIsStartDone();
                 return ENodeState.Success;
             }
         }

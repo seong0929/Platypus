@@ -15,6 +15,11 @@ namespace Skills
         protected bool _isStart = false;
         private bool _done = false;
 
+        public void ResetIsStartDone()
+        {
+            _isStart = false;
+            _done = false;
+        }
         public virtual bool Execute(GameObject summon, GameObject target, Animator animator)
         {
             return false;            // 동작 구현
