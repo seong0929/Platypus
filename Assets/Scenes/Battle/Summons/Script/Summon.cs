@@ -14,7 +14,7 @@ public abstract class Summon : MonoBehaviour
     #endregion
 
     public string SummonName;
-    public GameObject Opponent;
+    public GameObject[] Opponents;
     public ECC CurrentCC;
     public float[] CurrentCCStats;
     public ETeamSide TeamSide;
@@ -42,11 +42,11 @@ public abstract class Summon : MonoBehaviour
     {
         if(stats[((int)ESummonStats.Health)] <= 0)
         {
-            _isAlive = true;
-            return _isAlive;
+            _isAlive = false;
+            return !_isAlive;
         }
-        _isAlive = false;
-        return _isAlive;
+        _isAlive = true;
+        return !_isAlive;
     }
     // 데미지 받은 함수
     public void TakeDamage(float damage)
