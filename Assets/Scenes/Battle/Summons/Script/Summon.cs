@@ -8,6 +8,11 @@ using System.Collections;
 //공통적이되 함수 내용이 달라지는 클래스
 public abstract class Summon : MonoBehaviour
 {
+    #region for the Inspector
+    public GameObject Target; 
+    public ESummonState State;
+    #endregion
+
     public string SummonName;
     public GameObject Opponent;
     public ECC CurrentCC;
@@ -21,7 +26,7 @@ public abstract class Summon : MonoBehaviour
     [SerializeField]
     public float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 일반 공격, 1: 스킬, 2: 궁
-
+//    [SerializeField]
     private bool _isAlive = true;
 
     #region settings

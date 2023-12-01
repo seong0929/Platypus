@@ -141,6 +141,26 @@ namespace BehaviorTree
             return currentNode;
         }
 
+        public Dictionary<string, object> GetAllData()
+        {
+            if (IsRoot)
+            {
+                return _dataContext;
+            }
+            else
+            {
+                Node rootNode = FindRootNode();
+                if (rootNode != null)
+                {
+                    return rootNode.GetAllData();
+                }
+                else
+                {
+                    Debug.Log("Get All Data: Root node not found");
+                    return null; // Root node not found
+                }
+            }
+        }
     }
     // 시퀀스 노드
     public class Sequence : Node
