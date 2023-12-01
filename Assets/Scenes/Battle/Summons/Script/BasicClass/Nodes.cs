@@ -125,7 +125,7 @@ namespace BehaviorTree
     {
         private Animator _animator;
         private float _waitTime = Constants.RESPAWN_TIME;
-        private float _timer;   // ToDo: 초기화 방법 필요
+        private float _timer = 0;   // ToDo: 초기화 방법 필요
         private GameObject _summon;
 
         public DutyDie() { }
@@ -133,12 +133,13 @@ namespace BehaviorTree
         {
             _summon = (GameObject)GetData("Self");
             _animator = _summon.GetComponent<Animator>();
-            _timer = _summon.GetComponent<Summon>()._deadTime;
+            _timer += Time.deltaTime;
 
             _animator.SetTrigger("Dead");
-            if (_timer + _waitTime > BattleManager.instance.GameTime)
+            if (_timer >= _waitTime )
             {
                 SetData("State", ESummonState.Respawn);
+                _timer = 0;
                 return ENodeState.Success;
             }
 
