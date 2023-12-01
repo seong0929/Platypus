@@ -163,7 +163,7 @@ public class SenorZorro : Summon
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
                 FlipSprite(summon, target);
-                if(isMoved && stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.9f && isMoved)
+                if(isMoved && stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.9f)
                 {
                     isMoved = false;
                     _isStart = false;
