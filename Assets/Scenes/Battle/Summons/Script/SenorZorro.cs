@@ -6,6 +6,54 @@ using static Enums;
 
 public class SenorZorro : Summon
 {
+
+    #region make data show on inspector
+    public string[] dictionaryArray;
+    public string[] currentAnimatorStateArray;
+    public Dictionary<string, object> rootNodeData = new Dictionary<string, object>();
+    public AnimatorStateInfo currentAnimatorState;
+
+    private void SetInspectatorArray()
+    {
+        int dicLength = rootNodeData.Count;
+        dictionaryArray = new string[dicLength];
+
+        int i = 0;
+        foreach(KeyValuePair<string, object> data in rootNodeData)
+        {
+            dictionaryArray[i] = data.Key.ToString() + " : " + data.Value.ToString();
+            i++;
+        }
+
+        currentAnimatorStateArray = new string[10];
+        currentAnimatorStateArray[0] = "fullPathHash : " + currentAnimatorState.fullPathHash.ToString();
+        currentAnimatorStateArray[1] = "length : " + currentAnimatorState.length.ToString();
+        currentAnimatorStateArray[2] = "loop : " + currentAnimatorState.loop.ToString();
+        currentAnimatorStateArray[3] = "speed : " + currentAnimatorState.speed.ToString();
+        currentAnimatorStateArray[4] = "speedMultiplier : " + currentAnimatorState.speedMultiplier.ToString();
+        currentAnimatorStateArray[5] = "tagHash : " + currentAnimatorState.tagHash.ToString();
+        currentAnimatorStateArray[6] = "normalizedTime : " + currentAnimatorState.normalizedTime.ToString();        
+        currentAnimatorStateArray[7] = " Name : " + currentAnimatorState.ToString();
+        currentAnimatorStateArray[8] = " IsNameAttack : " + currentAnimatorState.IsName("Attack").ToString();
+        currentAnimatorStateArray[9] = " IsNameSkill : " + currentAnimatorState.IsName("Skill").ToString();
+
+
+    }
+
+    private void UpdateInspectatorData()
+    {
+        Transform targetT = (Transform)_rootNode.GetData("target");
+        base.Target = targetT.gameObject;
+        base.State = (ESummonState)_rootNode.GetData("State");
+        rootNodeData = _rootNode.GetAllData();
+        Debug.Log("rootNodeData: " + rootNodeData);
+        currentAnimatorState = this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+        Debug.Log("currentAnimatorState: " + currentAnimatorState);
+        SetInspectatorArray();
+
+    }
+    #endregion
+
     #region Settings
     public SenorZorro()
     {
@@ -37,6 +85,7 @@ public class SenorZorro : Summon
         if (_rootNode != null) 
         {
             _rootNode.Evaluate();
+            //UpdateInspectatorData();
         }
     }
     #endregion

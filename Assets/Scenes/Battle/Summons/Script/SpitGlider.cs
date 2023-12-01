@@ -15,7 +15,6 @@ public class SpitGlider : Summon
         float[] summonStats = { 5f, 0.5f, 40f, 1f};
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
-//        base.stats = summonStats;
         base.BaseStats = summonStats;
 
     }
@@ -37,6 +36,9 @@ public class SpitGlider : Summon
     {
         UpdateSkillCooldowns(Time.deltaTime);
         _rootNode.Evaluate();
+        //Transform targetT = (Transform)_rootNode.GetData("target");
+        //base.Target = targetT.gameObject;
+
     }
     #endregion
     #region Skill
