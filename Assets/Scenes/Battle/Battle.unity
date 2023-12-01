@@ -664,8 +664,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Timer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c5a3359ee853e354f84f0d1813d15151, type: 2}
+  m_sharedMaterial: {fileID: -293196497617627462, guid: c5a3359ee853e354f84f0d1813d15151, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1283,8 +1283,8 @@ Canvas:
   m_GameObject: {fileID: 1470946856}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 942806677}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1381,8 +1381,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Battle
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
-  m_sharedMaterial: {fileID: -8651549988511741003, guid: 846009268a4ca2b49ba31a048316014d, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c5a3359ee853e354f84f0d1813d15151, type: 2}
+  m_sharedMaterial: {fileID: -293196497617627462, guid: c5a3359ee853e354f84f0d1813d15151, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
