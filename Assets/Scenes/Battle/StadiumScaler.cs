@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// °æ±âÀå Å©±â Á¶Àı
+// ê²½ê¸°ì¥ í¬ê¸° ì¡°ì ˆ
 public class StadiumScaler : MonoBehaviour
 {
     [SerializeField] Canvas canvas;
