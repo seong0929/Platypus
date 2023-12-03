@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8544673299357075899}
   - component: {fileID: 8544673299357075898}
   - component: {fileID: 142167761508634541}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SenorZorro
   m_TagString: Summon
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2091580714, guid: bb3844cea69c10e40917c4d4a68abce0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -184,9 +184,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a5f9b7fae9ccb49bc58d6350d6b88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  State: 0
   SummonName: 
-  Opponent: {fileID: 0}
+  Opponents: []
   CurrentCC: 0
   CurrentCCStats: []
-  MyTeam: 0
+  TeamSide: 0
+  SpawnPositionOrder: 0
   _deadTime: 0
+  BaseStats:
+  - 0.7
+  - 1
+  - 40
+  - 5
+  stats: []
+  dictionaryArray: []
+  currentAnimatorStateArray: []
