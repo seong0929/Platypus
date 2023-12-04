@@ -15,7 +15,13 @@ public class FieldLimit : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Summon"))
+        // Summon이 못 나가게
+        if (collision.gameObject.CompareTag("Summon"))
+        {
+
+        }
+        // Summon을 제외한 모든 애들은 삭제
+        else
         {
             Destroy(collision.gameObject);
         }
