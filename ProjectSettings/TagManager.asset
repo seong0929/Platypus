@@ -6,14 +6,15 @@ TagManager:
   tags:
   - Summon
   - NonTarget
+  - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Summon
   - Water
   - UI
-  - 
+  - Wall
   - 
   - 
   - 

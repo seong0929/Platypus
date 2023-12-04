@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 519962954665326170}
   - component: {fileID: 2367538792243219271}
   - component: {fileID: 7109904074719579327}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PoToad
   m_TagString: Summon
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 859783888, guid: 0e604f579465e5e4aa688c2414311c0f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -177,10 +177,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b5c2e3edfc5ed4d8e48c32431ed250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  State: 0
   SummonName: 
-  Opponent: {fileID: 0}
+  Opponents: []
   CurrentCC: 0
   CurrentCCStats: []
-  MyTeam: 0
+  TeamSide: 0
+  SpawnPositionOrder: 0
   _deadTime: 0
+  BaseStats:
+  - 1
+  - 0.3
+  - 10
+  - 3
+  stats: []
   Area: {fileID: 7959615659237009251, guid: 04277437594be584e9ed40f8d32f73b3, type: 3}

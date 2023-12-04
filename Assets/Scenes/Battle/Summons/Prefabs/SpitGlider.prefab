@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8544673299357075899}
   - component: {fileID: 8544673299357075898}
   - component: {fileID: -5209658663630326722}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SpitGlider
   m_TagString: Summon
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1421605425, guid: a45587e19849a8840afc610c59d2e54a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -176,7 +176,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e8d49e08202e8c488b9da06fddc9bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Target: {fileID: 0}
+  State: 0
   SummonName: 
-  Opponent: {fileID: 0}
-  MyTeam: 0
+  Opponents: []
+  CurrentCC: 0
+  CurrentCCStats: []
+  TeamSide: 0
+  SpawnPositionOrder: 0
+  _deadTime: 0
+  BaseStats:
+  - 5
+  - 0.5
+  - 40
+  - 1
+  stats: []
   Projectile: {fileID: 474097148577293721, guid: 519719be0abe0764fbd1510cba2636b4, type: 3}
