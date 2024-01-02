@@ -21,6 +21,9 @@ public class ScoutCard : MonoBehaviour
     [SerializeField]
     private GameObject Character;
 
+    [SerializeField]
+    private GameObject PlayerCharacterPanel;
+
     private Player thePlayer;
 
     public ScoutCard(Player player)
@@ -30,10 +33,11 @@ public class ScoutCard : MonoBehaviour
         // Access the data from GameManager and update the UI text
         Name.text = thePlayer.Name;
         Level.text = "Level:" + thePlayer.Level.ToString();
-        if (Character != null && Character.GetComponent<CharacterBuilder>() != null)
+        if (PlayerCharacterPanel!= null)// && Character.GetComponent<CharacterBuilder>() != null)
         {
-            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
-            Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
+            PlayerCharacterPanel.GetComponent<PlayerCharacterPanel>().SetCharacterPanel(thePlayer.Appearance);
+//            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
+  //          Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
         }
 
         ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
@@ -58,10 +62,11 @@ public class ScoutCard : MonoBehaviour
     {
         Name.text = thePlayer.Name;
         Level.text = "Level:" + thePlayer.Level.ToString();
-        if (Character != null && Character.GetComponent<CharacterBuilder>() != null)
+        if (PlayerCharacterPanel!= null)// && Character.GetComponent<CharacterBuilder>() != null)
         {
-            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
-            Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
+            PlayerCharacterPanel.GetComponent<PlayerCharacterPanel>().SetCharacterPanel(thePlayer.Appearance);
+            //            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
+            //          Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
         }
 
         ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);

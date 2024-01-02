@@ -26,6 +26,7 @@ public class ScoutPlayerPanel : MonoBehaviour
             GameObject scoutCard = Instantiate(scoutCardPrefab, transform);
             scoutCard.GetComponent<ScoutCard>().SetPlayer(scoutablePlayers[i]);
             scoutCards.Add(scoutCard);
+
         }
     }
 // Assign ScoutCard to each of the FA Players
