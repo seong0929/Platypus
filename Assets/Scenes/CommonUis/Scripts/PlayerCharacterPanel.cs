@@ -2,6 +2,7 @@ using Assets.PixelHeroes.Scripts.CharacterScripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCharacterPanel : MonoBehaviour
 {
@@ -9,11 +10,14 @@ public class PlayerCharacterPanel : MonoBehaviour
     
     // Get and Set CharacterBuilder
     private CharacterBuilder _characterBuilder;
+    [SerializeField]
+    private Image _characterImage;
 
     public void SetCharacterPanel(CharacterAppearance characterAppearance)
     {
         CharacterAppearance = characterAppearance;
         SetCharacter();
+        SetCharacterImage();
     }
 
     private void SetCharacter()
@@ -25,6 +29,29 @@ public class PlayerCharacterPanel : MonoBehaviour
         }
 
         _characterBuilder.SetByCharacterAppearance(CharacterAppearance);
+    }
+
+    private void SetCharacterImage()
+    {
+        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if(spriteRenderer == null)
+        {
+            Debug.LogError("SpriteRenderer not found");
+        }
+        if(_characterImage == null)
+        {
+            Debug.LogError("Image not found");
+        }
+
+        _characterImage.sprite = spriteRenderer.sprite;
+
+        _characterImage.preserveAspect = true;
+
+        _characterImage.rectTransform.sizeDelta = spriteRenderer.size;
+
+        _characterImage.enabled = true;
+        spriteRenderer.enabled = false;
     }
 
 }

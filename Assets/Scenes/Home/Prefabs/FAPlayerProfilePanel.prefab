@@ -98,6 +98,7 @@ MonoBehaviour:
   Level: {fileID: 7346424764531567504}
   ScoutButton: {fileID: 7346424763414909102}
   Character: {fileID: 7346424762467888660}
+  PlayerCharacterPanel: {fileID: 7346424764432448570}
 --- !u!1 &7346424763021115292
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +620,11 @@ PrefabInstance:
 --- !u!1 &7346424762467888660 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 520952286201073071, guid: b4d40268c1402214f930557940f8cc0c, type: 3}
+  m_PrefabInstance: {fileID: 7118349595653530555}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7346424764432448570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 520952287592030081, guid: b4d40268c1402214f930557940f8cc0c, type: 3}
   m_PrefabInstance: {fileID: 7118349595653530555}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &7346424764432448571 stripped
