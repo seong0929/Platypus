@@ -9,9 +9,19 @@ public class SummonController : MonoBehaviour
 {
     public Animator Animator;
     public Rigidbody2D Rigidbody2D;
+
+    public float MoveSpeed = 1;
+    public float AttackSpeed = 1;
+    public float SkillSpeed = 1;
+    public float UltSpeed = 1;
+
     private string[] _animationStates = new string[] { "Idle", "Move", "Attack", "Skill", "Dead", "Respawn", "Ult" };
     private float[] _animationMultiplier = new float[] { 1, 1, 1, 1, 1, 1, 1 };
-    // Set animation state
+
+    private float MaxAreaX;
+    private float MaxAreaY;
+    private float minAreaX;
+    private float minAreaY;
 
     void Start()
     {
@@ -23,10 +33,11 @@ public class SummonController : MonoBehaviour
         }
 
         InitAnimationStatesandMultipliers();
+        SetArea();
     }
 
     // Set animation state and make it play in certain seconds
-    public void SetAnimationState(string state, float seconds = 1)
+    public void SetAnimationState(string state, float speed = 1)
     {
         if( _animationStates.Contains(state) == false)
         {
@@ -42,7 +53,22 @@ public class SummonController : MonoBehaviour
         
         Animator.SetBool(state, true);
         Animator.SetTrigger(state);
-        Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * seconds;
+        Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * Mathf.Max(0.1f, speed);
+    }
+
+    public void Move(Vector2 direction)
+    {   
+        Rigidbody2D.velocity = direction;
+    }
+    public void Transport(Vector3 transform)
+    {
+        // make sure the summon doesn't go out of the map
+        if (transform.x > MaxAreaX) transform.x = MaxAreaX;
+        if (transform.x < minAreaX) transform.x = minAreaX;
+        if (transform.y > MaxAreaY) transform.y = MaxAreaY;
+        if (transform.y < minAreaY) transform.y = minAreaY;
+
+        Rigidbody2D.transform.position = transform;
     }
 
     #region initialization
@@ -67,6 +93,32 @@ public class SummonController : MonoBehaviour
 
         _animationStates = possibleAnimationStates;
         _animationMultiplier = animationMultiplier;
+    }
+
+    public void SetArea()
+    {
+        // find "BattleArea" object
+        GameObject battleArea = GameObject.Find("BattleArea");
+        if (battleArea == null)
+        {
+            Debug.LogError("BattleArea object not found!");
+            return;
+        }
+
+        // get the size of the battle area
+        BoxCollider2D battleAreaCollider = battleArea.GetComponent<BoxCollider2D>();
+        if (battleAreaCollider == null)
+        {
+            Debug.LogError("BattleArea collider not found!");
+            return;
+        }
+
+        // set the size of the battle area
+        MaxAreaX = battleAreaCollider.bounds.max.x;
+        MaxAreaY = battleAreaCollider.bounds.max.y;
+        minAreaX = battleAreaCollider.bounds.min.x;
+        minAreaY = battleAreaCollider.bounds.min.y;
+
     }
     #endregion
 
