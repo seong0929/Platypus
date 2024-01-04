@@ -1,3 +1,4 @@
+// BattleManager.cs: Setting up Battle
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
@@ -17,14 +18,17 @@ public class BattleManager : MonoBehaviour
 
     private List<ESummon> SummonListA;
     private List<ESummon> SummonListB;
-    [SerializeField]
     private Transform[] TeamASpawn;
-    [SerializeField]
     private Transform[] TeamBSpawn;
 
-    public GameObject SenorZorroPrefab;
-    public GameObject SpitGliderPrefab;
-    public GameObject PoToadPrefab;
+    #region Summon Prefabs
+    [SerializeField]
+    private GameObject SenorZorroPrefab;
+    [SerializeField]
+    private GameObject SpitGliderPrefab;
+    [SerializeField]
+    private GameObject PoToadPrefab;
+    #endregion
 
     private Dictionary<ESummon, GameObject> summonPrefabs;
 
@@ -34,23 +38,9 @@ public class BattleManager : MonoBehaviour
     }
     private void Start()
     {
-        // check if TeamASpawn and TeamBSpawn are null
-        if (SpawnPoint == null)
-        {
-            Debug.Log("SpawnPoint is null");
-            return;
-        }
-        if (SpawnPoint.transform.Find("TeamA") == null)
-        {
-            Debug.Log("TeamA is null");
-            return;
-        }
-        if (SpawnPoint.transform.Find("TeamB") == null)
-        {
-            Debug.Log("TeamB is null");
-            return;
-        }
+        IsComponentsValid();
 
+        // Get TeamA/B Spawn from the SpawnPoint
         TeamASpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamA"));
         TeamBSpawn = GetChildTransforms(SpawnPoint.transform.Find("TeamB"));
 
@@ -200,19 +190,7 @@ public class BattleManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
-    ////ToDo: 배틀씬에서 넘어온 소환수를 인수에 넣기
-    //public void AssignTeam(GameObject[] summons)
-    //{
-    //    //ToDo: 배틀씬에서 user가 선택했는 지 안 했는 지 판단하는 함수 필요
-    //    foreach (GameObject summon in summons)
-    //    {
-    //        //if() 배틀씬에서 선택을 했다면
-    //        summon.GetComponent<Summon>().MyTeam = true;
-    //        //else배틀씬에서 선택은 되지 않았지만, 넘어 온 경우
-    //        summon.GetComponent<Summon>().MyTeam = false;
-    //    }
-    //}
-    // UI에 타이머 값을 표시
+
     private void UpdateTimerUI()
     {
         float remainingTime = Mathf.Max(MaxGameTime - GameTime, 0f);
@@ -244,4 +222,54 @@ public class BattleManager : MonoBehaviour
         get { return TeamBSpawn; }
         set { TeamBSpawn = value; }
     }
+
+    #region Helper Functions
+    // check if any required components are missing
+    private bool IsComponentsValid()
+    {
+        // check if TeamASpawn and TeamBSpawn are null
+        if (SpawnPoint == null)
+        {
+            Debug.Log("SpawnPoint is null");
+            return false;
+        }
+        if (SpawnPoint.transform.Find("TeamA") == null)
+        {
+            Debug.Log("TeamA is null");
+            return false;
+        }
+        if (SpawnPoint.transform.Find("TeamB") == null)
+        {
+            Debug.Log("TeamB is null");
+            return false;
+        }
+
+        // check needed UIs are null
+        if (TimerText == null)
+        {
+            Debug.Log("TimerText is null");
+            return false;
+        }
+
+        // check if Summon Prefabs are null
+        if (SenorZorroPrefab == null)
+        {
+            Debug.Log("SenorZorroPrefab is null");
+            return false;
+        }
+        if (SpitGliderPrefab == null)
+        {
+            Debug.Log("SpitGliderPrefab is null");
+            return false;
+        }
+        if (PoToadPrefab == null)
+        {
+            Debug.Log("PoToadPrefab is null");
+            return false;
+        }
+
+        return true;
+    }
+    //bool 
+    #endregion
 }
