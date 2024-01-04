@@ -1,9 +1,6 @@
 // SummonController.cs -- Script that controls the movement and animation of the summons
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Enums;
 
 public class SummonController : MonoBehaviour
 {
