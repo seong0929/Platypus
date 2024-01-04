@@ -138,14 +138,6 @@ public class BattleManager : MonoBehaviour
         {
             SpawnSummon(SummonListB[i], false, i);
         }
-        //foreach (ESummon summon in SummonListA)
-        //{
-        //    SpawnSummon(summon, true, 1);
-        //}
-        //foreach (ESummon summon in SummonListB)
-        //{
-        //    SpawnSummon(summon, false, 1);
-        //}
     }
     private void SpawnSummon(ESummon summon, bool isTeamA, int position)
     {
@@ -172,17 +164,6 @@ public class BattleManager : MonoBehaviour
             summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
             summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamA;
             summonObject.transform.position = TeamASpawn[position].position;
-
-            //foreach (Transform point in ASpawn)
-            //{
-            //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
-
-            //    if (colliders.Length == 0)
-            //    {
-            //        summonObject.transform.position = point.position;
-            //        break;
-            //    }
-            //}
         }
         else
         {
@@ -197,16 +178,6 @@ public class BattleManager : MonoBehaviour
             summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
             summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamB;
             summonObject.transform.position = TeamBSpawn[position].position;
-            //foreach (Transform point in BSpawn)
-            //{
-            //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
-
-            //    if (colliders.Length == 0)
-            //    {
-            //        summonObject.transform.position = point.position;
-            //        break;
-            //    }
-            //}
         }
     }
 
