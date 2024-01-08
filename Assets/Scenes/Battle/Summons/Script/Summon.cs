@@ -4,9 +4,14 @@ using BehaviorTree;
 using Skills;
 using static Enums;
 using System.Collections;
-
-//공통적이되 함수 내용이 달라지는 클래스
-public abstract class Summon : MonoBehaviour
+public struct SummonStats
+{
+    public float Health;
+    public float Defence;
+    public float MoveSpeed;
+}
+    //공통적이되 함수 내용이 달라지는 클래스
+    public abstract class Summon : MonoBehaviour
 {
     #region for the Inspector
     public GameObject Target; 

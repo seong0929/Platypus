@@ -14,7 +14,8 @@ public class BattleManager : MonoBehaviour
     public float GameTime;  // 경과 시간
     public float MaxGameTime = Constants.Play_TIME;   //전투시간
     public TMP_Text TimerText;       // 타이머 UI
-    public GameObject SpawnPoint;   // 스폰 위치
+    [SerializeField]
+    private GameObject SpawnPoint;   // 스폰 위치
 
     private List<ESummon> SummonListA;
     private List<ESummon> SummonListB;

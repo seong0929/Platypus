@@ -772,8 +772,6 @@ MonoBehaviour:
   MaxGameTime: 180
   TimerText: {fileID: 601944081}
   SpawnPoint: {fileID: 271212044}
-  TeamASpawn: []
-  TeamBSpawn: []
   SenorZorroPrefab: {fileID: 8544673299357075893, guid: 4d50364200c488e468bab32f34209837, type: 3}
   SpitGliderPrefab: {fileID: 8544673299357075893, guid: 89ba3a7fa8dc67e459bd66039df4fb34, type: 3}
   PoToadPrefab: {fileID: 1566618110003923544, guid: 5a507ad31cd340b4dbb9254a44fede28, type: 3}
