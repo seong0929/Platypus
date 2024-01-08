@@ -61,7 +61,6 @@ public class SenorZorro : Summon
         float[] summonStats = { 0.7f, 1f, 40f, 5f};
 
         //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
-//        base.stats = summonStats;
         base.BaseStats = summonStats;
     }
     private void Awake()
@@ -69,7 +68,6 @@ public class SenorZorro : Summon
         skills.Add(new Attack());
         skills.Add(new FootworkSkill());
         skills.Add(new FlecheSkill());
-
 
         CreateBehaviorTree();
         _rootNode.SetData("State", ESummonState.Respawn);
@@ -97,7 +95,7 @@ public class SenorZorro : Summon
 
         public Attack()
         {
-            base._stats = skillStats;
+            base.Stats = skillStats;
             HasCc = ECC.None;
             float[] bufferStats = { -1f, -1f, -1f };
             buffer.Stats = bufferStats;
@@ -128,7 +126,7 @@ public class SenorZorro : Summon
                 }
                 return true;
             }
-            
+
         }
     }
     public class FootworkSkill : Skill
@@ -140,7 +138,7 @@ public class SenorZorro : Summon
 
         public FootworkSkill()
         {
-            base._stats = skillStats;
+            base.Stats = skillStats;
             float[] bufferStats = { -1f, -1f, -1f };
             buffer.Stats = bufferStats;
             buffer.Type = EBufferType.None;
@@ -210,7 +208,7 @@ public class SenorZorro : Summon
 
         public FlecheSkill()
         {
-            base._stats = skillStats;
+            base.Stats = skillStats;
             float[] bufferStats = { -1f, -1f, -1f };
             buffer.Stats = bufferStats;
             buffer.Type = EBufferType.None;

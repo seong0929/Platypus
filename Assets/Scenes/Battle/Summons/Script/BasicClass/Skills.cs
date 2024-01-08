@@ -10,7 +10,8 @@ namespace Skills
         #region Settings
         public float SkiilCounter = 0;
         public ECC HasCc;
-        protected float[] _stats;
+        
+        public float[] Stats;
         protected float _skillCooldown = 0f;
         protected bool _isStart = false;
         private bool _done = false;
@@ -24,11 +25,11 @@ namespace Skills
         {
             return false;            // 동작 구현
         }
-        public float[] Stats
+        public virtual bool Execute(GameObject summon, GameObject[] targets, Animator animator)
         {
-            get { return _stats; }
-            set { _stats = value; }
+            return false;            // 동작 구현
         }
+
         public void FlipSprite(GameObject summon, GameObject target)
         {
             if (summon.transform.position.x < target.transform.position.x)
@@ -48,11 +49,11 @@ namespace Skills
         }
         public void StartSkillCooldown()
         {
-            _skillCooldown = _stats[(int)ESkillStats.CoolTime];
+            _skillCooldown = Stats[(int)ESkillStats.CoolTime];
         }
         public void UpdateSkillCooldown(float deltaTime)
         {
-            if (_stats[((int)ESkillStats.CoolTime)] > 0f)
+            if (Stats[((int)ESkillStats.CoolTime)] > 0f)
             {
                 _skillCooldown -= deltaTime;
                 if (_skillCooldown <= 0f)
@@ -68,17 +69,11 @@ namespace Skills
         }
         public bool IsDone()//float duration)
         {
-            Debug.Log("In IsDone fn");
-            //CheckDone(duration);
-            Debug.Log("IS it Done? : "+ _done);
             return _done;
         }
         public IEnumerator CheckDone(float duration)
         {
-            Debug.Log("IS it WORKING");
-            Debug.Log("In CheckDone fn");
             yield return new WaitForSeconds(duration);
-            Debug.Log("In CheckDone fn next");
             _done = true;
         }
         #endregion
@@ -87,20 +82,10 @@ namespace Skills
     public class Buffer
     {
         #region 공통
-        private float[] _stats;
+        public float[] Stats;
         private float _bufferCooldown;
-        private EBufferType _type;
+        public EBufferType Type;
 
-        public float[] Stats
-        {
-            get { return _stats; }
-            set { _stats = value; }
-        }
-        public EBufferType Type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
         #endregion
         #region 쿨타임
         public bool IsBufferCooldown(float time)

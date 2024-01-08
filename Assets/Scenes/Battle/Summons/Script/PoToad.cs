@@ -49,7 +49,7 @@ public class PoToad : Summon
 
         public Attack()
         {
-            base._stats = _skillStats;
+            base.Stats = _skillStats;
             float[] bufferStats = { 0f, 0f };
             _buffer.Stats = bufferStats;
             _buffer.Type = EBufferType.None;
@@ -67,7 +67,7 @@ public class PoToad : Summon
 
         public SlimeLick()
         {
-            base._stats = _skillStats;
+            base.Stats = _skillStats;
             float[] debufferStats = { 2f, 2f, -1f };
             _debuffer.Stats = debufferStats;
             _debuffer.Type = EBufferType.Debuffer;
@@ -111,7 +111,7 @@ public class PoToad : Summon
 
         public ElixirTorrent()
         {
-            base._stats = _skillStats;
+            base.Stats = _skillStats;
             float[] bufferStats = { 5f, 2f, 1f };
             _buffer.Stats = bufferStats;
             _buffer.Type = EBufferType.Buffer;

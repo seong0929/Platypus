@@ -51,7 +51,7 @@ public class SpitGlider : Summon
 
         public Attack()
         {
-            base._stats = _skillStats;
+            base.Stats = _skillStats;
             float[] bufferStats = { -1f, -1f, -1f };
             _buffer.Stats = bufferStats;
             _buffer.Type = EBufferType.None;
@@ -107,7 +107,7 @@ public class SpitGlider : Summon
 
         public AirStrike()
         {
-            base._stats = _skillStats;
+            base.Stats = _skillStats;
             float[] ccStats = { 1f, 3f, -1f };
             _cc.Stats = ccStats;
             _cc.Type = EBufferType.CC;
@@ -146,7 +146,7 @@ public class SpitGlider : Summon
 
         public AerialBombardment()
         {
-            base._stats = _skillStats;
+            base.Stats = _skillStats;
             float[] bufferStats = { -1f, -1f, -1f };
             _buffer.Stats = bufferStats;
             _buffer.Type = EBufferType.None;

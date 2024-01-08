@@ -34,7 +34,7 @@ public class SummonController : MonoBehaviour
     }
 
     // Set animation state and make it play in certain seconds
-    public void SetAnimationState(string state, float speed = 1)
+    public void SetAnimationState(string state, float second = 1)
     {
         if( _animationStates.Contains(state) == false)
         {
@@ -50,7 +50,7 @@ public class SummonController : MonoBehaviour
         
         Animator.SetBool(state, true);
         Animator.SetTrigger(state);
-        Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * Mathf.Max(0.1f, speed);
+        Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * Mathf.Max(0.01f, second);
     }
 
     public void Move(Vector2 direction)

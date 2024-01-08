@@ -13,6 +13,8 @@ public abstract class Summon : MonoBehaviour
     public ESummonState State;
     #endregion
 
+    private SummonController summonController;
+
     public string SummonName;
     public GameObject[] Opponents;
     public ECC CurrentCC;
@@ -24,23 +26,18 @@ public abstract class Summon : MonoBehaviour
     public float[] BaseStats;
 
     [SerializeField]
-    public float[] stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
+    public float[] Stats;  //임시 스탯: 사거리, 이동속도, 체력, 데미지, 방어력
     protected List<Skill> skills = new List<Skill>();   //skillIndex == 0: 일반 공격, 1: 스킬, 2: 궁
-//    [SerializeField]
     private bool _isAlive = true;
 
     #region settings
-    public float[] Stats
-    {
-        get { return stats; }
-        set { stats = value; }
-    }
+
     protected abstract Node CreateBehaviorTree();
     #endregion
     #region Attack
     public bool IsDead()
     {
-        if(stats[((int)ESummonStats.Health)] <= 0)
+        if(Stats[((int)ESummonStats.Health)] <= 0)
         {
             _isAlive = false;
             return !_isAlive;
@@ -48,12 +45,13 @@ public abstract class Summon : MonoBehaviour
         _isAlive = true;
         return !_isAlive;
     }
-    // 데미지 받은 함수
+
+    // 데미지 받는 함수
     public void TakeDamage(float damage)
     {
-        float actualDamage = Mathf.Max(damage - stats[((int)ESummonStats.Defence)], 0);
-        stats[((int)ESummonStats.Health)] -= actualDamage;
-        if (stats[((int)ESummonStats.Health)] <= 0) 
+        float actualDamage = Mathf.Max(damage - Stats[((int)ESummonStats.Defence)], 0);
+        Stats[((int)ESummonStats.Health)] -= actualDamage;
+        if (Stats[((int)ESummonStats.Health)] <= 0) 
         {
             _deadTime = BattleManager.instance.GameTime;
             _isAlive = false;
@@ -89,6 +87,6 @@ public abstract class Summon : MonoBehaviour
 
     public void ResetStats()
     {
-        stats = (float[])BaseStats.Clone();
+        Stats = (float[])BaseStats.Clone();
     }
 }
