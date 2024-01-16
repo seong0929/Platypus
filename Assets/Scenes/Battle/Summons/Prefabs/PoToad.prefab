@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7428061923758178793}
   - component: {fileID: 519962954665326170}
   - component: {fileID: 2367538792243219271}
-  - component: {fileID: 7109904074719579327}
   m_Layer: 0
   m_Name: PoToad
   m_TagString: Summon
@@ -165,22 +164,3 @@ PolygonCollider2D:
       - {x: 0.17999999, y: -0.14}
       - {x: 0.26, y: -0.02}
       - {x: 0.26, y: 0.22999999}
---- !u!114 &7109904074719579327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566618110003923544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15b5c2e3edfc5ed4d8e48c32431ed250, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SummonName: 
-  Opponent: {fileID: 0}
-  CurrentCC: 0
-  CurrentCCStats: []
-  MyTeam: 0
-  _deadTime: 0
-  Area: {fileID: 7959615659237009251, guid: 04277437594be584e9ed40f8d32f73b3, type: 3}

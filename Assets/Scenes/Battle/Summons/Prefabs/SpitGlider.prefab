@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8544673299357075896}
   - component: {fileID: 8544673299357075899}
   - component: {fileID: 8544673299357075898}
-  - component: {fileID: -5209658663630326722}
   m_Layer: 0
   m_Name: SpitGlider
   m_TagString: Summon
@@ -164,19 +163,3 @@ PolygonCollider2D:
       - {x: 0.38, y: -0.22999999}
       - {x: 0.38, y: -0.07}
       - {x: 0.37, y: 0}
---- !u!114 &-5209658663630326722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8544673299357075893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e8d49e08202e8c488b9da06fddc9bf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SummonName: 
-  Opponent: {fileID: 0}
-  MyTeam: 0
-  Projectile: {fileID: 474097148577293721, guid: 519719be0abe0764fbd1510cba2636b4, type: 3}

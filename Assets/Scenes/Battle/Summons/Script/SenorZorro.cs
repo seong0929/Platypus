@@ -3,275 +3,271 @@ using UnityEngine;
 using BehaviorTree;
 using Skills;
 using static Enums;
+using UnityEngine.Rendering;
 
 public class SenorZorro : Summon
 {
+    [SerializeField]
+    Animator _animator;
 
-    #region make data show on inspector
-    public string[] dictionaryArray;
-    public string[] currentAnimatorStateArray;
-    public Dictionary<string, object> rootNodeData = new Dictionary<string, object>();
-    public AnimatorStateInfo currentAnimatorState;
-
-    private void SetInspectatorArray()
-    {
-        int dicLength = rootNodeData.Count;
-        dictionaryArray = new string[dicLength];
-
-        int i = 0;
-        foreach(KeyValuePair<string, object> data in rootNodeData)
-        {
-            dictionaryArray[i] = data.Key.ToString() + " : " + data.Value.ToString();
-            i++;
-        }
-
-        currentAnimatorStateArray = new string[10];
-        currentAnimatorStateArray[0] = "fullPathHash : " + currentAnimatorState.fullPathHash.ToString();
-        currentAnimatorStateArray[1] = "length : " + currentAnimatorState.length.ToString();
-        currentAnimatorStateArray[2] = "loop : " + currentAnimatorState.loop.ToString();
-        currentAnimatorStateArray[3] = "speed : " + currentAnimatorState.speed.ToString();
-        currentAnimatorStateArray[4] = "speedMultiplier : " + currentAnimatorState.speedMultiplier.ToString();
-        currentAnimatorStateArray[5] = "tagHash : " + currentAnimatorState.tagHash.ToString();
-        currentAnimatorStateArray[6] = "normalizedTime : " + currentAnimatorState.normalizedTime.ToString();        
-        currentAnimatorStateArray[7] = " Name : " + currentAnimatorState.ToString();
-        currentAnimatorStateArray[8] = " IsNameAttack : " + currentAnimatorState.IsName("Attack").ToString();
-        currentAnimatorStateArray[9] = " IsNameSkill : " + currentAnimatorState.IsName("Skill").ToString();
-
-
-    }
-
-    private void UpdateInspectatorData()
-    {
-        Transform targetT = (Transform)_rootNode.GetData("target");
-        base.Target = targetT.gameObject;
-        base.State = (ESummonState)_rootNode.GetData("State");
-        rootNodeData = _rootNode.GetAllData();
-        Debug.Log("rootNodeData: " + rootNodeData);
-        currentAnimatorState = this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-        Debug.Log("currentAnimatorState: " + currentAnimatorState);
-        SetInspectatorArray();
-
-    }
-    #endregion
+    private Attack attack = new Attack();
+    private FootworkSkill footworkSkill = new FootworkSkill(0.1f);
+    private FlecheSkill flecheSkill = new FlecheSkill();
+    private float _desirableDistance = 0.1f;
 
     #region Settings
     public SenorZorro()
-    {
-        //ToDo: GameManager를 통해 픽 된 캐릿터 스탯 가져오기
-        float[] summonStats = { 0.7f, 1f, 40f, 5f};
-
-        //Summon 클래스의 생성자를 호출하면서 초기화된 값을 전달
-        base.BaseStats = summonStats;
+    {   
     }
     private void Awake()
     {
-        skills.Add(new Attack());
-        skills.Add(new FootworkSkill());
-        skills.Add(new FlecheSkill());
+        if (_animator == null)
+        {
+            Debug.LogError("Animator component not found!");
+            return;
+        }
+    }
+    private void Start()
+    {
+        base.SetSummonBasic(ESummon.SenorZorro, _animator);
 
-        CreateBehaviorTree();
-        _rootNode.SetData("State", ESummonState.Respawn);
+        // setting up skills
+        InitSkills();
 
-        foreach (Skill skill in skills)
+        // dictionary skill cooldowns
+        foreach( (string key, Skill skill) in _skillDictionary)
         {
             skill.StartSkillCooldown();
         }
+
+        base._root = CreateBehaviorTree();
+        UpdateRootNodeData();
+        update_for_inspectator();
     }
     private void Update()
     {
-        UpdateSkillCooldowns(Time.deltaTime);
-        if (_rootNode != null) 
+        if (_root == null)
         {
-            _rootNode.Evaluate();
-            //UpdateInspectatorData();
+            _root = CreateBehaviorTree();
         }
+        UpdateRootNodeData();
+        UpdateSkillCooldowns(Time.deltaTime);
+        //Make_Inspectator_Changes_update_real_value();
+        update_for_inspectator();
+        _root.Evaluate();
+        if(!_isMoving)
+        {
+            Rigidbody2D.velocity = Vector2.zero;
+        }
+        UpdateHardCCContainer(Time.deltaTime);
     }
+
     #endregion
     #region Skill
-    public class Attack: Skill
+    public override void InitSkills()
     {
-        private Buffer buffer = new Buffer();
-        private float[] skillStats = { 0.8f, 1f, 2f };   // 사거리, 쿨타임, 데미지
+        // setting up skills
+        _skillDictionary.Add("attack", attack);
+        _skillDictionary.Add("skill", footworkSkill);
+        _skillDictionary.Add("ult", flecheSkill);
+    }
+    public class Attack : Skill
+    {
+        public SkillStats skillStats = new SkillStats() {
+            CoolTime = 7f,
+            Damage = 10f,
+            Range = 0.5f,
+            Duration = 3f,
+            Heal = 0f,
+            CriticalChance = 0.3f,
+            CriticalCoefficient = 1.3f
+        };
+        public bool IsAnimationEventCalled = false;
 
         public Attack()
         {
             base.Stats = skillStats;
-            HasCc = ECC.None;
-            float[] bufferStats = { -1f, -1f, -1f };
-            buffer.Stats = bufferStats;
-            buffer.Type = EBufferType.None;
         }
-        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        public override bool Execute(Summon summon, Summon target)
         {
-            if(_isStart == false)
+            summon._isMoving = false;
+            if(State == ESkillState.Available)
             {
-                _isStart = true;
-                FlipSprite(summon, target);
-
-                animator.SetBool("Idle", false);
-                animator.SetBool("Move", false);            
-                animator.SetTrigger("Attack");
-
+                Debug.Log("Attack is available");
+                IsAnimationEventCalled = false;
+                base.SetInUse();
+                summon.SetAnimationState("Attack", skillStats.Duration);
                 return true;
             }
-            else
+            if(State == ESkillState.InUse && IsAnimationEventCalled)
             {
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-                if (stateInfo.IsName("Attack") && stateInfo.normalizedTime >= 0.9f)
-                {
-                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    _isStart = false;
-                    return false;
-                }
+                Debug.Log("Attack is called");
+                IsAnimationEventCalled = false;
+                summon.FlipSpriteTo(target);
+                summon.GiveDamage(target, skillStats.Damage);
+                StartSkillCooldown();
                 return true;
             }
-
+            return false;
         }
     }
     public class FootworkSkill : Skill
     {
-        private Buffer buffer = new Buffer();
-        private float[] skillStats = { 0.8f, 7f, 0f };   // 사거리, 쿨타임, 데미지
-        private bool isMoved = false;
-        private float movableDistance = 0f;
+        public SkillStats skillStats = new SkillStats()
+        {
+            CoolTime = 8f,
+            Damage = 0f,
+            Range = 0.5f,
+            Duration = 3f,
+            Heal = 0f,
+            CriticalChance = 0f,
+            CriticalCoefficient = 0f
+        };
 
-        public FootworkSkill()
+        public float DesirableDistance = 5f;
+        public bool IsAnimationEventCalled = false;
+
+        public FootworkSkill(float desirableDistance = 5f)
         {
             base.Stats = skillStats;
-            float[] bufferStats = { -1f, -1f, -1f };
-            buffer.Stats = bufferStats;
-            buffer.Type = EBufferType.None;
-            HasCc = ECC.None;
+            DesirableDistance = desirableDistance;
         }
-        public override bool Execute(GameObject summon, GameObject target, Animator animator)
+        public override bool Execute(Summon summon, Summon target)
         {
-            if(_isStart == false)
+            summon._isMoving = false;
+            if(base.State == ESkillState.Available)
             {
-                animator.SetBool("Idle", false);
-                animator.SetBool("Move", false);
-                animator.SetTrigger("Skill");
+                IsAnimationEventCalled = false;
+                base.SetInUse();
+                summon.SetAnimationState("Skill", skillStats.Duration);
+                summon.FlipSpriteTo(target);
 
-                _isStart = true;
-                isMoved = false;
-                movableDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)] * 2;
                 return true;
             }
-            else
+            if(base.State == ESkillState.InUse && IsAnimationEventCalled)
             {
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                IsAnimationEventCalled = false;
 
-                FlipSprite(summon, target);
-                if(isMoved && stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.9f)
+                Vector2 summonPosition = summon.transform.position;
+                Vector2 targetPosition = target.transform.position;
+                float distance = Vector2.Distance(summonPosition, targetPosition);
+                float movableDistance = skillStats.Range;
+                // 멀리 있을 때
+                if (distance > DesirableDistance)
                 {
-                    isMoved = false;
-                    _isStart = false;
-                    return false;
-                }
-                if (stateInfo.IsName("Skill") && stateInfo.normalizedTime >= 0.4f && isMoved == false)
-                {
-                    Vector2 summonPosition = summon.transform.position;
-                    Vector2 targetPosition = target.transform.position;
-                    float distance = Vector2.Distance(summonPosition, targetPosition);
-                    float attackRagne = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
-
+                    // 멀지만, 최대 이동시 공격 범위 보다 가까워질 위험이 있는 경우
+                    if ((distance - movableDistance) < DesirableDistance)
+                    {
+                        Vector2 teleportPosition= (summonPosition - targetPosition).normalized * DesirableDistance + targetPosition;
+                        summon.Teleport(teleportPosition);
+                    }
                     // 멀리 있을 때
-                    if (distance > attackRagne)
-                    {
-                        // 멀지만, 최대 이동시 공격 범위 보다 가까워질 위험이 있는 경우
-                        if ((distance - movableDistance) < attackRagne)
-                        {
-                            summon.transform.position = (summonPosition- targetPosition).normalized * attackRagne + targetPosition;
-                        }
-
-                        // 멀리 있을 때
-                        summon.transform.position = summonPosition + (targetPosition - summonPosition).normalized * movableDistance;
-                    }
-                    // 가까이 있을 때
-                    else
-                    {
-                        summon.transform.position = (summonPosition - targetPosition).normalized * attackRagne + targetPosition;
-                    }
-                    
-                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    isMoved = true;
-                    return true;
+                    summon.Teleport(summonPosition + (targetPosition - summonPosition).normalized * movableDistance);
                 }
+                // 가까이 있을 때
+                else
+                {
+                    summon.Teleport( (summonPosition - targetPosition).normalized * DesirableDistance + targetPosition);
+                }
+
                 return true;
             }
+
+            return false;
         }
     }
     public class FlecheSkill : Skill
     {
-        private Buffer buffer = new Buffer();
-        private float[] skillStats = { 20f, 19f, 10f };   // 사거리, 쿨타임, 데미지
+        public SkillStats skillStats = new SkillStats()
+        {
+            CoolTime = 20f,
+            Damage = 20f,
+            Range = 1f,
+            Duration = 8f,
+            Heal = 0f,
+            CriticalChance = 0.4f,
+            CriticalCoefficient = 1.4f
+        };
+
+        public bool IsUltInAnimationEventCalled = false;
 
         public FlecheSkill()
         {
             base.Stats = skillStats;
-            float[] bufferStats = { -1f, -1f, -1f };
-            buffer.Stats = bufferStats;
-            buffer.Type = EBufferType.None;
-            HasCc = ECC.None;
         }
-        public override bool Execute(GameObject summon, GameObject target, Animator animator)
-        {            
-            if (_isStart == false)
+        public override bool Execute(Summon summon, Summon target)
+        {
+            summon._isMoving = false;
+
+            float DesirableDistance = 5f;
+            if (base.State == ESkillState.Available)
             {
-                animator.SetBool("Idle", false);
-                animator.SetBool("Move", false);
-                animator.SetTrigger("UltIn");
-                _isStart = true;
+                base.SetInUse();
+                summon.SetAnimationState("UltIn", skillStats.Duration / 2);
+                summon.FlipSpriteTo(target);
+
+                IsUltInAnimationEventCalled = false;
+
                 return true;
             }
-            else
+            if(base.State == ESkillState.InUse && IsUltInAnimationEventCalled)
             {
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                if(stateInfo.IsName("UltIn") && stateInfo.normalizedTime >= 0.9f)
-                {
-                    animator.SetTrigger("UltOut");
-                    _isStart = false;
+                summon.SetAnimationState("UltOut", skillStats.Duration /2);
 
-                    float appearDistance = summon.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
-                    Vector3 direction = (target.transform.position - summon.transform.position).normalized;
-                    float distance = Vector3.Distance(summon.transform.position, target.transform.position);
-                    float teleportDistance = distance - appearDistance;
+                float appearDistance = DesirableDistance;
+                Vector3 direction = (target.transform.position - summon.transform.position).normalized;
+                float distance = Vector3.Distance(summon.transform.position, target.transform.position);
+                float teleportDistance = distance - appearDistance;
 
-                    Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
-                    summon.transform.position = teleportPosition;
+                Vector3 teleportPosition = summon.transform.position + direction * teleportDistance;
+                summon.Teleport(teleportPosition);
 
-                    Vector3 appearPosition = target.transform.position + direction * appearDistance;
-                    summon.transform.position = appearPosition;
-                    FlipSprite(summon, target);
+                Vector3 appearPosition = target.transform.position + direction * appearDistance;
+                summon.Teleport(appearPosition);
 
-                    summon.GetComponent<Summon>().GiveDamage(target.GetComponent<Summon>(), skillStats[((int)ESkillStats.Damage)]);
-                    return false;
-                }
+                summon.FlipSpriteTo(target);
+
+                List<Summon> targets = new List<Summon>();
+                targets.Add(target);
+
+                summon.GiveDamage(targets, skillStats.Damage);
+
+                IsUltInAnimationEventCalled = false;
                 return true;
             }
+            return false;
         }
     }
-    private void UpdateSkillCooldowns(float deltaTime)
+
+    public void CallAttackAnimationEvent()
     {
-        foreach (Skill skill in skills)
-        {
-            skill.UpdateSkillCooldown(deltaTime);
-        }
+        Debug.Log("Attack_SenorZorro Animation Event is called");
+        attack.IsAnimationEventCalled = true;
+    }
+    public void CallFootworkAnimationEvent()
+    {
+        Debug.Log("Footwork_SenorZorro Animation Event is called");
+        footworkSkill.IsAnimationEventCalled = true;
+    }
+    public void CallFlecheAnimatonEvent()
+    {
+        Debug.Log("Fleche_SenorZorro Animation Event is called");
+        flecheSkill.IsUltInAnimationEventCalled = true;
     }
     #endregion
     #region BehaviorTree
-    private Node _rootNode = null;
     protected override Node CreateBehaviorTree()
     {
-        _rootNode = new Selector(new List<Node>
+//        Node node = new Selector(new List<Node>
+        base._root = new Selector(new List<Node>
         {
             //행동 결정
             new Selector(new List<Node>{
                 // 리스폰
                 new Sequence(new List<Node>
                 {
-                    new CheckRespawn(this.gameObject),
-                    new DutyRespawn()
+                    new CheckRespawn(),
+                    new DutyRespawn(Constants.RESPAWN_TIME)
                 }),
                 // 캐릭터 생존 여부 확인 후, 리스폰
                 new Sequence(new List<Node>
@@ -282,8 +278,8 @@ public class SenorZorro : Summon
                 // CC 여부 확인
                 new Sequence(new List<Node>
                 {
-                    new CheckCC(),
-                    new DutyCC(),
+                    new CheckHardCC(),
+                    new DutyHardCC(),
                 }),
                 //적이 씬 안에 있다면, 행동
                 new Sequence(new List<Node>
@@ -294,14 +290,14 @@ public class SenorZorro : Summon
                         //적이 멀리 있다면, 가까이 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyOutOfAttackRange(),
+                            new Inverter (new CheckEnemyInAttackRange(attack.Stats.Range)),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node> //스킬 사용
                                 {
-                                    new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                                    new TaskSkill(skills[((int)ESummonAction.Skill)])
+                                    new CheckSkill(footworkSkill),
+                                    new TaskSkill(footworkSkill)
                                 }),
                                 new DoMoveToEnemy() // 일반 이동
                             })
@@ -309,32 +305,32 @@ public class SenorZorro : Summon
                         //적이 공격 범위 안에 있다면, 공격
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyInAttackRange(),
-                            new Inverter(new CheckEnemyTooClose()),
+                            new CheckEnemyInAttackRange(attack.Stats.Range),
+                            new Inverter(new CheckEnemyTooClose(_desirableDistance)),
                             new Selector(new List<Node>{
                                 new Sequence(new List<Node> // 궁국기 사용
                                 {
-                                    new CheckUltGage(skills[((int)ESummonAction.Ult)]),
-                                    new TaskUlt(skills[((int)ESummonAction.Ult)])
+                                    new CheckSkill(flecheSkill),
+                                    new TaskSkill(flecheSkill)
                                 }),
                                 new Sequence(new List<Node>
                                 {
-                                    new CheckSkill(skills[((int)ESummonAction.Attack)]),
-                                    new TaskAttack(skills[((int)ESummonAction.Attack)]), // 일반 공격
+                                    new CheckSkill(attack),
+                                    new TaskSkill(attack), // 일반 공격
                                 })
                             })
                         }),
                         //적이 너무 가까우면, 이동
                         new Sequence(new List<Node>
                         {
-                            new CheckEnemyTooClose(),
+                            new CheckEnemyTooClose(_desirableDistance),
                             //스킬이 있다면 스킬 사용, 아니면 이동
                             new Selector(new List<Node>
                             {
                                 new Sequence(new List<Node> // 이동 스킬 사용
                                 {
-                                    new CheckSkill(skills[((int)ESummonAction.Skill)]),
-                                    new TaskSkill(skills[((int)ESummonAction.Skill)])
+                                    new CheckSkill(footworkSkill),
+                                    new TaskSkill(footworkSkill)
                                 }),
                                 new DoMoveAwayFromEnemy() // 일반 이동으로 멀어짐
                             })
@@ -349,7 +345,9 @@ public class SenorZorro : Summon
                 })
             })
         });
-        return _rootNode;
+
+        return base._root;
     }
+
     #endregion
 }

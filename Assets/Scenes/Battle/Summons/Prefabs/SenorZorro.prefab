@@ -184,9 +184,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a5f9b7fae9ccb49bc58d6350d6b88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SummonName: 
-  Opponent: {fileID: 0}
-  CurrentCC: 0
-  CurrentCCStats: []
-  MyTeam: 0
-  _deadTime: 0
+  Rigidbody2D: {fileID: 8544673299357075899}
+  MoveSeconds: 0.7
+  IdleSeconds: 0.7
+  AttackSeconds: 0.7
+  SkillSeconds: 0.7
+  UltSeconds: 0.7
+  DeadSeconds: 0.7
+  RespawnSeconds: 0.7
+  _animator: {fileID: 8544673299357075896}

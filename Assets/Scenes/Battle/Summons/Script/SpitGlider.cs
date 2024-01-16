@@ -3,7 +3,7 @@ using UnityEngine;
 using BehaviorTree;
 using Skills;
 using static Enums;
-
+/*
 public class SpitGlider : Summon
 {
     public GameObject Projectile;
@@ -303,4 +303,4 @@ public class SpitGlider : Summon
         return _rootNode;
     }
     #endregion
-}
+}*/

@@ -22,6 +22,9 @@ public class BattleManager : MonoBehaviour
     private Transform[] TeamASpawn;
     private Transform[] TeamBSpawn;
 
+    private List<Summon> teamASummons = new List<Summon>();
+    private List<Summon> teamBSummons = new List<Summon>();
+
     #region Summon Prefabs
     [SerializeField]
     private GameObject SenorZorroPrefab;
@@ -61,8 +64,8 @@ public class BattleManager : MonoBehaviour
         summonPrefabs = new Dictionary<ESummon, GameObject> 
         { 
             { ESummon.SenorZorro, SenorZorroPrefab },
-            { ESummon.SpitGlider, SpitGliderPrefab },
-            { ESummon.PoToad, PoToadPrefab },
+            //{ ESummon.SpitGlider, SpitGliderPrefab },
+            //{ ESummon.PoToad, PoToadPrefab },
             
             // added for test
             { ESummon.SenorZorro2, SenorZorroPrefab },
@@ -74,9 +77,9 @@ public class BattleManager : MonoBehaviour
             { ESummon.SenorZorro8, SenorZorroPrefab },
             { ESummon.SenorZorro9, SenorZorroPrefab },
             { ESummon.SenorZorro10, SenorZorroPrefab },
-            { ESummon.SpitGlider1, SpitGliderPrefab },
-            { ESummon.SpitGlider2, SpitGliderPrefab },
-            { ESummon.SpitGlider3, SpitGliderPrefab }        
+            //{ ESummon.SpitGlider1, SpitGliderPrefab },
+            //{ ESummon.SpitGlider2, SpitGliderPrefab },
+            //{ ESummon.SpitGlider3, SpitGliderPrefab }        
         };
     }
 
@@ -129,6 +132,15 @@ public class BattleManager : MonoBehaviour
         {
             SpawnSummon(SummonListB[i], false, i);
         }
+
+        foreach (Summon summon in teamASummons)
+        {
+            summon.SetSummonTeamEnemies(teamASummons, teamBSummons);
+        }
+        foreach (Summon summon in teamBSummons)
+        {
+            summon.SetSummonTeamEnemies(teamBSummons, teamASummons);
+        }
     }
     private void SpawnSummon(ESummon summon, bool isTeamA, int position)
     {
@@ -141,6 +153,16 @@ public class BattleManager : MonoBehaviour
         }
         summonObject = Instantiate(summonPrefabs[summon]);
          
+        SummonStats stats = new SummonStats();
+        stats.Health = 100f;
+        stats.Defence = 0f;
+        stats.MoveSpeed = 0.5f;
+        stats.DamageCoefficient = 1f;
+        stats.ActionSpeedCoefficient = 1f;
+        stats.CriticalChanceCoefficient = 1.5f;
+
+        Vector2 spawnPosition = Vector2.zero;
+
         if(isTeamA)
         {
             if(TeamASpawn.Length <= position)
@@ -151,10 +173,10 @@ public class BattleManager : MonoBehaviour
             {
                 position = 0;
             }
-
-            summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
-            summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamA;
-            summonObject.transform.position = TeamASpawn[position].position;
+            spawnPosition = TeamASpawn[position].position;
+            summonObject.GetComponent<Summon>().SetSummon(stats, teamASummons, teamBSummons, spawnPosition);
+            summonObject.transform.position = spawnPosition;
+            teamASummons.Add(summonObject.GetComponent<Summon>());
         }
         else
         {
@@ -166,9 +188,11 @@ public class BattleManager : MonoBehaviour
             {
                 position = 0;
             }
-            summonObject.GetComponent<Summon>().SpawnPositionOrder = position;
-            summonObject.GetComponent<Summon>().TeamSide = ETeamSide.TeamB;
-            summonObject.transform.position = TeamBSpawn[position].position;
+            spawnPosition = TeamBSpawn[position].position;
+            summonObject.GetComponent<Summon>().SetSummon(stats, teamBSummons, teamASummons, spawnPosition);
+            summonObject.transform.position = spawnPosition;
+
+            teamBSummons.Add(summonObject.GetComponent<Summon>());
         }
     }
 

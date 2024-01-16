@@ -2,70 +2,64 @@
 using System.Linq;
 using UnityEngine;
 
-public class SummonController : MonoBehaviour
+public class SummonController //: MonoBehaviour
 {
     public Animator Animator;
     public Rigidbody2D Rigidbody2D;
 
-    public float MoveSpeed = 1;
-    public float AttackSpeed = 1;
-    public float SkillSpeed = 1;
-    public float UltSpeed = 1;
-
     private string[] _animationStates = new string[] { "Idle", "Move", "Attack", "Skill", "Dead", "Respawn", "Ult" };
     private float[] _animationMultiplier = new float[] { 1, 1, 1, 1, 1, 1, 1 };
 
-    private float MaxAreaX;
-    private float MaxAreaY;
-    private float minAreaX;
-    private float minAreaY;
-
-    void Start()
+    public void InitializeController(Animator animator, Rigidbody2D rigidbody2D)
     {
-        Animator = GetComponent<Animator>();
-        if (Animator == null)
+        if (animator == null)
         {
             Debug.LogError("Animator component not found!");
             return;
         }
 
+        Animator = animator;
+        Rigidbody2D = rigidbody2D;
         InitAnimationStatesandMultipliers();
-        SetArea();
     }
 
     // Set animation state and make it play in certain seconds
     public void SetAnimationState(string state, float second = 1)
     {
-        if( _animationStates.Contains(state) == false)
+        if(Animator.GetBool(state) == false)
         {
-            Debug.LogError("Invalid animation state: " + state);
-            return;
-        }
+            Debug.Log(state + "Animation is called");
+            if( _animationStates.Contains(state) == false)
+            {
+                Debug.LogError("Invalid animation state: " + state);
+                return;
+            }
 
-        foreach (string animationState in _animationStates)
-        {
-            if (animationState.Equals(state)) continue;
-            Animator.SetBool(animationState, false);
+            foreach (string animationState in _animationStates)
+            {
+                if (animationState.Equals(state)) continue;
+                Animator.SetBool(animationState, false);
+            }
+    
+            Animator.SetBool(state, true);
+            Animator.SetTrigger(state);
         }
         
-        Animator.SetBool(state, true);
-        Animator.SetTrigger(state);
-        Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * Mathf.Max(0.01f, second);
+        Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * Mathf.Max(0.001f, 1/second);
+        if(state.Equals("Move"))
+            Animator.speed = 0.3f;
     }
 
-    public void Move(Vector2 direction)
-    {   
-        Rigidbody2D.velocity = direction;
-    }
-    public void Transport(Vector3 transform)
+    public void FlipSpriteTo(GameObject target)
     {
-        // make sure the summon doesn't go out of the map
-        if (transform.x > MaxAreaX) transform.x = MaxAreaX;
-        if (transform.x < minAreaX) transform.x = minAreaX;
-        if (transform.y > MaxAreaY) transform.y = MaxAreaY;
-        if (transform.y < minAreaY) transform.y = minAreaY;
-
-        Rigidbody2D.transform.position = transform;
+        if (Rigidbody2D.position.x < target.transform.position.x)
+        {
+            Rigidbody2D.gameObject.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else
+        {
+            Rigidbody2D.gameObject.transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 
     #region initialization
@@ -92,31 +86,6 @@ public class SummonController : MonoBehaviour
         _animationMultiplier = animationMultiplier;
     }
 
-    public void SetArea()
-    {
-        // find "BattleArea" object
-        GameObject battleArea = GameObject.Find("BattleArea");
-        if (battleArea == null)
-        {
-            Debug.LogError("BattleArea object not found!");
-            return;
-        }
-
-        // get the size of the battle area
-        BoxCollider2D battleAreaCollider = battleArea.GetComponent<BoxCollider2D>();
-        if (battleAreaCollider == null)
-        {
-            Debug.LogError("BattleArea collider not found!");
-            return;
-        }
-
-        // set the size of the battle area
-        MaxAreaX = battleAreaCollider.bounds.max.x;
-        MaxAreaY = battleAreaCollider.bounds.max.y;
-        minAreaX = battleAreaCollider.bounds.min.x;
-        minAreaY = battleAreaCollider.bounds.min.y;
-
-    }
     #endregion
 
     #region helper functions

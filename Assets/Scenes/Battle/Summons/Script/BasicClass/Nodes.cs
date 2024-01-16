@@ -1,6 +1,7 @@
 using UnityEngine;
 using Skills;
 using static Enums;
+using System.Collections.Generic;
 
 namespace BehaviorTree
 {
@@ -8,88 +9,54 @@ namespace BehaviorTree
     // 리스폰 확인
     public class CheckRespawn : Node
     {
-        private GameObject _gameObject;
-
-        public CheckRespawn(GameObject gameObject)
-        {
-            _gameObject = gameObject;
-        }
         public override ENodeState Evaluate()
         {
-            object s = GetData("State");
-            if (s == null)
+            //Debug.Log("CheckRespawn");
+            Summon selfSummon = (Summon)GetData("self");
+            ESummonState state = selfSummon.GetSummonState();
+
+            if(state.Equals(ESummonState.Dead))
             {
-                SetData("State", ESummonState.Default);
-                SetData("Self", _gameObject);
-                return ENodeState.Failure;
+                Debug.Log("Succ");return ENodeState.Success;
             }
-            if (GetData("State").Equals(ESummonState.Respawn))
-            {
-                SetData("Self", _gameObject);
-                return ENodeState.Success;
-            }
-            return ENodeState.Failure;
+            Debug.Log("Fail");return ENodeState.Failure;
         }
     }
     // 리스폰 하기
     public class DutyRespawn : Node
     {
-        private Animator _animator;
-        private GameObject _summon;
-
-        public DutyRespawn() { }
+        private float _respawnSecond = 5f;
+        private float _timer = 0;
+        public DutyRespawn(float respawnSecond) 
+        {
+            _respawnSecond = respawnSecond; 
+        }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            if(self == null)
-            {
-               Debug.Log("self is null");
-            }
-
-            _animator = self.GetComponent<Animator>();
-            _summon = self;
-
-            // 리스폰 위치에 순간이동
-            if (self.GetComponent<Summon>().TeamSide == ETeamSide.TeamA)
-            {
-                int spawnPoint = self.GetComponent<Summon>().SpawnPositionOrder;
-                self.transform.position = BattleManager.instance.ASpawn[spawnPoint].position;
-                //// 해당 위치에 다른 유닛이 있는지 확인
-                //foreach (Transform point in BattleManager.instance.ASpawn)
-                //{
-                //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
-
-                //    if (colliders.Length == 0)
-                //    {
-                //        self.transform.position = point.position;
-                //        break;
-                //    }
-                //}
-            }
-            else
-            {
-                int spawnPoint = self.GetComponent<Summon>().SpawnPositionOrder;
-                self.transform.position = BattleManager.instance.BSpawn[spawnPoint].position;
-
-                //foreach (Transform point in BattleManager.instance.BSpawn)
-                //{
-                //    Collider2D[] colliders = Physics2D.OverlapCircleAll(point.position, 0.3f);
-
-                //    if (colliders.Length == 0)
-                //    {
-                //        self.transform.position = point.position;
-                //        break;
-                //    }
-                //}
-            }
+        // log : "DutyRespawn"
+        Debug.Log("DutyRespawn");
             
-            //_animator.SetTrigger("Respawn"); ToDo: 리스폰 애니메이션 고려
-            SetData("State", ESummonState.Default);
-            _summon.tag = "Summon";
-
-            self.GetComponent<Summon>().ResetStats();
-
-            return ENodeState.Success;
+            Summon selfSummon = (Summon)GetData("self");
+            if(selfSummon.GetSummonState() == ESummonState.Dead)
+            {
+                _timer = 0;
+                selfSummon.Respawn();
+                Debug.Log("Running");return ENodeState.Running;
+            }
+            if(selfSummon.GetSummonState() == ESummonState.Respawn)
+            {
+                _timer += Time.deltaTime;
+                if(_timer >= _respawnSecond)
+                {
+                    _timer = 0;
+                    Debug.Log("Success"); return ENodeState.Success;
+                }
+                else
+                {
+                    Debug.Log("Running");return ENodeState.Running;
+                }
+            }
+            Debug.Log("Fail");return ENodeState.Failure;
         }
     }
     #endregion
@@ -97,118 +64,86 @@ namespace BehaviorTree
     //생존 확인
     public class CheckIfAlive : Node
     {
-        private bool _isAlive;
-
         public CheckIfAlive() { }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _isAlive = !self.GetComponent<Summon>().IsDead();
-            if (_isAlive == true)
+            //Debug.Log("CheckIfAlive");    
+
+            Summon selfSummon = (Summon)GetData("self");
+            
+            if(selfSummon.GetHealth() <= 0 || selfSummon.GetSummonState() == ESummonState.Dead)
             {
-                SetData("State", ESummonState.Default);
-                return ENodeState.Success;
-            }
-            else
-            {
-                SetData("State", ESummonState.Dead);
-                return ENodeState.Failure;
-            }
+                Debug.Log("Fail");return ENodeState.Failure;
+            }            
+                Debug.Log("Succ");return ENodeState.Success;
         }
     }
     // 죽기
     public class DutyDie : Node
     {
-        private Animator _animator;
-        private float _waitTime = Constants.RESPAWN_TIME;
-        private float _timer = 0;   // ToDo: 초기화 방법 필요
-        private GameObject _summon;
-
         public DutyDie() { }
         public override ENodeState Evaluate()
         {
-            _summon = (GameObject)GetData("Self");
-            _animator = _summon.GetComponent<Animator>();
-            _timer += Time.deltaTime;
+            Debug.Log("DutyDie");
+            Summon selfSummon = (Summon)GetData("self");
+            GameObject self = selfSummon.gameObject;
 
-            _animator.SetBool("Idle", false);
-            _animator.SetBool("Move", false);
-            _animator.SetTrigger("Dead");//애니메이터 Exit Transition 있어야함!!!
-            if (_timer >= _waitTime )
+            self.tag = "NonTarget";
+            bool isOver = !selfSummon.Die();
+            if(isOver)
             {
-                SetData("State", ESummonState.Respawn);
-                _timer = 0;
-                return ENodeState.Success;
+                Debug.Log("Succ");return ENodeState.Success;
             }
-
-            _summon.tag = "NonTarget";
-            return ENodeState.Running;
+            else
+            {
+                Debug.Log("Running");return ENodeState.Running;
+            }
         }
     }
     #endregion
     #region CC기 관련
     // CC기 걸렸는 지 확인
-    public class CheckCC : Node
+    public class CheckHardCC : Node
     {
-        private Transform _transform;
-
-        public CheckCC() { }
+        public CheckHardCC() { }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
+            //Debug.Log("CheckHardCC");
+            Summon selfSummon = (Summon)GetData("self");
+            ESummonState state = selfSummon.GetSummonState();
 
-            if (_transform.GetComponent<Summon>().HasCC())
+            if (state == ESummonState.HardCC)
             {
-                SetData("State", ESummonState.CC);
-                return ENodeState.Success;
+                Debug.Log("Succ");return ENodeState.Success;
             }
-            else
-            {
-                return ENodeState.Failure;
-            }
+            
+            Debug.Log("Fail");return ENodeState.Failure;
         }
     }
     // CC 기 행동
-    public class DutyCC : Node
+    public class DutyHardCC : Node
     {
-        private Summon _summon;
-        private Buffer cc = new Buffer();
-
-        public DutyCC() { }
+        public DutyHardCC() { }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _summon = self.GetComponent<Summon>();
+            Debug.Log("DutyHardCC");
+            Summon selfSummon = (Summon)GetData("self");
+            ESummonState state = selfSummon.GetSummonState();
 
             // 죽었을 시, interrupt
-            if(_summon.IsDead())
+            if(selfSummon.GetSummonState() == ESummonState.Dead)
             {
-                return ENodeState.Failure;
+                Debug.Log("Fail");return ENodeState.Failure;
             }
 
-            // CC 걸림
-            if (_summon.HasCC())
+            GivenSkillContainer ccContainer = selfSummon.GetHardCCContainer();
+            if (ccContainer.Stun.Duration <= 0)
             {
-                // CC 쿨타임 끝
-                if (!cc.IsBufferCooldown(_summon.CurrentCCStats[((int)EBufferStats.Time)]))
-                {
-                    cc.FinishedCC(_summon.gameObject);
-                    cc.ResetBufferCooldown();
-                    SetData("State", ESummonState.Default);
-                    return ENodeState.Success;
-                }
-                // CC 쿨타임 안 끝남
-                else
-                {
-                    cc.UpdateBufferCooldown(Time.deltaTime);
-                    return ENodeState.Running;
-                }
+                Debug.Log("Succ");return ENodeState.Success;
             }
-            // CC 안 걸림
             else
             {
-                return ENodeState.Failure;
+                Debug.Log("Running");return ENodeState.Running;
             }
         }
     }
@@ -219,262 +154,146 @@ namespace BehaviorTree
     {
         public override ENodeState Evaluate()
         {
-            //ToDo: 상대방 리스트로 관리가 필요하지 않을까?
-            GameObject[] summons = GameObject.FindGameObjectsWithTag("Summon");
-            GameObject self = (GameObject)GetData("Self");
+            // log : "CheckEnemyInScene"
+            //Debug.Log("CheckEnemyInScene");
 
-            Summon selfSummon = self.GetComponent<Summon>();
+            Summon selfSummon = (Summon)GetData("self");
+            List<Summon> enemies = selfSummon.GetEnemies();
+
             // 상대방 있는 경우
-            foreach (GameObject summon in summons)
+            foreach (Summon summon in enemies)
             {
-                Summon otherSummon = summon.GetComponent<Summon>();
-                if ( !otherSummon.IsDead() && (otherSummon.TeamSide != selfSummon.TeamSide))//summon != self) // && summon.GetComponent<Summon>().myTeam == false
+                if (summon.GetSummonState() != ESummonState.Dead)
                 {
-                    //if(summon.GetComponent<Summon>().myTeam == false){
-                    SetData("target", summon.transform);
-                    return ENodeState.Success;
-                    //}
-                    //else
-                    //{
-                    //parent.parent.SetData("target", summon.transform);
-                    //return NodeState.SUCCESS;
-                    //}
+                    SetData("target", summon);
+                    Debug.Log("Succ");return ENodeState.Success;
                 }
             }
             // 상대방 없는 경우
             ClearData("target");
-            return ENodeState.Failure;
+            Debug.Log("Fail");return ENodeState.Failure;
         }
     }
     // 사거리 밖에 있는 지 확인
-    public class CheckEnemyOutOfAttackRange : Node
+    public class CheckEnemyInAttackRange : Node
     {
-        private Transform _transform;
         private float _attackRange;
 
-        public CheckEnemyOutOfAttackRange() { }
+        public CheckEnemyInAttackRange(float range) { _attackRange = range; }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _attackRange = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
+            //Debug.Log("CheckEnemyInAttackRange");
 
-            object t = GetData("target");
-            if (t == null)
+            Summon self = (Summon)GetData("self");
+
+            Summon target = (Summon)GetData("target");
+            if (target == null)
             {
-                return ENodeState.Failure;
+                Debug.Log("Fail");return ENodeState.Failure;
             }
-            Transform target = (Transform)t;
-            if (Vector3.Distance(_transform.position, target.position) > _attackRange)
+
+            float distance = Vector3.Distance(self.transform.position, target.transform.position);
+            if (distance <= _attackRange)
             {
-                return ENodeState.Success;
+                Debug.Log("Succ");return ENodeState.Success;
             }
-            return ENodeState.Failure;
+            Debug.Log("Fail");return ENodeState.Failure;
         }
     }
     //적을 향해 움직이기
     public class DoMoveToEnemy : Node
     {
-        private Animator _animator;
-        private Transform _transform;
-        private SpriteRenderer _spriteRenderer;
-        private Rigidbody2D _rb;
-        private float _moveSpeed;
-
         public DoMoveToEnemy() { }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
-            _spriteRenderer = self.GetComponent<SpriteRenderer>();
-            _moveSpeed = self.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)];
-            _rb = self.GetComponent<Rigidbody2D>();
+            // log : "DoMoveToEnemy"
+            Debug.Log("DoMoveToEnemy");
 
-            Transform target = (Transform)GetData("target");
+            Summon self = (Summon)GetData("self");
+            Summon target = (Summon)GetData("target");
+            if (target == null)
+            {
+                Debug.Log("Fail");return ENodeState.Failure;
+            }
 
             // 상대방 바라보기
             if (target != null)
             {
-                if (_transform.position.x < target.transform.position.x)
-                {
-                    _transform.localScale = new Vector3(-1, 1, 1);
-                }
-                else
-                {
-                    _transform.localScale = new Vector3(1, 1, 1);
-                }
+                self.FlipSpriteTo(target);
+                self.MoveTo(target);
             }
 
-            // 애니메이션
-            _animator.SetBool("Idle", false);
-            _animator.SetBool("Move", true);
-            SetData("State", ESummonState.Move);
-
-            // 이동
-            Vector3 direction = (target.transform.position - _transform.position).normalized;
-            _transform.position += direction * _moveSpeed * Time.deltaTime;
-            _rb.velocity = Vector2.zero;
-
-            return ENodeState.Success;
+            Debug.Log("Succ");return ENodeState.Success;
         }
     }
 
     //적과 멀어지기
     public class DoMoveAwayFromEnemy : Node
-    {
-        private Animator _animator;
-        private Transform _transform;
-        private Rigidbody2D _rb;
-        private float _moveSpeed;
-
+    { 
         public DoMoveAwayFromEnemy() { }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
-            _moveSpeed = self.GetComponent<Summon>().Stats[((int)ESummonStats.MoveSpeed)];
-            _rb = self.GetComponent<Rigidbody2D>();
+            // log : "DoMoveAwayFromEnemy"
+            Debug.Log("DoMoveAwayFromEnemy");
 
-            Transform target = (Transform)GetData("target");
-            // 상대방 바라보기
+            Summon self = (Summon)GetData("self");
+            Summon target = (Summon)GetData("target");
+
             if (target != null)
             {
-                if (_transform.position.x < target.transform.position.x)
+                self.FlipSpriteTo(target);
+
+                Vector2 direction = (self.transform.position - target.transform.position).normalized;
+                if (self.transform.position == target.transform.position)
                 {
-                    _transform.localScale = new Vector3(-1, 1, 1);
+                    // random direction
+                    direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
                 }
-                else
-                {
-                    _transform.localScale = new Vector3(1, 1, 1);
-                }
+                self.Move(direction);
             }
 
-            // 애니메이션
-            _animator.SetBool("Idle", false);
-            _animator.SetBool("Move", true);
-            SetData("State", ESummonState.Move);
-
-            // 이동
-            Vector3 direction = (_transform.position - target.transform.position).normalized;
-            _transform.position += direction * _moveSpeed * Time.deltaTime;
-            _rb.velocity = Vector2.zero;
-
-
-            return ENodeState.Success;
+            Debug.Log("Succ");return ENodeState.Success;
         }
     }
-    // 사거리 이내에 있는 지 확인
-    public class CheckEnemyInAttackRange : Node
-    {
-        private Transform _transform;
-        private float _attackRange;
 
-        public CheckEnemyInAttackRange() { }
-        public override ENodeState Evaluate()
-        {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _attackRange = self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)];
-
-            object t = GetData("target");
-            if (t == null)
-            {
-                return ENodeState.Failure;
-            }
-            Transform target = (Transform)t;
-            if (Vector3.Distance(_transform.position, target.position) <= _attackRange)
-            {
-                return ENodeState.Success;
-            }
-            return ENodeState.Failure;
-        }
-    }
     // Idle 상태
     public class DoIdle : Node
     {
-        private Animator _animator;
-
         public DoIdle() { }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _animator = self.GetComponent<Animator>();
+            // log : "DoIdle"
+            Debug.Log("DoIdle");
 
-            _animator.SetBool("Idle", true);
-            _animator.SetBool("Move", false);
-            SetData("State", ESummonState.Default);
+            Summon self = (Summon)GetData("self");
+            self.Idle();
 
-            return ENodeState.Success;
+            Debug.Log("Succ");return ENodeState.Success;
         }
     }
     #endregion
+
     #region 스킬
-    // 일반 공격하기 행동
-    public class TaskAttack : Node
-    {
-        private Transform _transform;
-        private Skill _skill;
-        private Animator _animator;
-
-        public TaskAttack(Skill skill)
-        {
-            _skill = skill;
-        }
-        public override ENodeState Evaluate()
-        {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
-
-            // Duty Event시, interrupt
-            if (self.GetComponent<Summon>().CheckCriticalEvent())
-            {
-                _skill.StartSkillCooldown();
-                _skill.ResetIsStartDone();
-                return ENodeState.Failure;
-            }
-
-
-            Transform target = (Transform)GetData("target");
-            SetData("State", ESummonState.Attack);
-            
-            bool isDoing = _skill.Execute(_transform.gameObject, target.gameObject, _animator);
-            if (isDoing)
-            {
-                return ENodeState.Running;
-            }
-            else
-            {
-                _skill.StartSkillCooldown();
-                _skill.ResetIsStartDone();
-                return ENodeState.Success;
-            }
-
-        }
-    }
     // 스킬 사용 가능 여부 확인
     public class CheckSkill : Node
     {
         private Skill _skill;
-        private float _coolTime;
 
         public CheckSkill(Skill skill)
         {
             _skill = skill;
-            _coolTime = _skill.Stats[((int)ESkillStats.CoolTime)];
         }
         public override ENodeState Evaluate()
         {
+            // log : "CheckSkill"
+            //Debug.Log("CheckSkill : " + _skill.ToString());
             if (_skill.IsSkillCooldown())
             {
-                return ENodeState.Failure;
+                Debug.Log("Fail"); return ENodeState.Failure;
             }
             else
             {
-                _skill.SkiilCounter += 1;
-                return ENodeState.Success;
+                Debug.Log("Succ");return ENodeState.Success;
             }
         }
     }
@@ -482,8 +301,9 @@ namespace BehaviorTree
     public class TaskSkill : Node
     {
         private Skill _skill;
-        private Transform _transform;
-        private Animator _animator;
+        private float _timer = 0f;
+
+        private bool _wtf = false;
 
         public TaskSkill(Skill skill)
         {
@@ -491,97 +311,31 @@ namespace BehaviorTree
         }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
+            Debug.Log("TaskSkill : " + _skill.ToString());
 
+
+            Summon self = (Summon)GetData("self");
             // Duty Event시, interrupt
-            if(self.GetComponent<Summon>().CheckCriticalEvent())
+            if(self.CheckCriticalEvent())
             {                
                 _skill.StartSkillCooldown();
-                _skill.ResetIsStartDone();
-                return ENodeState.Failure;
+                _timer = 0f;
+                Debug.Log("Fail");return ENodeState.Failure;
             }
 
-            Transform target = (Transform)GetData("target");
-            SetData("State", ESummonState.Skill);
-            bool isDoing = _skill.Execute(_transform.gameObject, target.gameObject, _animator);
-            if(isDoing)
-            {
-                return ENodeState.Running;
-            }
-            else
-            {
+            Summon target = (Summon)GetData("target");
+            _skill.Execute(self, target);
+            Debug.Log("Skill State : "+_skill.State.ToString());
+
+            if (_timer >= _skill.Stats.Duration) 
+            { 
+                _timer = 0f;
                 _skill.StartSkillCooldown();
-                _skill.ResetIsStartDone();
-                return ENodeState.Success;
+                Debug.Log("Succ"); return ENodeState.Success; 
             }
-        }
-    }
-    // 궁극기 사용 가능 여부 확인
-    public class CheckUltGage : Node
-    {
-        //ToDo: 게이지 형식으로 변환
-        private Skill _skill;
-        private float _coolTime;
+            _timer += Time.deltaTime;
 
-        public CheckUltGage(Skill skill)
-        {
-            _skill = skill;
-            _coolTime = skill.Stats[((int)ESkillStats.CoolTime)];
-        }
-        public override ENodeState Evaluate()
-        {
-            if (_skill.IsSkillCooldown())
-            {
-                return ENodeState.Failure;
-            }
-            else
-            {
-                _skill.SkiilCounter += 1;
-                return ENodeState.Success;
-            }
-        }
-    }
-    // 궁극기 사용하기
-    public class TaskUlt : Node
-    {
-        private Skill _skill;
-        private Transform _transform;
-        private Animator _animator;
-
-        public TaskUlt(Skill skill)
-        {
-            _skill = skill;
-        }
-        public override ENodeState Evaluate()
-        {
-            GameObject self = (GameObject)GetData("Self");
-
-            // Critical Event시, interrupt
-            if (self.GetComponent<Summon>().CheckCriticalEvent())
-            {
-                _skill.StartSkillCooldown();
-                _skill.ResetIsStartDone();
-                return ENodeState.Failure;
-            }
-
-            _transform = self.transform;
-            _animator = self.GetComponent<Animator>();
-
-            Transform target = (Transform)GetData("target");
-            SetData("State", ESummonState.Ult);
-            bool isDoing = _skill.Execute(_transform.gameObject, target.gameObject, _animator);
-            if(isDoing)
-            {
-                return ENodeState.Running;
-            }
-            else
-            {
-                _skill.StartSkillCooldown();
-                _skill.ResetIsStartDone();
-                return ENodeState.Success;
-            }
+            Debug.Log("Running"); return ENodeState.Running;
         }
     }
     #endregion
@@ -589,30 +343,28 @@ namespace BehaviorTree
     // 원거리 캐릭터 전용 +(밀당 캐릭터)
     public class CheckEnemyTooClose : Node
     {
-        private Transform _transform;
         private float _personalDistance;
 
-        public CheckEnemyTooClose() { }
+        public CheckEnemyTooClose(float distance) { _personalDistance = distance; }
         public override ENodeState Evaluate()
         {
-            GameObject self = (GameObject)GetData("Self");
-            _transform = self.transform;
-            _personalDistance = (self.GetComponent<Summon>().Stats[((int)ESummonStats.AttackRange)]) * 0.5f;
+            // log : "CheckEnemyTooClose"
+            //Debug.Log("CheckEnemyTooClose");
 
-            object t = GetData("target");
-            if (t == null)
+            Summon self = (Summon)GetData("self");
+            Summon target = (Summon)GetData("target");
+            if(target == null)
             {
-                return ENodeState.Failure;
+                Debug.Log("Fail");return ENodeState.Failure;
             }
 
-            Transform target = (Transform)t;
-            if (Vector3.Distance(_transform.position, target.position) <= _personalDistance)
+            if (Vector3.Distance(self.transform.position, target.transform.position) <= _personalDistance)
             {
-                return ENodeState.Success;
+                Debug.Log("Succ");return ENodeState.Success;
             }
             else 
             {
-                return ENodeState.Failure;
+                Debug.Log("Fail");return ENodeState.Failure;
             }
         }
     }
@@ -631,11 +383,11 @@ namespace BehaviorTree
 
             if (colliders != null)
             {
-                return ENodeState.Success;
+                Debug.Log("Succ");return ENodeState.Success;
             }
             else
             {
-                return ENodeState.Failure;
+                Debug.Log("Fail");return ENodeState.Failure;
             }
         }
     }
