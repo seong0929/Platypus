@@ -1,5 +1,5 @@
 # Platypus
- 서울과학기술대학교 컴퓨터공학과 김다은과 오성혁의 캡스톤디자인
+ 서울과학기술대학교 컴퓨터공학과 김다은, 오성혁의 캡스톤디자인
  
 # 목차
 - [게임 컨셉](https://github.com/seong0929/Platypus/edit/hotfix-seong0929/README.md#%EA%B2%8C%EC%9E%84-%EC%BB%A8%EC%85%89)
