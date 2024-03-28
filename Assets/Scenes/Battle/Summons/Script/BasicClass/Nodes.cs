@@ -11,15 +11,14 @@ namespace BehaviorTree
     {
         public override ENodeState Evaluate()
         {
-            //Debug.Log("CheckRespawn");
             Summon selfSummon = (Summon)GetData("self");
             ESummonState state = selfSummon.GetSummonState();
 
-            if(state.Equals(ESummonState.Dead))
+            if(state.Equals(ESummonState.Respawn))
             {
-                Debug.Log("Succ");return ENodeState.Success;
+                return ENodeState.Success;
             }
-            Debug.Log("Fail");return ENodeState.Failure;
+            return ENodeState.Failure;
         }
     }
     // 리스폰 하기
@@ -67,15 +66,13 @@ namespace BehaviorTree
         public CheckIfAlive() { }
         public override ENodeState Evaluate()
         {
-            //Debug.Log("CheckIfAlive");    
-
             Summon selfSummon = (Summon)GetData("self");
             
             if(selfSummon.GetHealth() <= 0 || selfSummon.GetSummonState() == ESummonState.Dead)
             {
-                Debug.Log("Fail");return ENodeState.Failure;
+                return ENodeState.Failure;
             }            
-                Debug.Log("Succ");return ENodeState.Success;
+                return ENodeState.Success;
         }
     }
     // 죽기
@@ -84,7 +81,6 @@ namespace BehaviorTree
         public DutyDie() { }
         public override ENodeState Evaluate()
         {
-            Debug.Log("DutyDie");
             Summon selfSummon = (Summon)GetData("self");
             GameObject self = selfSummon.gameObject;
 
@@ -92,11 +88,11 @@ namespace BehaviorTree
             bool isOver = !selfSummon.Die();
             if(isOver)
             {
-                Debug.Log("Succ");return ENodeState.Success;
+                return ENodeState.Success;
             }
             else
             {
-                Debug.Log("Running");return ENodeState.Running;
+                return ENodeState.Running;
             }
         }
     }
@@ -154,9 +150,6 @@ namespace BehaviorTree
     {
         public override ENodeState Evaluate()
         {
-            // log : "CheckEnemyInScene"
-            //Debug.Log("CheckEnemyInScene");
-
             Summon selfSummon = (Summon)GetData("self");
             List<Summon> enemies = selfSummon.GetEnemies();
 
@@ -166,12 +159,12 @@ namespace BehaviorTree
                 if (summon.GetSummonState() != ESummonState.Dead)
                 {
                     SetData("target", summon);
-                    Debug.Log("Succ");return ENodeState.Success;
+                    return ENodeState.Success;
                 }
             }
             // 상대방 없는 경우
             ClearData("target");
-            Debug.Log("Fail");return ENodeState.Failure;
+            return ENodeState.Failure;
         }
     }
     // 사거리 밖에 있는 지 확인
@@ -337,6 +330,11 @@ namespace BehaviorTree
 
             Debug.Log("Running"); return ENodeState.Running;
         }
+    }
+
+    public class Action:Node
+    {
+
     }
     #endregion
     #region 특수 노드

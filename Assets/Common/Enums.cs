@@ -5,6 +5,7 @@ public static class Enums
         SenorZorro,
 //        SpitGlider,
   //      PoToad,
+
         // 테스트를 위한 Enum 값들
         SenorZorro2,
         SenorZorro3,
@@ -18,29 +19,6 @@ public static class Enums
        // SpitGlider1,
     //    SpitGlider2,
       //  SpitGlider3
-    }
-    public enum ESummonStats
-    {
-        AttackRange,    //사거리
-        MoveSpeed,  //이동속도
-        Health, //체력
-        Defence    //방어력
-    }
-    public enum ESummonAction
-    {
-        Attack,
-        Skill,
-        Ult
-    }
-    public enum ESkillStats
-    {
-        AttackRange,
-        CoolTime,
-        Damage,
-        Duration,
-        Heal,
-        CriticalChance,
-        CriticalEfiiciency
     }
     public enum EBuffType
     {
@@ -75,19 +53,6 @@ public static class Enums
     public enum ETrait
     {
         Mad
-    }
-    public enum EBufferType
-    {
-        None,
-        Buffer,
-        Debuffer,
-        CC
-    }
-    public enum EBufferStats
-    {
-        Time,
-        Power,
-        Tick
     }
     public enum ELanguage
     {

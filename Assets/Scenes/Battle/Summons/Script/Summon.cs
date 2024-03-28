@@ -26,17 +26,22 @@ public struct GivenSkillContainer
 public abstract class Summon : MonoBehaviour
 {
     protected ESummon _eSummon;
+
     protected SummonStats _baseStats;
     protected SummonStats _currentStats;
+    private ESummonState _summonState;
+
+    private GivenSkillContainer _hardCCContainer;
+    public Rigidbody2D Rigidbody2D;
+
+    protected Vector2 _spawnPosition;
+
     protected List<Summon> _teamMates = new List<Summon>();
     protected List<Summon> _enemies = new List<Summon>();
-    private ESummonState _summonState;
-    protected Vector2 _spawnPosition;
+
     protected Node _root = null;
     protected SummonController _summonController;    
     protected Dictionary<string, Skill> _skillDictionary = new Dictionary<string, Skill>();
-
-    private GivenSkillContainer _hardCCContainer;
 
     // Battle Area Boundaries
     private float _MaxAreaX;
@@ -44,15 +49,12 @@ public abstract class Summon : MonoBehaviour
     private float _minAreaX;
     private float _minAreaY;
 
-    public Rigidbody2D Rigidbody2D;
-
     private float _moveSeconds = 3f;
     private float _idleSeconds = 9f;
     private float _deadSeconds = 2f;
     private float _respawnSeconds = 1.5f;
 
     public bool _isMoving = false;
-
     private bool _isRespawnAnimationEventCalled = false;
     private bool _isDeadAnimationEventCalled = false;
 
@@ -72,7 +74,6 @@ public abstract class Summon : MonoBehaviour
     {
         UpdateSkillCooldowns(Time.deltaTime);
         UpdateHardCCContainer(Time.deltaTime);
-        update_for_inspectator();
     }
     public void SetSummon(SummonStats summonStats, List<Summon> team, List<Summon> enemies, Vector2 spawnPosition)
     {
@@ -422,171 +423,4 @@ public abstract class Summon : MonoBehaviour
         _isRespawnAnimationEventCalled = true;
         _currentStats.Defence = _baseStats.Defence;
     }
-
-    #region For prospective use
-
-    //Current stats
-    [Header("Current Stats")]
-    public float p_Health;
-    public float p_Defence;
-    public float p_MoveSpeed;
-    public float p_DamageCoefficient;
-    public float p_ActionSpeedCoefficient;
-    public float p_CriticalChanceCoefficient;
-
-    [Header("Base Stats")]
-    //base stats
-    public float b_Health;
-    public float b_Defence;
-    public float b_MoveSpeed;
-    public float b_DamageCoefficient;
-    public float b_ActionSpeedCoefficient;
-    public float b_CriticalChanceCoefficient;
-
-    [Header("Summon")]
-    public ESummon p_eSummon;
-    public List<Summon> p_teamMates = new List<Summon>();
-    public List<Summon> p_enemies = new List<Summon>();
-
-    [Header("Summon info")]
-    public ESummonState p_summonState;
-    public Vector2 p_spawnPosition;
-    public GivenSkillContainer p_hardCCContainer;
-
-    [Header("normal Attack/Action Info")]
-    public float a_CoolTime;
-    public float a_Damage;
-    public float a_Range;
-    public float a_Duration;
-    public float a_Heal;
-    public float a_CriticalChance;
-    public float a_CriticalCoefficient;
-
-    [Header("Skill Info")]
-    public float sk_CoolTime;
-    public float sk_Damage;
-    public float sk_Range;
-    public float sk_Duration;
-    public float sk_Heal;
-    public float sk_CriticalChance;
-    public float sk_CriticalCoefficient;
-
-    [Header("ULT Info")]
-    public float u_CoolTime;
-    public float u_Damage;
-    public float u_Range;
-    public float u_Duration;
-    public float u_Heal;
-    public float u_CriticalChance;
-    public float u_CriticalCoefficient;
-
-    protected void update_for_inspectator()
-    {
-        Debug.Log("updating inspectator infos");
-
-        p_Health = _currentStats.Health;
-        p_Defence = _currentStats.Defence;
-        p_MoveSpeed = _currentStats.MoveSpeed;
-        p_DamageCoefficient = _currentStats.DamageCoefficient;
-        p_ActionSpeedCoefficient = _currentStats.ActionSpeedCoefficient;
-        p_CriticalChanceCoefficient = _currentStats.CriticalChanceCoefficient;
-
-        b_Health = _baseStats.Health;
-        b_Defence = _baseStats.Defence;
-        b_MoveSpeed = _baseStats.MoveSpeed;
-        b_DamageCoefficient = _baseStats.DamageCoefficient;
-        b_ActionSpeedCoefficient = _baseStats.ActionSpeedCoefficient;
-        b_CriticalChanceCoefficient = _baseStats.CriticalChanceCoefficient;
-
-        p_eSummon = _eSummon;
-
-        p_teamMates = _teamMates;
-        p_enemies = _enemies;
-
-        p_summonState = _summonState;
-        p_spawnPosition = _spawnPosition;
-        p_hardCCContainer = _hardCCContainer;
-
-        //attack from dictionary
-        a_CoolTime = _skillDictionary["attack"].GetCoolTime();
-        a_Damage = _skillDictionary["attack"].GetDamage();
-        a_Range = _skillDictionary["attack"].GetRange();
-        a_Duration = _skillDictionary["attack"].GetDuration();
-        a_Heal = _skillDictionary["attack"].GetHeal();
-        a_CriticalChance = _skillDictionary["attack"].GetCriticalChance();
-        a_CriticalCoefficient = _skillDictionary["attack"].GetCriticalCoefficient();
-
-        //skill from dictionary
-        sk_CoolTime = _skillDictionary["skill"].GetCoolTime();
-        sk_Damage = _skillDictionary["skill"].GetDamage();
-        sk_Range = _skillDictionary["skill"].GetRange();
-        sk_Duration = _skillDictionary["skill"].GetDuration();
-        sk_Heal = _skillDictionary["skill"].GetHeal();
-        sk_CriticalChance = _skillDictionary["skill"].GetCriticalChance();
-        sk_CriticalCoefficient = _skillDictionary["skill"].GetCriticalCoefficient();
-
-        //ult
-        u_CoolTime = _skillDictionary["ult"].GetCoolTime();
-        u_Damage = _skillDictionary["ult"].GetDamage();
-        u_Range = _skillDictionary["ult"].GetRange();
-        u_Duration = _skillDictionary["ult"].GetDuration();
-        u_Heal = _skillDictionary["ult"].GetHeal();
-        u_CriticalChance = _skillDictionary["ult"].GetCriticalChance();
-        u_CriticalCoefficient = _skillDictionary["ult"].GetCriticalCoefficient();
-    }
-
-    public void Make_Inspectator_Changes_update_real_value()
-    {
-        //base stats
-        _baseStats.Health = b_Health;
-        _baseStats.Defence = b_Defence;
-        _baseStats.MoveSpeed = b_MoveSpeed;
-        _baseStats.DamageCoefficient = b_DamageCoefficient;
-        _baseStats.ActionSpeedCoefficient = b_ActionSpeedCoefficient;
-        _baseStats.CriticalChanceCoefficient = b_CriticalChanceCoefficient;
-
-        //current stats
-        _currentStats.Health = p_Health;
-        _currentStats.Defence = p_Defence;            
-        _currentStats.MoveSpeed = p_MoveSpeed;
-        _currentStats.DamageCoefficient = p_DamageCoefficient;
-        _currentStats.ActionSpeedCoefficient = p_ActionSpeedCoefficient;
-        _currentStats.CriticalChanceCoefficient = p_CriticalChanceCoefficient;
-
-        //summon info
-        //_eSummon = p_eSummon;
-        //_teamMates = p_teamMates;
-        //_enemies = p_enemies;
-        //_summonState = p_summonState;
-        _spawnPosition = p_spawnPosition;
-        _hardCCContainer = p_hardCCContainer;
-
-        //attack from dictionary
-        _skillDictionary["attack"].SetCoolTime(a_CoolTime);
-        _skillDictionary["attack"].SetDamage(a_Damage);
-        _skillDictionary["attack"].SetRange(a_Range);
-        _skillDictionary["attack"].SetDuration(a_Duration);
-        _skillDictionary["attack"].SetHeal(a_Heal);
-        _skillDictionary["attack"].SetCriticalChance(a_CriticalChance);
-        _skillDictionary["attack"].SetCriticalCoefficient(a_CriticalCoefficient);
-        
-        //skill from dictionary
-        _skillDictionary["skill"].SetCoolTime(sk_CoolTime);
-        _skillDictionary["skill"].SetDamage(sk_Damage);
-        _skillDictionary["skill"].SetRange(sk_Range);
-        _skillDictionary["skill"].SetDuration(sk_Duration);
-        _skillDictionary["skill"].SetHeal(sk_Heal);
-        _skillDictionary["skill"].SetCriticalChance(sk_CriticalChance);
-        _skillDictionary["skill"].SetCriticalCoefficient(sk_CriticalCoefficient);
-        
-        //ult
-        _skillDictionary["ult"].SetCoolTime(u_CoolTime);
-        _skillDictionary["ult"].SetDamage(u_Damage);
-        _skillDictionary["ult"].SetRange(u_Range);
-        _skillDictionary["ult"].SetDuration(u_Duration);
-        _skillDictionary["ult"].SetHeal(u_Heal);
-        _skillDictionary["ult"].SetCriticalChance(u_CriticalChance);
-        _skillDictionary["ult"].SetCriticalCoefficient(u_CriticalCoefficient);
-    }
-    #endregion
 }

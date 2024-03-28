@@ -1,4 +1,5 @@
 using Assets.PixelHeroes.Scripts.CharacterScripts;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,8 +37,6 @@ public class ScoutCard : MonoBehaviour
         if (PlayerCharacterPanel!= null)// && Character.GetComponent<CharacterBuilder>() != null)
         {
             PlayerCharacterPanel.GetComponent<PlayerCharacterPanel>().SetCharacterPanel(thePlayer.Appearance);
-//            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
-  //          Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
         }
 
         ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
@@ -65,8 +64,6 @@ public class ScoutCard : MonoBehaviour
         if (PlayerCharacterPanel!= null)// && Character.GetComponent<CharacterBuilder>() != null)
         {
             PlayerCharacterPanel.GetComponent<PlayerCharacterPanel>().SetCharacterPanel(thePlayer.Appearance);
-            //            Character.GetComponent<CharacterBuilder>().CharacterAppearance = thePlayer.Appearance;
-            //          Character.GetComponent<CharacterBuilder>().SetByCharacterAppearance();
         }
 
         ScoutButton.GetComponent<Button>().onClick.AddListener(Scout);
@@ -88,6 +85,12 @@ public class ScoutCard : MonoBehaviour
         }
         gameManager.GetUserTeam().ScoutPlayer(thePlayer);
         Debug.Log("Scout"+thePlayer.Name);
+
+        // Mark the player as scouted on the scout button
+        ScoutButton.GetComponent<Button>().interactable = false;
+        ScoutButton.GetComponentInChildren<Text>().text = "Scouted";
+        ScoutButton.GetComponent<Image>().color = Color.gray; // change the color of the button
+
 
         /////////////// NEED FIX LATER /////////////
         gameManager.GetUserTeam().AddPlayerToRoster(thePlayer);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using static Enums;
 using static Constants;
 /*
@@ -35,7 +36,8 @@ public class BanPickRunner
 
     public Dictionary<ESummon, int> SummonPriceDict;
 
-    public static UnityEvent<ESummon> RecieveBanPickSummon = new UnityEvent<ESummon>();
+    public static UnityEvent<ESummon, Image> RecieveBanPickSummon = new UnityEvent<ESummon, Image>();
+
 
     //RecieveBanPickSummon
     public BanPickRunner(int playerNum, List<ESummon> avaiableSummons)
@@ -225,13 +227,14 @@ public class BanPickRunner
 
     }
 
-    public void GetBanPickRequest(object value)
+    public void GetBanPickRequest(ESummon value, Image image)
     {
         // To do : other State that not involve with summon ban/pick.
         // [] Choose Side
         // [] Choose Map
         // [] Choose Strategy
         // [] Set Summoner&Summon pair
+
         switch(CurrentRoundState.State)
         {
             case EBanPickState.Ban:
@@ -260,6 +263,7 @@ public class BanPickRunner
                         return;
                     }
                     AddPickedSummon(CurrentRoundState.Turn, (ESummon)value);
+                    BanPickUI.UpdateTeamPicked.Invoke(CurrentRoundState.Turn, image);
                     NextRoundState();
                 }
                 else
@@ -275,10 +279,14 @@ public class BanPickRunner
         }
     }
     
+    private void UpdateTeamPickedSummon(Image image)
+    {
+    }
+
     private void initializeEvents()
     {
-        RecieveBanPickSummon = new UnityEvent<Enums.ESummon>();
-        RecieveBanPickSummon.AddListener((eSummon) => GetBanPickRequest(eSummon));
+        RecieveBanPickSummon = new UnityEvent<Enums.ESummon, Image>();
+        RecieveBanPickSummon.AddListener((eSummon, image) => GetBanPickRequest(eSummon, image));
     }
 }
 public struct RoundStatePair

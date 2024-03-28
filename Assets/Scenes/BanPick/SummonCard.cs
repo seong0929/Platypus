@@ -126,6 +126,7 @@ public class SummonCard : MonoBehaviour
 
     private void SelectButtonClicked()
     {
-        BanPickRunner.RecieveBanPickSummon.Invoke(ESummon);
+        BanPickRunner.RecieveBanPickSummon.Invoke(ESummon, SummonImage);
     }
+
 }

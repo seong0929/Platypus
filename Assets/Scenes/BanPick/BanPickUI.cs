@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using static Enums;
 
 public class BanPickUI : MonoBehaviour
@@ -15,13 +16,14 @@ public class BanPickUI : MonoBehaviour
 
     private Scroll _scroll;
 
-    [SerializeField] GameObject TeamPanelA;
-    [SerializeField] GameObject TeamPanelB;
+    [SerializeField] public GameObject TeamPanelA;
+    [SerializeField] public GameObject TeamPanelB;
     [SerializeField] GameObject SummonCardsPanelObject;
     [SerializeField] GameObject ScrollObject;
 
     private Round round;
     public static UnityEvent UpdateBanPickUIs = new UnityEvent();
+    public static UnityEvent<ETeamSide, Image> UpdateTeamPicked = new UnityEvent<ETeamSide, Image>();
 
     // Start is called before the first frame update
     void Awake()
@@ -195,9 +197,20 @@ public class BanPickUI : MonoBehaviour
         }
     }
 
+    public void AddTeamPickedSummon(ETeamSide eTeamSide, Image image)
+    {
+        TeamPanel teamPanel = new TeamPanel();
+        GameObject teamPanelObject = (eTeamSide == ETeamSide.TeamA) ? TeamPanelA : TeamPanelB;
+        teamPanel = teamPanelObject.GetComponent<TeamPanel>();
+        teamPanel.AddPickedSummonImage(image);
+    }
+
     private void initializeEvents()
     {
         UpdateBanPickUIs = new UnityEvent();
         UpdateBanPickUIs.AddListener(() => UpdateBanPickUI());
+        UpdateTeamPicked = new UnityEvent<ETeamSide, Image>();
+        UpdateTeamPicked.AddListener((ETeamSide eTeamSide, Image image) => AddTeamPickedSummon(eTeamSide, image));
     }
+
 }

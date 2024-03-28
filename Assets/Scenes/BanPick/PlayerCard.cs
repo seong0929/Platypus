@@ -89,6 +89,7 @@ public class PlayerCard : MonoBehaviour
         proficientPanelImage0 = ProficientPanel0.GetComponent<Image>();
         proficientPanelImage1 = ProficientPanel1.GetComponent<Image>();
         proficientPanelImage2 = ProficientPanel2.GetComponent<Image>();
+        playerImage = PlayerPanel.GetComponentInChildren<Image>();
     }
     public void SetTeam(bool isA)
     {
@@ -123,6 +124,11 @@ public class PlayerCard : MonoBehaviour
     {
         _characterAppearance = characterAppearance;
         PlayerPanel.GetComponent<PlayerCharacterPanel>().SetCharacterPanel(characterAppearance);
+    }
+    public void SetPickedSummonImage(Image summonImage)
+    {
+        playerImage = summonImage;
+        playerImage.sprite = summonImage.sprite;
     }
     private void SetStats()
     {

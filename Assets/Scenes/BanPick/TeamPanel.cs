@@ -15,6 +15,7 @@ public class TeamPanel : MonoBehaviour
     private List<int> lvList = new List<int>();
     private List<string> nameList = new List<string>();
     private List<CharacterAppearance> characterAppearanceList = new List<CharacterAppearance>();
+    private List<Image> pickedSummonImages = new List<Image>();
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,12 @@ public class TeamPanel : MonoBehaviour
         //createCards();
     }
     
-
+    public void AddPickedSummonImage(Image pickedSummonImage)
+    {
+        pickedSummonImages.Add(pickedSummonImage);        
+//        cards[pickedSummonImages.Count].SetPickedSummonImage(pickedSummonImage);
+        cards[0].SetPickedSummonImage(pickedSummonImage);
+    }
 
     public void SetATKs(List<int> atks)
     {

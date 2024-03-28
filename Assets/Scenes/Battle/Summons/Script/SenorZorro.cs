@@ -42,7 +42,6 @@ public class SenorZorro : Summon
 
         base._root = CreateBehaviorTree();
         UpdateRootNodeData();
-        update_for_inspectator();
     }
     private void Update()
     {
@@ -52,8 +51,6 @@ public class SenorZorro : Summon
         }
         UpdateRootNodeData();
         UpdateSkillCooldowns(Time.deltaTime);
-        //Make_Inspectator_Changes_update_real_value();
-        update_for_inspectator();
         _root.Evaluate();
         if(!_isMoving)
         {
@@ -350,4 +347,5 @@ public class SenorZorro : Summon
     }
 
     #endregion
+    
 }
