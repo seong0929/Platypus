@@ -71,7 +71,7 @@ public class SenorZorro : Summon
     public class Attack : Skill
     {
         public SkillStats skillStats = new SkillStats() {
-            CoolTime = 7f,
+            CoolTime = 3f,
             Damage = 10f,
             Range = 0.5f,
             Duration = 3f,
@@ -80,6 +80,7 @@ public class SenorZorro : Summon
             CriticalCoefficient = 1.3f
         };
         public bool IsAnimationEventCalled = false;
+        public bool IsAnimationOver = false;
 
         public Attack()
         {
@@ -90,8 +91,9 @@ public class SenorZorro : Summon
             summon._isMoving = false;
             if(State == ESkillState.Available)
             {
-                Debug.Log("Attack is available");
+                //Debug.Log("Attack is available");
                 IsAnimationEventCalled = false;
+                IsAnimationOver = false;
                 base.SetInUse();
                 summon.SetAnimationState("Attack", skillStats.Duration);
                 return true;
@@ -105,14 +107,19 @@ public class SenorZorro : Summon
                 StartSkillCooldown();
                 return true;
             }
-            return false;
+            if(State == ESkillState.InUse && IsAnimationOver)
+            {
+                IsAnimationOver = false;
+                return false;
+            }
+            return true;
         }
     }
     public class FootworkSkill : Skill
     {
         public SkillStats skillStats = new SkillStats()
         {
-            CoolTime = 8f,
+            CoolTime = 5f,
             Damage = 0f,
             Range = 0.5f,
             Duration = 3f,
@@ -177,7 +184,7 @@ public class SenorZorro : Summon
     {
         public SkillStats skillStats = new SkillStats()
         {
-            CoolTime = 20f,
+            CoolTime = 13f,
             Damage = 20f,
             Range = 1f,
             Duration = 8f,
@@ -238,8 +245,11 @@ public class SenorZorro : Summon
 
     public void CallAttackAnimationEvent()
     {
-        Debug.Log("Attack_SenorZorro Animation Event is called");
         attack.IsAnimationEventCalled = true;
+    }
+    public void CallAttackAnimationOver()
+    {
+        attack.IsAnimationOver = true;
     }
     public void CallFootworkAnimationEvent()
     {

@@ -8,6 +8,7 @@ using System.Collections;
 using System;
 using System.Data;
 
+[System.Serializable]
 public struct SummonStats
 {
     public float Health;
@@ -17,6 +18,8 @@ public struct SummonStats
     public float ActionSpeedCoefficient;
     public float CriticalChanceCoefficient;
 }
+
+[System.Serializable]
 public struct GivenSkillContainer
 {
     public ActionStats Stun;
@@ -27,13 +30,16 @@ public abstract class Summon : MonoBehaviour
 {
     protected ESummon _eSummon;
 
-    protected SummonStats _baseStats;
-    protected SummonStats _currentStats;
+    public SummonStats _baseStats;
+    public SummonStats _currentStats;
+    [SerializeField]
     private ESummonState _summonState;
 
+    [SerializeField]
     private GivenSkillContainer _hardCCContainer;
     public Rigidbody2D Rigidbody2D;
 
+    [SerializeField]
     protected Vector2 _spawnPosition;
 
     protected List<Summon> _teamMates = new List<Summon>();
@@ -83,6 +89,7 @@ public abstract class Summon : MonoBehaviour
         _baseStats.DamageCoefficient = summonStats.DamageCoefficient;
         _baseStats.ActionSpeedCoefficient = summonStats.ActionSpeedCoefficient;
         _baseStats.CriticalChanceCoefficient = summonStats.CriticalChanceCoefficient;
+
 
         _teamMates = team;
         _enemies = enemies;

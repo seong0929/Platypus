@@ -46,8 +46,6 @@ public class SummonController //: MonoBehaviour
         }
         
         Animator.speed = _animationMultiplier[GetAnimationStateIndex(state)] * Mathf.Max(0.001f, 1/second);
-        if(state.Equals("Move"))
-            Animator.speed = 0.3f;
     }
 
     public void FlipSpriteTo(GameObject target)

@@ -82,3 +82,10 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.33333334
+    functionName: CallAttackAnimationOver
+    data: 
+    objectReferenceParameter: {fileID: 11500000, guid: 66a5f9b7fae9ccb49bc58d6350d6b88e, type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

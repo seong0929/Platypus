@@ -51,6 +51,10 @@ public class BattleManager : MonoBehaviour
         InitializeSummonPrefabDictionary();
         SetupGameSummons();
         GameTime = 0;
+
+        // Register Summons to SummonMonitor
+        SummonMonitor.RegisterSummon.Invoke(teamASummons);
+        SummonMonitor.RegisterSummon.Invoke(teamBSummons);
     }
 
     private void SetupGameSummons()
@@ -156,7 +160,7 @@ public class BattleManager : MonoBehaviour
         SummonStats stats = new SummonStats();
         stats.Health = 100f;
         stats.Defence = 0f;
-        stats.MoveSpeed = 0.5f;
+        stats.MoveSpeed = 1.5f;
         stats.DamageCoefficient = 1f;
         stats.ActionSpeedCoefficient = 1f;
         stats.CriticalChanceCoefficient = 1.5f;
